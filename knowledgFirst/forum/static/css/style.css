@@ -1,0 +1,14 @@
+html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+#highlights {
+    margin-top: 10px;
+    margin-bottom: 30px;
+    font-family: monospace;
+    padding: 2px;
+}
+#hl {
+    background-color: antiquewhite;
+}
