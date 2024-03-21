@@ -23,11 +23,11 @@ GRADES_CHOICES = [
     ('Moderator/Administrator', 'Moderator/Administrator'),
 ]
 
-# Accessing the first element of the GRADES_CHOICES list of tuples
 DEFAULT_GRADE = GRADES_CHOICES[0][0]  # 'Novice'
+DEFAULT_STATE = POST_STATE_CHOICES[0][0]  # 'Open'
 
 class Grade(models.Model):
-    name = models.CharField(max_length=20, choices=GRADES_CHOICES, default=DEFAULT_GRADE)
+    name = models.CharField(max_length=30, choices=GRADES_CHOICES, default=DEFAULT_GRADE)
 
     def __str__(self):
         return self.name
@@ -42,7 +42,7 @@ class User(models.Model):
     email = models.EmailField(unique=True)
     join_date = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
-    grade = models.ForeignKey(Grade, on_delete=models.SET_NULL, null=True, default=None)
+    grade = models.ForeignKey(Grade, on_delete=models.SET_NULL, null=True, default=DEFAULT_GRADE)
     total_posts = models.IntegerField(default=0)
     total_comments = models.IntegerField(default=0)
     total_likes = models.IntegerField(default=0)
@@ -60,11 +60,19 @@ class Post(models.Model):
     date_posted = models.DateTimeField(auto_now_add=True)
     last_modify = models.DateTimeField(auto_now=True)
     total_replies = models.IntegerField(default=0)
-    state = models.CharField(max_length=20, choices=POST_STATE_CHOICES, default='Open')
+    state = models.CharField(max_length=20, choices=POST_STATE_CHOICES, default=DEFAULT_STATE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     likes = models.IntegerField(default=0)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, blank=True, null=True)
 
+    def delete(self, *args, **kwargs):
+        self.update_posts()
+        super(User, self).delete(*args, **kwargs)
+
+    def update_posts(self):
+        deleted_user = User.objects.get_or_create(username='deleted')[0]
+        self.post_set.update(author=deleted_user)
+    
     def __str__(self):
         return self.title
 
