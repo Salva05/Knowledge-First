@@ -5,8 +5,12 @@ from .models import *
 
 def index(request):
     template = loader.get_template('index.html')
-    context = {}
-    return HttpResponse(template.render(context, request))
+
+    latest_posts = Post.objects.all().order_by('-pub_date')[:5]
+    context = {
+        'latest_posts': latest_posts
+    }
+    return HttpResponse(template.render(context=context, request=request))
 
 def elenco(request):
     template = loader.get_template('elenco.html')
@@ -17,15 +21,15 @@ def elenco(request):
     }
     return HttpResponse(template.render(context, request))
 
-def dettaglio(request, id):
-    template = loader.get_template('dettaglio.html')
+def detail(request, id):
+    template = loader.get_template('detail.html')
 
     target_post = Post.objects.get(pk=id)
 
-    comments = Comment.objects.all().filter(post=target_post)
+    replies = Reply.objects.all().filter(post=target_post)
 
     context = {
         'post': target_post,
-        'comments': comments
+        'replies': replies
     }
     return HttpResponse(template.render(context, request))

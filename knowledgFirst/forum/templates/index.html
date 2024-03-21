@@ -61,10 +61,13 @@
                     <h3 class="header">Latest topics</h3>
                     <p>
                         <ul class="topic-list">
-                            <li class="topic-item">Something</li>
-                            <li class="topic-item">Something else</li>
-                            <li class="topic-item">Something else again</li>
-                            <li class="topic-item">Something new</li>
+                            {% if latest_posts.count == 0 %}
+                                <li class="topic-item">No topics yet</li>
+                            {% else %}
+                                {% for post in latest_posts %}
+                                    <li class="topic-item"><a href="{% url 'detail' id=post.id %}">{{ post.title }}  -  {{ post.pub_date }}</a></li>
+                                {% endfor %}
+                            {% endif %}
                         </ul>
                     </p>
                 </div>

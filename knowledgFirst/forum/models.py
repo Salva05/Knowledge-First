@@ -27,7 +27,7 @@ DEFAULT_GRADE = GRADES_CHOICES[0][0]  # 'Novice'
 DEFAULT_STATE = POST_STATE_CHOICES[0][0]  # 'Open'
 
 class Grade(models.Model):
-    name = models.CharField(max_length=30, choices=GRADES_CHOICES, default=DEFAULT_GRADE)
+    name = models.CharField(max_length=30, choices=GRADES_CHOICES, default=None)
 
     def __str__(self):
         return self.name
@@ -42,9 +42,9 @@ class User(models.Model):
     email = models.EmailField(unique=True)
     join_date = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
-    grade = models.ForeignKey(Grade, on_delete=models.SET_NULL, null=True, default=DEFAULT_GRADE)
+    grade = models.CharField(max_length=30, default=DEFAULT_GRADE)
     total_posts = models.IntegerField(default=0)
-    total_comments = models.IntegerField(default=0)
+    total_replys = models.IntegerField(default=0)
     total_likes = models.IntegerField(default=0)
     interests = models.TextField()
     followers = models.IntegerField(default=0)
@@ -57,7 +57,7 @@ class User(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=50)
     content = models.TextField()
-    date_posted = models.DateTimeField(auto_now_add=True)
+    pub_date = models.DateTimeField(auto_now_add=True)
     last_modify = models.DateTimeField(auto_now=True)
     total_replies = models.IntegerField(default=0)
     state = models.CharField(max_length=20, choices=POST_STATE_CHOICES, default=DEFAULT_STATE)
@@ -77,10 +77,10 @@ class Post(models.Model):
         return self.title
 
 
-class Comment(models.Model):
+class Reply(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     content = models.TextField()
-    comment_date = models.DateTimeField(auto_now_add=True)
+    reply_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     pinned = models.BooleanField(default=False)
     likes = models.IntegerField(default=0)
@@ -118,12 +118,12 @@ class PostLike(models.Model):
         return f"{self.post.title} - {self.user.username}"
 
 
-class CommentLike(models.Model):
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+class ReplyLike(models.Model):
+    reply = models.ForeignKey(Reply, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.comment.author.username} - {self.user.username}"
+        return f"{self.reply.author.username} - {self.user.username}"
 
     def get_absolute_url(self):
         return reverse('user-detail', kwargs={'pk': self.pk})
