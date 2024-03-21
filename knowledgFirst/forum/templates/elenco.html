@@ -1,0 +1,19 @@
+{% extends "master.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12 p-3 mb-2 bg-light text-dark rounded">
+			<h1>List of Posts</h1>
+            <ul>
+				{% for post in posts %}
+				<li> {{ post.title }} ( <a href="dettaglio/{{ post.id }}">details</a> ) </li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}
