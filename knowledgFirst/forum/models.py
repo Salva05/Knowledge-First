@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 CATEGORY_CHOICES = [
     ('Sport', 'Sport'),
@@ -35,24 +36,22 @@ class Grade(models.Model):
     def get_absolute_url(self):
         return reverse('grade-detail', kwargs={'pk': self.pk})
 
-
-class User(models.Model):
-    username = models.CharField(max_length=20, unique=True)
-    password = models.CharField(max_length=30)
-    email = models.EmailField(unique=True)
-    join_date = models.DateTimeField(auto_now_add=True)
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.ImageField(upload_to='static/avatars/', default='static/avatars/user.png')
     last_login = models.DateTimeField(auto_now=True)
     grade = models.CharField(max_length=30, default=DEFAULT_GRADE)
     total_posts = models.IntegerField(default=0)
-    total_replys = models.IntegerField(default=0)
+    replies = models.IntegerField(default=0)
     total_likes = models.IntegerField(default=0)
     interests = models.TextField()
     followers = models.IntegerField(default=0)
     following = models.IntegerField(default=0)
-
+    def display_name(self):
+        return self.user.username + '<br> - <br>' + self.grade
+    
     def __str__(self):
-        return self.username
-
+        return self.user.username
 
 class Post(models.Model):
     title = models.CharField(max_length=50)
@@ -61,16 +60,18 @@ class Post(models.Model):
     last_modify = models.DateTimeField(auto_now=True)
     total_replies = models.IntegerField(default=0)
     state = models.CharField(max_length=20, choices=POST_STATE_CHOICES, default=DEFAULT_STATE)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     likes = models.IntegerField(default=0)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, blank=True, null=True)
+    views = models.IntegerField(default=0)
+    likes = models.IntegerField(default=0)
 
     def delete(self, *args, **kwargs):
         self.update_posts()
-        super(User, self).delete(*args, **kwargs)
+        super(Post, self).delete(*args, **kwargs)
 
     def update_posts(self):
-        deleted_user = User.objects.get_or_create(username='deleted')[0]
+        deleted_user = Profile.objects.get_or_create(username='deleted')[0]
         self.post_set.update(author=deleted_user)
     
     def __str__(self):
@@ -81,12 +82,12 @@ class Reply(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     content = models.TextField()
     reply_date = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     pinned = models.BooleanField(default=False)
     likes = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.author.username} - {self.post.title}"
+        return f"{self.author.user.username} - {self.post.title}"
 
 
 class Tag(models.Model):
@@ -112,29 +113,29 @@ class PostTag(models.Model):
 
 class PostLike(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.post.title} - {self.user.username}"
+        return f"{self.post.title} - {self.user.user.username}"
 
 
 class ReplyLike(models.Model):
     reply = models.ForeignKey(Reply, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.reply.author.username} - {self.user.username}"
+        return f"{self.reply.author.user.username} - {self.user.user.username}"
 
     def get_absolute_url(self):
         return reverse('user-detail', kwargs={'pk': self.pk})
 
 
 class UserFollow(models.Model):
-    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
-    followee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followee')
+    follower = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='follower')
+    followee = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='followee')
 
     def __str__(self):
-        return f"{self.follower.username} - {self.followee.username}"
+        return f"{self.follower.user.username} - {self.followee.user.username}"
 
     def get_absolute_url(self):
         return reverse('user-detail', kwargs={'pk': self.follower.pk})

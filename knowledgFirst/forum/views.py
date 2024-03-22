@@ -7,8 +7,13 @@ def index(request):
     template = loader.get_template('index.html')
 
     latest_posts = Post.objects.all().order_by('-pub_date')[:5]
+    most_quoted = Post.objects.all().order_by('-likes')[:5]
+    most_active = Profile.objects.all().order_by('-replies')[:5]
+    
     context = {
-        'latest_posts': latest_posts
+        'latest_posts': latest_posts,
+        'most_quoted': most_quoted,
+        'most_active': most_active,
     }
     return HttpResponse(template.render(context=context, request=request))
 

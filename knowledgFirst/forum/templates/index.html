@@ -2,125 +2,110 @@
 {% load static %}
 {% block content %}
 
-<div class="container-fluid">
-    <!-- Highlights -->
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<div class="container-fluid ctnr1">
     <div class="row">
+        <!-- Highlights Section -->
         <div class="col-md-3 mb-3">
-            <div class="p-3 bg-light text-dark rounded">
-                <div id="hl">
-                    <h3 id="highlights">
-                        Highlights
-                    </h3>
-                </div>
+            <div class="p-3 bg-light text-dark rounded d-flex flex-column h-100">
+                <h3 id="highlights">
+                    Members
+                </h3>
+                <!-- Members -->
+                <table class="table table-hover border-bottom border-dark mb-5">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Mark</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Jacob</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td colspan="2">Larry the Bird</td>
+    </tr>
+  </tbody>
+</table>
+
                 <h5 class="font-italic">
                     <b>Most quoted topics</b>
                 </h5>
-                <ol>
-                    <li class="list-item">
-                        Lorem ipsum dolor sit amet
-                    </li>
-                    <li class="list-item">
-                        Consectetur adipiscing elit
-                    </li>
-                    <li class="list-item">
-                        Integer molestie lorem at massa
-                    </li>
-                    <li class="list-item">
-                        Facilisis in pretium nisl aliquet
-                    </li>
-                </ol>
+                {% if most_quoted.count == 0 %}
+                <p>No topics yet</p>
+                {% else %}
+                <ul>
+                    {% for topic in most_quoted %}
+                    <li><a href="{% url 'detail' id=topic.id %}">{{ topic.title }}</a></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
                 <h5 class="font-italic">
-                    <b>Most active members</b>
+                    <b>Most active users</b>
                 </h5>
-                <ol>
-                    <li class="list-item">
-                        Lorem ipsum dolor sit amet
-                    </li>
-                    <li class="list-item">
-                        Consectetur adipiscing elit
-                    </li>
-                    <li class="list-item">
-                        Integer molestie lorem at massa
-                    </li>
-                    <li class="list-item">
-                        Facilisis in pretium nisl aliquet
-                    </li>
-                </ol>
+                {% if most_active.count == 0 %}
+                <p>No users yet</p>
+                {% else %}
+                <ul>
+                    {% for user in most_active %}
+                    <li>{{ user.user.username }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
             </div>
         </div>
         <!-- General Informations -->
         <div class="col-md-9 mb-3">
             <div class="p-3 bg-light text-dark rounded">
-				<div class="forum-intro">
-					<h2>Welcome to our vibrant community!</h2>
-					<p>Whether you're a seasoned developer, a visionary designer, a creative soul, or simply someone who's passionate about the ever-evolving world of technology, you've arrived at the perfect destination. Here, amidst the digital tapestry of our forum, connections are forged, ideas take flight, and innovation finds its voice.</p>
-					<p>Within these virtual walls, curiosity reigns supreme. Feel free to wander through our corridors of knowledge, pose your burning questions, and bask in the collective wisdom of our diverse members. Remember, this is a sanctuary of learning and collaboration, where mutual respect and camaraderie guide our interactions.</p>
-					<p>So, whether you're here to seek guidance, share your expertise, or simply soak in the electrifying atmosphere of camaraderie, know that you've found your tribe. Together, let's embark on a journey of exploration, enlightenment, and boundless possibility. Welcome, dear friend, to our digital oasis.</p>
-				</div>
-                <div class="container">
+                <div class="forum-intro">
+                    <h2>Welcome to our vibrant community!</h2>
+                    <p>Whether you're a seasoned developer, a visionary designer, a creative soul, or simply someone
+                        who's passionate about the ever-evolving world of technology, you've arrived at the perfect
+                        destination. Here, amidst the digital tapestry of our forum, connections are forged, ideas
+                        take flight, and innovation finds its voice.</p>
+                    <p>Within these virtual walls, curiosity reigns supreme. Feel free to wander through our
+                        corridors of knowledge, pose your burning questions, and bask in the collective wisdom of
+                        our diverse members. Remember, this is a sanctuary of learning and collaboration, where
+                        mutual respect and camaraderie guide our interactions.</p>
+                    <p>So, whether you're here to seek guidance, share your expertise, or simply soak in the
+                        electrifying atmosphere of camaraderie, know that you've found your tribe. Together, let's
+                        embark on a journey of exploration, enlightenment, and boundless possibility. Welcome, dear
+                        friend, to our digital oasis.</p>
+                </div>
+                <div class="container-fluid">
                     <h3 class="header">Latest topics</h3>
                     <p>
-                        <ul class="topic-list">
-                            {% if latest_posts.count == 0 %}
-                                <li class="topic-item">No topics yet</li>
-                            {% else %}
-                                {% for post in latest_posts %}
-                                    <li class="topic-item"><a href="{% url 'detail' id=post.id %}">{{ post.title }}  -  {{ post.pub_date }}</a></li>
-                                {% endfor %}
-                            {% endif %}
-                        </ul>
+                    <ul class="topic-list">
+                        {% if latest_posts.count == 0 %}
+                        <li class="topic-item">No topics yet</li>
+                        {% else %}
+                        {% for post in latest_posts %}
+                        <li class="topic-item"><a href="{% url 'detail' id=post.id %}">{{ post.title }} - 
+                        {{ post.pub_date }}</a></li>
+                        {% endfor %}
+                        {% endif %}
+                    </ul>
                     </p>
                 </div>
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-3">
+
+        </div>
+    </div>
 </div>
-<style>
-	.forum-intro {
-		background-color: #fcfbe7;
-		padding: 20px;
-		border-radius: 10px;
-		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-		text-align: center;
-		font-family: Arial, sans-serif;
-        margin-bottom: 20px;
-	}
-	
-	.forum-intro h2 {
-		color: #333;
-	}
-	
-	.forum-intro p {
-		color: #666;
-		font-size: 16px;
-	}
-    /* styles.css */
-.container {
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-}
 
-.header {
-    color: #4CAF50;
-    font-family: 'Roboto', sans-serif;
-    font-size: 24px;
-    text-shadow: 1px 1px 2px #ddd;
-}
-
-.topic-list {
-    list-style-type: none;
-    padding-left: 0;
-}
-
-.topic-item {
-    margin-bottom: 10px;
-}
-
-.topic-item:not(:last-child) {
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-}
-</style>
 {% endblock %}

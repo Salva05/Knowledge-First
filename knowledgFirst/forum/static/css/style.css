@@ -4,16 +4,203 @@ html {
     padding: 0;
 }
 #highlights {
+	display: flex;
     margin-top: 10px;
     margin-bottom: 30px;
     font-family: monospace;
-    padding: 2px;
-}
-#hl {
-    background-color: antiquewhite;
+    padding: 5px;
+	text-align: center;
+	justify-content: center;
+	border: 1px solid lightgrey;
+	background-color: antiquewhite;
 }
 
 .row [class^="col-"] {
     padding-right: 5px;
     padding-left: 5px;
 }
+.ctnr1 {
+    background-color: light;
+}
+
+	/* Styling for the post container */
+	.post-container {
+		background-color: #fff;
+		padding: 30px;
+		margin: 20px;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		color: #333;
+	}
+
+	.no-comment {
+		padding: 30px;
+		margin: 20px;
+	}
+
+	/* Styling for the post title */
+	.post-title {
+		font-size: 2.5rem;
+		margin-bottom: 20px;
+		color: black;
+	}
+
+	/* Styling for the post metadata */
+	.post-meta {
+		font-size: 0.9rem;
+		color: #666;
+	}
+
+	/* Styling for the comment metadata */
+	.comment-meta {
+		font-size: 0.8rem;
+		color: #888;
+	}
+
+	/* Styling for the author */
+	.author {
+		margin-bottom: 20px;
+	}
+
+	/* Styling for the post content */
+	.post-content {
+		font-size: 1.1rem;
+		line-height: 1.8;
+	}
+
+	/* Styling for the comment list */
+	.comment-list {
+		padding-left: 0;
+		margin-top: 30px;
+		list-style: none;
+	}
+
+	/* Styling for each comment item */
+	.comment-item {
+		background-color: #eaeaea;
+		border-radius: 5px;
+		padding: 15px;
+		margin-bottom: 30px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.post-container p {
+		margin-bottom: 15px;
+	}
+
+	.post-container h4 {
+		margin-bottom: 10px;
+	}
+
+	.comments-title {
+		font-size: 1.8rem;
+		font-weight: bold;
+		color: #555;
+		margin-top: 50px;
+		margin-bottom: 30px;
+		font-family: 'monospace';
+	}
+
+	.lks {
+		font-size: 0.9rem;
+		font-style: italic;
+	}
+
+	.modal-content {
+		color: #333;
+	}
+
+	@media (min-width: 876px) {
+		#ctnr {
+			padding-top: 50px;
+			background-color: lightgrey;
+			padding: 60px;
+			min-height: 50vh;
+		}
+	}
+
+	@media (max-width: 600px) {
+		#ctnr {
+			padding-top: 0px;
+			background-color: lightgrey;
+			padding: 0px;
+		}
+	}
+
+	@media (min-width: 601px) {
+		#ctnr {
+			padding-top: 10px;
+			background-color: lightgrey;
+			padding: 10px;
+		}
+	}
+
+    .forum-intro {
+        background-color: #fcfbe7;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        font-family: Arial, sans-serif;
+        margin-bottom: 20px;
+    }
+
+    .forum-intro h2 {
+        color: #333;
+    }
+
+    .forum-intro p {
+        color: #666;
+        font-size: 16px;
+    }
+
+    /* styles.css */
+    .container {
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    .header {
+        color: #4CAF50;
+        font-family: 'Roboto', sans-serif;
+        font-size: 24px;
+        text-shadow: 1px 1px 2px #ddd;
+    }
+
+    .topic-list {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    .topic-item {
+        margin-bottom: 10px;
+    }
+
+    .topic-item:not(:last-child) {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+
+	@media (max-width: 991px) {
+		#userCard {
+			display: none;
+		}
+
+		#userCard2 {
+			display: block;
+			margin-top: 20px;
+		}
+	}
+
+	@media (min-width: 992px) {
+		#userCard {
+			display: block;
+		}
+
+		#userCard2 {
+			display: none;
+		}
+	}
+
+	
