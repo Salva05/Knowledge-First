@@ -9,11 +9,14 @@ def index(request):
     latest_posts = Post.objects.all().order_by('-pub_date')[:5]
     most_quoted = Post.objects.all().order_by('-likes')[:5]
     most_active = Profile.objects.all().order_by('-replies')[:5]
-    
+    members = Profile.objects.all()
+
+    print(members)
     context = {
         'latest_posts': latest_posts,
         'most_quoted': most_quoted,
         'most_active': most_active,
+        'members': members
     }
     return HttpResponse(template.render(context=context, request=request))
 
