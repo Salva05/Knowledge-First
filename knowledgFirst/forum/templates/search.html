@@ -12,20 +12,22 @@
     {% for topic in topics %}
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 my-3">   
         <div class="col">
-            <div class="card bg-light text-dark">
-                <div class="card-body">
-                    <h2 class="card-title"><a href="{% url 'detail' topic.id %}" class="text-dark">{{ topic.title|highlight_text:query }}</a></h2>
-                    <img src="{{ topic.author.avatar }}" alt="Topic Image" width="30" height="30" class="mb-2">
-                    <small class="card-text text-muted font-italic">By <a href="#" class="text-dark font-italic">{{ topic.author }}</a></small>
-                    <p class="card-text mt-3">
-                        {{ topic.content|highlight_text:query|truncatewords:30 }}
-                    </p>
+            <a href="{% url 'detail' topic.id %}" class="post-link">
+                <div class="card bg-light text-dark">
+                    <div class="card-body">
+                        <h2 class="card-title">{{ topic.title|highlight_text:query }}</h2>
+                        <img src="{{ topic.author.avatar }}" alt="Topic Image" width="30" height="30" class="mb-2">
+                        <small class="card-text text-muted font-italic">By <span class="font-italic">{{ topic.author }}</span></small>
+                        <p class="card-text mt-3">
+                            {{ topic.content|highlight_text:query|truncatewords:30 }}
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0">
+                        <small class="text-muted font-italic">{{ topic.total_replies }} replies | {{ topic.likes}} Likes | {{ topic.views }} Views<br></small>
+                        <small class="text-muted">Published on {{ topic.pub_date }}</small>
+                    </div>
                 </div>
-                <div class="card-footer bg-transparent border-top-0">
-                    <small class="text-muted font-italic">{{ topic.total_replies }} replies | {{ topic.likes}} Likes | {{ topic.views }} Views<br></small>
-                    <small class="text-muted">Published on {{ topic.pub_date }}</small>
-                </div>
-            </div>
+            </a>
         </div>
     </div>
     {% empty %}
@@ -48,6 +50,13 @@
     }
     .highlight {
         background-color: yellow; /* Change highlight color as needed */
+    }
+    .post-link {
+        text-decoration: none; /* Remove underline from link */
+        color: inherit; /* Inherit color from parent */
+    }
+    .post-link:hover {
+        text-decoration: none; /* Remove underline on hover */
     }
 </style>
 

@@ -27,7 +27,7 @@
                     <tbody>
                         {% for member in members %}
                         <tr>
-                        <td class="text-center">{{ member.user.username }}</td>
+                        <td class="text-center">{{ member.user.username }}<span class="text-muted font-italic"> - {{ member.grade }}</span></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -74,14 +74,14 @@
                 <h5 class="font-italic">
                     <b>Most quoted topics</b>
                 </h5>
-                {% if most_quoted.count == 0 %}
-                <p>No topics yet</p>
+                {% if most_quoted|length == 0 %}
+                <p class="text-muted font-italic">No topics yet</p>
                 {% else %}
                 <ul class="list-group">
                     {% for topic in most_quoted %}
                     <span class="border-bottom">
                     <li class="list-group-item">
-                        <a href="{% url 'detail' id=topic.id %}">{{ topic.title }}</a>
+                        <a href="{% url 'detail' id=topic.id %}">{{ topic.title }}</a><span class="text-muted font-italic"> - {{ topic.likes }} likes</span>
                     </li>
                 </span>
                     {% endfor %}
@@ -90,12 +90,12 @@
                 <h5 class="font-italic mt-5">
                     <b>Most active users</b>
                 </h5>
-                {% if most_active.count == 0 %}
-                <p>No users yet</p>
+                {% if most_active|length == 0 %}
+                <p class="text-muted font-italic">No users yet</p>
                 {% else %}
                 <ul class="list-group">
                     {% for user in most_active %}
-                    <span class="border-bottom"><li class="list-group-item">&#9733 {{ user.user.username }}</li></span>
+                    <span class="border-bottom"><li class="list-group-item">&#9733 {{ user.user.username }}<span class="text-muted font-italic"> - {{ user.replies }} Total replies</span></li></span>
                     {% endfor %}
                 </ul>
                 {% endif %}

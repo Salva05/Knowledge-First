@@ -56,6 +56,7 @@ class Profile(models.Model):
     interests = models.TextField()
     followers = models.IntegerField(default=0)
     following = models.IntegerField(default=0)
+    email = models.EmailField(unique=True)
     def display_name(self):
         return self.user.username + '<br> - <br>' + self.grade
     
@@ -63,7 +64,7 @@ class Profile(models.Model):
         return self.user.username
 
 class Post(models.Model):
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=70)
     content = models.TextField()
     pub_date = models.DateTimeField(auto_now_add=True)
     last_modify = models.DateTimeField(auto_now=True)
