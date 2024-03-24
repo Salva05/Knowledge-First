@@ -5,9 +5,18 @@ from django.contrib.auth.models import User
 CATEGORY_CHOICES = [
     ('Sport', 'Sport'),
     ('Nature', 'Nature'),
-    ('IT', 'IT'),
     ('Food', 'Food'),
-    ('Fashion', 'Fashion')
+    ('Fashion', 'Fashion'),
+    ('Animals', 'Animals'),
+    ('Technology', 'Technology'),
+    ('Science', 'Science'),
+    ('Culture', 'Culture'),
+    ('Music', 'Music'),
+    ('Entertainment', 'Entertainment'),
+    ('History', 'History'),
+    ('Fiction', 'Fiction'),
+    ('Art', 'Art'),
+    ('Other', 'Other')
 ]
 
 POST_STATE_CHOICES = [
@@ -21,7 +30,7 @@ GRADES_CHOICES = [
     ('Active Participant', 'Active Participant'),
     ('Community Leader', 'Community Leader'),
     ('Superuser', 'Superuser'),
-    ('Moderator/Administrator', 'Moderator/Administrator'),
+    ('Moderator', 'Moderator'),
 ]
 
 DEFAULT_GRADE = GRADES_CHOICES[0][0]  # 'Novice'
@@ -65,6 +74,9 @@ class Post(models.Model):
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, blank=True, null=True)
     views = models.IntegerField(default=0)
     likes = models.IntegerField(default=0)
+
+    def get_categories():
+        return [category for category, other in CATEGORY_CHOICES]
 
     def delete(self, *args, **kwargs):
         self.update_posts()

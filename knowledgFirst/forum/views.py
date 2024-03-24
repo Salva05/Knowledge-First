@@ -10,22 +10,44 @@ def index(request):
     most_quoted = Post.objects.all().order_by('-likes')[:5]
     most_active = Profile.objects.all().order_by('-replies')[:5]
     members = Profile.objects.all()
-
-    print(members)
+    categories = Post.get_categories()
+    
     context = {
         'latest_posts': latest_posts,
         'most_quoted': most_quoted,
         'most_active': most_active,
-        'members': members
+        'members': members,
+        'categories': categories
     }
+    
     return HttpResponse(template.render(context=context, request=request))
 
 def elenco(request):
     template = loader.get_template('elenco.html')
     posts = Post.objects.all()
-
+    
     context = {
         'posts': posts
+    }
+    return HttpResponse(template.render(context, request))
+
+def specific_list(request, type):
+    template = loader.get_template('specific_list.html')
+    topics = Post.objects.all().filter(category=type)
+    
+    context = {
+        'topics': topics,
+    }
+    return HttpResponse(template.render(context, request))
+
+def search(request):
+    template = loader.get_template('search.html')
+    query = request.GET.get('q')
+    topics = Post.objects.filter(title__icontains=query) | Post.objects.filter(content__icontains=query)
+    
+    context = {
+        'topics': topics,
+        'query': query
     }
     return HttpResponse(template.render(context, request))
 

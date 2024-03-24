@@ -51,14 +51,12 @@
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Contents
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{% url 'elenco' %}">Sport</a>
-                            <a class="dropdown-item" href="{% url 'elenco' %}">Nature</a>
-                            <a class="dropdown-item" href="{% url 'elenco' %}">Food</a>
-                            <a class="dropdown-item" href="{% url 'elenco' %}">Fashion</a>
-                            <a class="dropdown-item" href="{% url 'elenco' %}">IT</a>
+                        <div class="dropdown-menu" style="max-height: 200px; overflow-y: auto;" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{% url 'elenco' %}">See all</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
+                            {% for category in categories %}
+                            <a class="dropdown-item" href="{% url 'specific_list' type=category %}">{{ category }}</a>
+                            {% endfor %}
                         </div>
                     </li>
                     <li class="nav-item">
@@ -67,12 +65,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Login</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Settings</a>
-                    </li>
                 </ul>
-                <form class="form-inline mr-auto">
-                    <input class="form-control mr-sm-2" type="text">
+                <form class="form-inline mr-auto" action="{% url 'search' %}" method="GET">
+                    <input class="form-control mr-sm-2" type="text" name="q" placeholder="Search" Required>
                     <button class="btn btn-primary my-2 my-sm-0" type="submit">
                         Search
                     </button>
