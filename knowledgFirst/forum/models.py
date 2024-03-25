@@ -47,7 +47,7 @@ class Grade(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(blank=False, upload_to='static/avatars/', default='static/avatars/user.png')
+    avatar = models.ImageField(upload_to='static/avatars/', default='static/avatars/user.png')
     last_login = models.DateTimeField(auto_now=True)
     grade = models.CharField(max_length=30, default=DEFAULT_GRADE)
     total_posts = models.IntegerField(default=0)

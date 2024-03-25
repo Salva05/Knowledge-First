@@ -29,6 +29,7 @@ def index(request):
         'most_active': most_active,
         'members': members,
         'categories': categories,
+        'user_authenticated': user_authenticated
     }
     
     return HttpResponse(template.render(context=context, request=request))
@@ -97,7 +98,8 @@ def signup(request):
 
             # Create the profile for the user
             avatar = request.FILES.get('avatar', None)
-            if avatar == "":
+            print(avatar)
+            if avatar == None:
                 avatar = 'static/avatars/user.png'
                 
             interests = request.POST.get('interests', None)
