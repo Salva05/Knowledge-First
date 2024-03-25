@@ -2,94 +2,132 @@
 {% load static %}
 
 {% block back %}
-    <a href="#" onclick="history.back();" class="btn btn-outline-light ml-2">Back</a>
+    <a href="#" onclick="history.back();" class="btn btn-outline-dark ml-2">Back</a>
 {% endblock %}
 
 {% block content %}
     <style>
-        .container-user-profile {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 30px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+        /* Custom styles */
+        .user-profile-container {
+            padding: 20px;
+        }
+
+        .user-profile-card {
+            background-color: #ffffff; /* White background */
+            color: #000000; /* Black text color */
             border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-            color: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
 
-        #user-profile {
-            font-size: 48px;
-            margin-bottom: 40px;
-            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+        .user-profile-header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
         }
 
-        .info {
-            margin-top: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+        .user-profile-header h1 {
+            font-size: 28px;
+            margin-bottom: 0;
+        }
+
+        .user-profile-info {
+            padding: 20px;
         }
 
         .info-item {
-            margin: 10px;
-            padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            text-align: left;
-            width: 300px;
+            margin-bottom: 20px;
         }
 
         .info-item span {
             font-weight: bold;
-            color: #fff;
-            font-size: 18px;
+            color: #555555;
         }
 
-        .info-item .value {
-            color: #fff;
-            font-size: 18px;
+        @media screen and (min-width: 576px) {
+            .user-profile-card {
+                margin: 0 auto;
+                max-width: 500px;
+            }
         }
 
-        .info-item .value a {
-            color: #ffd166;
-            text-decoration: none;
+        @media screen and (min-width: 768px) {
+            .user-profile-card {
+                max-width: 700px;
+            }
         }
 
-        .info-item .value a:hover {
-            text-decoration: underline;
+        @media screen and (min-width: 992px) {
+            .user-profile-card {
+                max-width: 900px;
+            }
+        }
+
+        @media screen and (min-width: 1200px) {
+            .user-profile-card {
+                max-width: 1100px;
+            }
+        }
+
+        /* Adjust email text size for small screens */
+        @media screen and (max-width: 340px) {
+            .info-item.email .value {
+                font-size: 14px;
+            }
         }
     </style>
 
-    <div class="container-user-profile">
+    <div class="container user-profile-container">
         {% if message %}
             <div class="alert alert-success" role="alert">
                 {{ message }}
             </div>
         {% else %}
-            <h1 id="user-profile">Personal Area</h1>
-        
-            <div class="info">
-                <div class="info-item">
-                    <span>User's Topics:</span>
-                    <span class="value">{{ user_profile.total_posts }}</span>
+            <div class="user-profile-card">
+                <div class="user-profile-header">
+                    <h1>Personal Area</h1>
                 </div>
-                <div class="info-item">
-                    <span>User's Replies:</span>
-                    <span class="value">{{ user_profile.replies }}</span>
-                </div>
-                <div class="info-item">
-                    <span>User's Followers:</span>
-                    <span class="value">{{ user_profile.followers }}</span>
-                </div>
-                <div class="info-item">
-                    <span>User's Followees:</span>
-                    <span class="value">{{ user_profile.following }}</span>
-                </div>
-                <div class="info-item">
-                    <span>User's Grade:</span>
-                    <span class="value">{{ user_profile.grade }}</span>
+                <div class="user-profile-info">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <span>Username:</span>
+                                <span class="value">{{ user_profile.user.username }}</span>
+                            </div>
+                            <div class="info-item email">
+                                <span>Email:</span>
+                                <span class="value">{{ user_profile.email }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span>Join date:</span>
+                                <span class="value">{{ user_profile.user.date_joined }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span>Grade:</span>
+                                <span class="value">{{ user_profile.grade }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <span>Total Topics:</span>
+                                <span class="value">{{ user_profile.total_posts }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span>Total Replies:</span>
+                                <span class="value">{{ user_profile.replies }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span>Followers:</span>
+                                <span class="value">{{ user_profile.followers }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span>Followees:</span>
+                                <span class="value">{{ user_profile.following }}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         {% endif %}
