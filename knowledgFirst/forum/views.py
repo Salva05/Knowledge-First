@@ -210,6 +210,8 @@ def profile(request):
     return HttpResponse(template.render(context, request))
 
 def new_topic(request):
+    user_authenticated = request.user.is_authenticated
+
     if not request.user.is_authenticated:
         return redirect('required_signin')
     if request.method == 'POST':
@@ -219,7 +221,9 @@ def new_topic(request):
         author = request.user
         post = Post.objects.create(title=title, content=content, category=category, author=author)
         return redirect('detail', id=post.id)
-    return render(request, 'new_topic.html', {'categories': Post.get_categories()})
+    return render(request, 'new_topic.html', {'categories': Post.get_categories(), 'user_authenticated': user_authenticated})
 
 def required_signin(request):
-    return render(request, 'required_signin.html')
+    user_authenticated = request.user.is_authenticated
+
+    return render(request, 'required_signin.html', {'categories': Post.get_categories(), 'user_authenticated': user_authenticated})
