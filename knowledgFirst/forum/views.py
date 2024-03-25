@@ -119,7 +119,7 @@ def signup(request):
 
             # Create the profile for the user
             avatar = request.FILES.get('avatar', None)
-            print(avatar)
+            
             if avatar == None:
                 avatar = 'static/avatars/user.png'
                 
@@ -134,6 +134,9 @@ def signup(request):
                 email=email
             ) 
 
+            #sign in the user
+            login(request, user)
+
             return redirect('signup_success')
     else:
         form = UserCreationForm()
@@ -142,8 +145,8 @@ def signup(request):
 def signup_success(request):
     categories = Post.get_categories()
     user_authenticated = request.user.is_authenticated
-
-    return render(request, 'signup_success.html', {'categories': categories, 'user_authenticated': user_authenticated})
+    user = request.user
+    return render(request, 'signup_success.html', {'categories': categories, 'user_authenticated': user_authenticated, 'user': user})
 
 def signin(request):
     categories = Post.get_categories()
@@ -205,3 +208,18 @@ def profile(request):
         }
 
     return HttpResponse(template.render(context, request))
+
+def new_topic(request):
+    if not request.user.is_authenticated:
+        return redirect('required_signin')
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        category = request.POST.get('category')
+        author = request.user
+        post = Post.objects.create(title=title, content=content, category=category, author=author)
+        return redirect('detail', id=post.id)
+    return render(request, 'new_topic.html', {'categories': Post.get_categories()})
+
+def required_signin(request):
+    return render(request, 'required_signin.html')

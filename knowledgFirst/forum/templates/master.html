@@ -76,9 +76,11 @@
                         <a class="nav-link" href="{% url 'signin' %}">Sign in</a>
                     </li>
                     {% endif %}
-                    <button class="btn btn-success my-sm-0 newTopic" type="submit">
-                        &#65291 New Topic
-                    </button>
+                    <form action="{% url 'new_topic' %}" method="GET">
+                        <button class="btn btn-success my-sm-0 newTopic" type="submit">
+                            &#65291 New Topic
+                        </button>
+                    </form>
                 </ul>
                 <form class="form-inline mr-auto my-2" action="{% url 'search' %}" method="GET">
                     <input class="form-control mr-sm-2" type="text" name="q" placeholder="Search" Required>
@@ -95,6 +97,8 @@
     {% block content %}
     {% endblock %}
 
+    {% block signout %}
+    {% endblock %}
     <!-- Footer -->
     <div class="row">
         <div class="col-md-12">

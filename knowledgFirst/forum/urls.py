@@ -12,4 +12,6 @@ urlpatterns = [
     path('signin/', views.signin, name='signin'),
     path('signout/', views.signout, name='signout'),
     path('profile/', views.profile, name='profile'),
+    path('new_topic/', views.new_topic, name='new_topic'),
+    path('required_signin/', views.required_signin, name='required_signin'),
 ]
