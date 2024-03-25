@@ -54,18 +54,18 @@
                 </div>
                 <div class="container-fluid">
                     <h3 class="header">Latest topics</h3>
+                    {% if latest_posts.count == 0 %}
+                    <p class="text-muted">No topics yet</p>
+                    {% else %}
                     <p>
                     <ul class="topic-list">
-                        {% if latest_posts.count == 0 %}
-                        <li class="topic-item">No topics yet</li>
-                        {% else %}
                         {% for post in latest_posts %}
                         <li class="topic-item"><a href="{% url 'detail' id=post.id %}">{{ post.title }} - 
                         {{ post.pub_date }}</a></li>
                         {% endfor %}
-                        {% endif %}
                     </ul>
                     </p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -75,7 +75,7 @@
                     <b>Most quoted topics</b>
                 </h5>
                 {% if most_quoted|length == 0 %}
-                <p class="text-muted font-italic">No topics yet</p>
+                <p class="text-muted">No topics yet</p>
                 {% else %}
                 <ul class="list-group">
                     {% for topic in most_quoted %}
@@ -91,7 +91,7 @@
                     <b>Most active users</b>
                 </h5>
                 {% if most_active|length == 0 %}
-                <p class="text-muted font-italic">No users yet</p>
+                <p class="text-muted">No users yet</p>
                 {% else %}
                 <ul class="list-group">
                     {% for user in most_active %}

@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import EmailValidator
 from django.core.exceptions import ValidationError
+from django.contrib.auth import login
 from .models import *
 
 def index(request):
@@ -20,12 +21,14 @@ def index(request):
     members = Profile.objects.all()
     categories = Post.get_categories()
 
+    user_authenticated = request.user.is_authenticated
+
     context = {
         'latest_posts': latest_posts,
         'most_quoted': most_quoted,
         'most_active': most_active,
         'members': members,
-        'categories': categories
+        'categories': categories,
     }
     
     return HttpResponse(template.render(context=context, request=request))
@@ -94,6 +97,9 @@ def signup(request):
 
             # Create the profile for the user
             avatar = request.FILES.get('avatar', None)
+            if avatar == "":
+                avatar = 'static/avatars/user.png'
+                
             interests = request.POST.get('interests', None)
             email = request.POST.get('email')
 
@@ -112,3 +118,24 @@ def signup(request):
 
 def signup_success(request):
     return render(request, 'signup_success.html')
+
+def signin(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        if not username or not password:
+            return render(request, 'signin.html', {'error': 'Username and password are required'})
+
+        if not User.objects.filter(username=username).exists():
+            return render(request, 'signin.html', {'error': 'Username not found'})
+        
+        user = User.objects.get(username=username)
+
+        if not user.check_password(password):
+            return render(request, 'signin.html', {'error': 'Incorrect password'})
+        
+        login(request, user)
+
+        return redirect('index')
+    return render(request, 'signin.html')

@@ -8,7 +8,7 @@
         <h3>Register</h3>
     </div>
     <div class="card-body">
-        <form action="{% url 'signup' %}" method="POST" class="needs-validation" novalidate autocomplete="off">
+        <form action="{% url 'signup' %}" method="POST" class="needs-validation" novalidate autocomplete="off" enctype="multipart/form-data">
             {% csrf_token %}
         
             <!-- Display form fields -->
@@ -43,7 +43,7 @@
             </div>
             <div class="form-group">
                 <label for="id_avatar">Avatar</label>
-                <input type="file" name="avatar" class="form-control-file" id="id_avatar">
+                <input type="file" name="avatar" class="form-control-file" id="id_avatar" default="">
             </div>
             <div class="form-group">
                 <label for="id_interests">Interests</label>
