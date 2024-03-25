@@ -174,6 +174,8 @@ def signout(request):
     return redirect('index')
 
 def profile(request):
+    user_authenticated = request.user.is_authenticated
+    
     template = loader.get_template('profile.html')
     categories = Post.get_categories()
 
@@ -192,12 +194,14 @@ def profile(request):
         context = {
             'categories': categories,
             'is_admin': is_admin,
-            'message': 'You are an admin'
+            'message': 'You are an admin',
+            'user_authenticated': user_authenticated,
         }
     else:
         context = {
             'categories': categories,
             'user_profile': user_profile,
+            'user_authenticated': user_authenticated,
         }
 
     return HttpResponse(template.render(context, request))

@@ -1,6 +1,10 @@
 {% extends "master.html" %}
 {% load static %}
 
+{% block back %}
+<a href="#" onclick="history.back();" class="btn btn-outline-light ml-2">Back</a>
+{% endblock %}
+
 {% block content %}
 <style>
     /* Custom CSS styles */
@@ -44,7 +48,7 @@
 </style>
 <div class="container">
     <div class="row justify-content-center mt-5">
-        <div class="col-md-6">
+        <div class="col-md-8 col-lg-6">
             <div class="card shadow-lg border-0">
                 <div class="card-header bg-primary text-white">
                     <h3 class="mb-0">Register</h3>

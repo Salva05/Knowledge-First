@@ -2,8 +2,13 @@
 {% load static %}
 {% load custom_filters %}
 
+{% block back %}
+<a href="#" onclick="history.back();" class="btn btn-outline-light ml-2">Back</a>
+{% endblock %}
+
 {% block content %}
-<div class="container-fluid bg-dark text-white py-5">
+<div class="container-fluid bg-dark text-white py-1">
+<!-- back button -->
     {% if topics.count == 1 %}
     <h1 class="display-4">{{ topics.count }} Result for <span class="font-italic text-light">"{{ query }}"</span></h1>
     {% else %}
