@@ -29,7 +29,7 @@
 						class="text-secondary font-italic mr-2">{{ post.author.grade }}<span></p>
 			</div>
 		</div>
-		<div class="col-xs-9 col-lg-8 post-container mx-2 px-4 d-flex flex-column">
+<div class="col-xs-9 col-lg-8 post-container mx-2 px-4 d-flex flex-column">
     <div class="post-meta">Published on {{ post.pub_date }}</div>
     <!-- Post Title -->
     <h1 class="post-title">{{ post.title }}</h1>
@@ -47,9 +47,7 @@
 
 	{% if replies.count == 0 %}
 	<div class="row justify-content-center">
-		<div class="col-lg-8 px-4 alert alert-secondary no-comment" role="alert">
-			No replies yet. Be the first to reply!
-		</div>
+		<h2 class="text-muted font-italic mt-5">No replies yet. Be the first to reply!</h2>
 	</div>
 	{% else %}
 	<h2 class="comments-title text-center">Replies:</h2>

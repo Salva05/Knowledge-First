@@ -4,6 +4,8 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import EmailValidator
 from django.core.exceptions import ValidationError
+from .forms import CategoryChoices
+from django.db.models import F
 from django.contrib.auth import login, logout
 
 from .models import *
@@ -218,8 +220,13 @@ def new_topic(request):
         title = request.POST.get('title')
         content = request.POST.get('content')
         category = request.POST.get('category')
-        author = request.user
+        author = request.user.profile
         post = Post.objects.create(title=title, content=content, category=category, author=author)
+
+        # increace total topics of the user by one
+        author.total_posts += F('total_posts') + 1
+        author.save()
+        
         return redirect('detail', id=post.id)
     return render(request, 'new_topic.html', {'categories': Post.get_categories(), 'user_authenticated': user_authenticated})
 
