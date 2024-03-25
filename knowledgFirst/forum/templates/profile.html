@@ -1,0 +1,93 @@
+{% extends "master.html" %}
+{% load static %}
+
+{% block content %}
+    <style>
+        .container-user-profile {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            color: #fff;
+            text-align: center;
+        }
+
+        #user-profile {
+            font-size: 48px;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .info {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .info-item {
+            margin: 10px;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-align: left;
+            width: 300px;
+        }
+
+        .info-item span {
+            font-weight: bold;
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .info-item .value {
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .info-item .value a {
+            color: #ffd166;
+            text-decoration: none;
+        }
+
+        .info-item .value a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+    <div class="container-user-profile">
+        {% if message %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+        {% else %}
+            <h1 id="user-profile">Personal Area</h1>
+        
+            <div class="info">
+                <div class="info-item">
+                    <span>User's Topics:</span>
+                    <span class="value">{{ user_profile.total_posts }}</span>
+                </div>
+                <div class="info-item">
+                    <span>User's Replies:</span>
+                    <span class="value">{{ user_profile.replies }}</span>
+                </div>
+                <div class="info-item">
+                    <span>User's Followers:</span>
+                    <span class="value">{{ user_profile.followers }}</span>
+                </div>
+                <div class="info-item">
+                    <span>User's Followees:</span>
+                    <span class="value">{{ user_profile.following }}</span>
+                </div>
+                <div class="info-item">
+                    <span>User's Grade:</span>
+                    <span class="value">{{ user_profile.grade }}</span>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
