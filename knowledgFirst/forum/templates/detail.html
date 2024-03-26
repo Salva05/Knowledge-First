@@ -19,36 +19,47 @@
 			<div class="card-body py-1 px-1 text-dark">
 				<img src="../{{ post.author.avatar }}" alt="user image" width="40px" height="40px">
 				<strong class="mr-2">{{ post.author }}</strong> - <span class="text-secondary font-italic mr-2">
-				{{ post.author.grade }}<span>
+					{{ post.author.grade }}<span>
 			</div>
 		</div>
 		<div class="col-xs-3 card post-container py-0 mx-0 px-0" id="userCard" style="width: 10rem;">
 			<img class="card-img-top" src="../{{ post.author.avatar }}" alt="Card image cap">
 			<div class="card-body">
-				<p class="card-text text-center" style="color: black"><strong>{{ post.author }}</strong><br>-<br><span
-						class="text-secondary font-italic mr-2">{{ post.author.grade }}<span></p>
+				<p class="card-text text-center" style="color: black"><strong>{{ post.author }}</strong><br>-<br>
+					<span class="text-secondary font-italic mr-2">{{ post.author.grade }}<span>
+				</p>
 			</div>
 		</div>
-<div class="col-xs-9 col-lg-8 post-container mx-2 px-4 d-flex flex-column">
-    <div class="post-meta">Published on {{ post.pub_date }}</div>
-    <!-- Post Title -->
-    <h1 class="post-title">{{ post.title }}</h1>
-    <!-- Post Metadata -->
-    <!-- Post Content -->
-    <div class="post-content mb-4">
-        {{ post.content | safe }}
-    </div>
-    <div class="mt-auto text-muted lks">
-        <a href="#" data-toggle="modal" data-target="#exampleModalCenter">{{ post.likes }} Likes -</a>
-        <span>{{ post.views }} Views</span>
-    </div>
-</div>
+		<div class="col-xs-9 col-lg-8 post-container mx-2 px-4 d-flex flex-column">
+			<div class="post-meta">Published on {{ post.pub_date }}</div>
+			<!-- Post Title -->
+			<h1 class="post-title">{{ post.title }}</h1>
+			<!-- Post Metadata -->
+			<!-- Post Content -->
+			<div class="post-content mb-4">
+				{{ post.content | safe }}
+			</div>
+			<div class="mt-auto text-muted lks">
+				<a href="#" data-toggle="modal" data-target="#exampleModalCenter">{{ post.likes }} Likes </a>-
+				<span>{{ post.views }} Views</span>
+			</div>
+			<div class="mt-auto text-muted lks position-absolute bottom-0 end-0 mr-4">
+				{% if user_authenticated %}
+				<a href="#userRpl" onclick="reply()">Reply</a> <span class="text-muted mx-1">|</span>
+				<a class="re" href="#">Like</a>
+				{% endif %}
+			</div>
+		</div>
 	</div>
 
 	{% if replies.count == 0 %}
 	<div class="row justify-content-center">
-		<h2 class="text-muted font-italic mt-5">No replies yet. Be the first to reply!</h2>
+		{% if user_authenticated %}
+		<h2 class="text-muted font-italic my-5 px-5">No replies yet. Be the first to reply!</h2>
+		{% else %}
+		<h2 class="text-muted font-italic my-5 px-5">No replies yet. Sign in and be the first to reply!</h2>
 	</div>
+	{% endif %}
 	{% else %}
 	<h2 class="comments-title text-center">Replies:</h2>
 	{% for reply in replies %}
@@ -57,7 +68,7 @@
 			<div class="card-body py-1 px-1 text-dark">
 				<img src="../{{ reply.author.avatar }}" alt="user image" width="40px" height="40px">
 				<strong class="mr-2">{{ reply.author }}</strong> - <span class="text-secondary font-italic mr-2">
-				{{ reply.author.grade }}<span>
+					{{ reply.author.grade }}<span>
 			</div>
 		</div>
 		<div class="card post-container py-0 mx-0 px-0" id="userCard" style="width: 10rem;">
@@ -81,6 +92,65 @@
 	</div>
 	{% endfor %}
 	{% endif %}
+
+	<!-- Reply of the user -->
+	{% if user_authenticated %}
+	<div class="col-12 row justify-content-center mx-0 px-0" id="userRpl">
+		<!-- Profile image for wide screens -->
+		<div class="card" id="userCard2">
+			<div class="card-body py-1 px-1 text-dark">
+				<img src="../{{ profile.avatar }}" alt="user image" width="40px" height="40px">
+				<strong class="mr-2">{{ profile.user.username }}</strong> - <span
+					class="text-secondary font-italic mr-2">
+					{{ profile.grade }}<span>
+			</div>
+		</div>
+		<!-- Profile image for smaller screens -->
+		<div class="card post-container py-0 mx-0 px-0" id="userCard" style="width: 10rem;">
+			<img class="card-img-top" src="../{{ profile.avatar }}" alt="Card image cap">
+			<div class="card-body">
+				<p class="card-text text-center" style="color: black"><strong>{{ profile.user.username }}</strong><br>-<br>
+					<span class="text-secondary font-italic mr-2">{{ profile.grade }}<span>
+				</p>
+			</div>
+		</div>
+		<!-- The post to be replied -->
+		<!-- Main body of the reply -->
+		<div class="col-lg-8 post-container px-4 mx-2 d-flex flex-column" id="">
+			<div class="row">
+				{% if post.content|wordcount > 80 %}
+				<div class="col-md-12 bg-light border-left border-dark mb-0 py-3 px-3 text-dark" id="replyPst1">
+					To <b>{{ post.author }}</b><br><br>
+					{{ post.content|truncatewords:80 }}
+				</div>
+				<div class="col-md-12 bg-light border-left border-dark mb-0 py-3 px-3 text-dark" id="replyPst2">
+					To <b>{{ post.author }}</b><br><br>
+					{{ post.content }}
+				</div>
+				<button class="col-md-12 mb-4" style="border: 0.5px solid black" id="expandButton1" onclick="expand()">
+					&#129131
+				</button>
+				<button class="col-md-12 mb-4" style="border: 0.5px solid black" id="expandButton2" onclick="expand()">
+					&#129129
+				</button>
+				{% else %}
+				<div class="col-md-12 bg-light border-left border-dark mb-5 py-3 px-3 text-dark" id="replyPst">
+					To <b>{{ post.author }}</b><br><br>
+					{{ post.content }}
+				</div>
+				{% endif %}
+			</div>
+			<form action="" method="GET">
+				<div class="row">
+					<textarea class="form-control" id="replyTextArea" rows="3"
+						placeholder="Write your reply..."></textarea>
+					<button class="btn btn-primary my-2" id="publishReplyBtn">Publish Reply</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	{% endif %}
+
 </div>
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
@@ -107,6 +177,74 @@
 	</div>
 </div>
 <style>
+	#expandButton,
+	#expandButton1,
+	#expandButton2 {
+		background-color: white;
+		transition: background-color 0.4s;
+	}
+
+	#expandButton:hover,
+	#expandButton1:hover,
+	#expandButton2:hover {
+		background-color: lightgrey;
+		cursor: pointer;
+	}
+
+	#replyPst2 {
+		display: none;
+	}
+
+	#expandButton2 {
+		display: none;
+	}
+
+	#userRpl {
+		display: none;
+	}
+
+	#replyPst {
+		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+	}
+
+	.replybtn {
+		background-color: #4CAF50;
+		color: white;
+		padding: 5px 10px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 16px;
+		border-radius: 3px;
+		transition-duration: 0.4s;
+		cursor: pointer;
+		border: none;
+		/* Initially no border */
+	}
+
+	.replybtn:hover {
+		background-color: #45a049;
+		border: 1px solid black;
+		/* Border appears on hover */
+	}
+
+	.post-container {
+		position: relative;
+	}
+
+	.position-absolute {
+		position: absolute;
+	}
+
+	.bottom-0 {
+		bottom: 0;
+		margin-bottom: 30px;
+	}
+
+	.end-0 {
+		right: 0;
+	}
+
 	.modal-content {
 		color: #333;
 	}
@@ -136,46 +274,46 @@
 		}
 	}
 
-    .forum-intro {
-        background-color: #fcfbe7;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        font-family: Arial, sans-serif;
-        margin-bottom: 20px;
-    }
+	.forum-intro {
+		background-color: #fcfbe7;
+		padding: 20px;
+		border-radius: 10px;
+		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+		text-align: center;
+		font-family: Arial, sans-serif;
+		margin-bottom: 20px;
+	}
 
-    .forum-intro h2 {
-        color: #333;
-    }
+	.forum-intro h2 {
+		color: #333;
+	}
 
-    .forum-intro p {
-        color: #666;
-        font-size: 16px;
-    }
+	.forum-intro p {
+		color: #666;
+		font-size: 16px;
+	}
 
-    /* styles.css */
-    .container {
-        background-color: #f9f9f9;
-        border-radius: 10px;
-        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-    }
+	/* styles.css */
+	.container {
+		background-color: #f9f9f9;
+		border-radius: 10px;
+		box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+		padding: 20px;
+	}
 
-    .topic-list {
-        list-style-type: none;
-        padding-left: 0;
-    }
+	.topic-list {
+		list-style-type: none;
+		padding-left: 0;
+	}
 
-    .topic-item {
-        margin-bottom: 10px;
-    }
+	.topic-item {
+		margin-bottom: 10px;
+	}
 
-    .topic-item:not(:last-child) {
-        border-bottom: 1px solid #eee;
-        padding-bottom: 10px;
-    }
+	.topic-item:not(:last-child) {
+		border-bottom: 1px solid #eee;
+		padding-bottom: 10px;
+	}
 
 	@media (max-width: 991px) {
 		#userCard {
@@ -197,87 +335,112 @@
 			display: none;
 		}
 	}
-	
-		/* Styling for the post container */
-		.post-container {
-			background-color: #fff;
-			padding: 30px;
-			margin: 20px;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			color: #333;
-		}
-	
-		.no-comment {
-			padding: 30px;
-			margin: 20px;
-		}
-	
-		/* Styling for the post title */
-		.post-title {
-			font-size: 2.5rem;
-			margin-bottom: 20px;
-			color: black;
-		}
-	
-		/* Styling for the post metadata */
-		.post-meta {
-			font-size: 0.9rem;
-			color: #666;
-		}
-	
-		/* Styling for the comment metadata */
-		.comment-meta {
-			font-size: 0.8rem;
-			color: #888;
-		}
-	
-		/* Styling for the author */
-		.author {
-			margin-bottom: 20px;
-		}
-	
-		/* Styling for the post content */
-		.post-content {
-			font-size: 1.1rem;
-			line-height: 1.8;
-		}
-	
-		/* Styling for the comment list */
-		.comment-list {
-			padding-left: 0;
-			margin-top: 30px;
-			list-style: none;
-		}
-	
-		/* Styling for each comment item */
-		.comment-item {
-			background-color: #eaeaea;
-			border-radius: 5px;
-			padding: 15px;
-			margin-bottom: 30px;
-			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-		}
-	
-		.post-container p {
-			margin-bottom: 15px;
-		}
-	
-		.post-container h4 {
-			margin-bottom: 10px;
-		}
-	
-		.comments-title {
-			font-size: 1.8rem;
-			font-weight: bold;
-			color: #555;
-			margin-top: 50px;
-			margin-bottom: 30px;
-			font-family: 'monospace';
-		}
-	
-		.lks {
-			font-size: 0.9rem;
-			font-style: italic;
-		}	
+
+	/* Styling for the post container */
+	.post-container {
+		background-color: #fff;
+		padding: 30px;
+		margin: 20px;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		color: #333;
+	}
+
+	.no-comment {
+		padding: 30px;
+		margin: 20px;
+	}
+
+	/* Styling for the post title */
+	.post-title {
+		font-size: 2.5rem;
+		margin-bottom: 20px;
+		color: black;
+	}
+
+	/* Styling for the post metadata */
+	.post-meta {
+		font-size: 0.9rem;
+		color: #666;
+	}
+
+	/* Styling for the comment metadata */
+	.comment-meta {
+		font-size: 0.8rem;
+		color: #888;
+	}
+
+	/* Styling for the author */
+	.author {
+		margin-bottom: 20px;
+	}
+
+	/* Styling for the post content */
+	.post-content {
+		font-size: 1.1rem;
+		line-height: 1.8;
+	}
+
+	/* Styling for the comment list */
+	.comment-list {
+		padding-left: 0;
+		margin-top: 30px;
+		list-style: none;
+	}
+
+	/* Styling for each comment item */
+	.comment-item {
+		background-color: #eaeaea;
+		border-radius: 5px;
+		padding: 15px;
+		margin-bottom: 30px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.post-container p {
+		margin-bottom: 15px;
+	}
+
+	.post-container h4 {
+		margin-bottom: 10px;
+	}
+
+	.comments-title {
+		font-size: 1.8rem;
+		font-weight: bold;
+		color: #555;
+		margin-top: 50px;
+		margin-bottom: 30px;
+		font-family: 'monospace';
+	}
+
+	.lks {
+		font-size: 0.9rem;
+		font-style: italic;
+	}
 </style>
+<script>
+	let opened = false;
+
+	function reply() {
+		document.getElementById('userRpl').style.display = 'flex'
+	}
+	function expand() {
+		if (!opened) {
+			document.getElementById('replyPst1').style.display = 'none';
+			document.getElementById('replyPst2').style.display = 'block';
+
+			document.getElementById('expandButton1').style.display = 'none';
+			document.getElementById('expandButton2').style.display = 'block';
+			opened = true;
+		} else {
+			document.getElementById('replyPst1').style.display = 'block';
+			document.getElementById('replyPst2').style.display = 'none';
+
+			document.getElementById('expandButton1').style.display = 'block';
+			document.getElementById('expandButton2').style.display = 'none';
+			opened = false;
+		}
+
+	}
+</script>
 {% endblock %}

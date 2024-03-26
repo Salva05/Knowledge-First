@@ -85,13 +85,20 @@ def detail(request, id):
 
     replies = Reply.objects.all().filter(post=target_post)
     categories = Post.get_categories()
+    
+    profile = None
     user_authenticated = request.user.is_authenticated
+    if user_authenticated:
+        user = request.user
+        profile = Profile.objects.get(user=user)
 
+    
     context = {
         'post': target_post,
         'replies': replies,
         'categories': categories,
-        'user_authenticated': user_authenticated
+        'user_authenticated': user_authenticated,
+        'profile': profile,
     }
     return HttpResponse(template.render(context, request))
 
