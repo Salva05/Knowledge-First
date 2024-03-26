@@ -36,7 +36,7 @@
 			<h1 class="post-title">{{ post.title }}</h1>
 			<!-- Post Metadata -->
 			<!-- Post Content -->
-			<div class="post-content mb-4">
+			<div class="post-content mb-4 reply-content">
 				{{ post.content | safe }}
 			</div>
 			<div class="mt-auto text-muted lks">
@@ -45,7 +45,7 @@
 			</div>
 			<div class="mt-auto text-muted lks position-absolute bottom-0 end-0 mr-4">
 				{% if user_authenticated %}
-				<a href="#userRpl" onclick="reply()">Reply</a> <span class="text-muted mx-1">|</span>
+				<a href="#userRpl" onclick="reply('post', {{ post.id }})">Reply</a> <span class="text-muted mx-1">|</span>
 				<a class="re" href="#">Like</a>
 				{% endif %}
 			</div>
@@ -79,14 +79,28 @@
 			</div>
 		</div>
 		<div class="col-lg-8 post-container px-4 mx-2 border-left border-dark d-flex flex-column">
-			<div class="comment-meta">{{ reply.reply_date }}</div>
-			<ul class="comment-list">
-				<li class="comment-item">
-					<div>{{ reply.content | linebreaks }}</div>
-				</li>
-			</ul>
+			<div class="comment-meta mb-3">Published on {{ reply.reply_date }}</div>
+			<!-- Main body of the reply -->
+			{% if reply.reply_to_reply != None %}
+			<div class="bg-light border-left border-dark mb-3 py-3 px-3 text-dark">
+				To <b>{{ reply.reply_to_reply.author }}</b><br><br>
+				<div class="reply-content">{{ reply.reply_to_reply.content }}</div>
+			</div>
+			{% endif %}
+			<div class="comment-list">
+				<div class="comment-item">
+					<div class="reply-content">{{ reply.content | linebreaks }}</div>
+				</div>
+			</div>
 			<div class="mt-auto text-muted lks">
 				<a href="#" data-toggle="modal" data-target="#exampleModalCenter">{{ reply.likes }} Likes</a>
+			</div>
+			<div class="mt-auto text-muted lks position-absolute bottom-0 end-0 mr-4">
+				{% if user_authenticated %}
+					<a href="#userRpl" onclick="reply('reply', {{ reply.id }}, '{{ reply.content|escapejs }}', '{{ reply.author|escapejs }}')">Reply</a> 
+					<span class="text-muted mx-1">|</span>
+					<a class="re" href="#">Like</a>
+				{% endif %}
 			</div>
 		</div>
 	</div>
@@ -120,10 +134,12 @@
 			<div class="row">
 				{% if post.content|wordcount > 80 %}
 				<div class="col-md-12 bg-light border-left border-dark mb-0 py-3 px-3 text-dark" id="replyPst1">
-					To <b>{{ post.author }}</b><br><br>
-					{{ post.content|truncatewords:80 }}
+					To <span id="rp1" class="reply-content"><b id="rpb1">{{ post.author }}</b><br><br>
+					{{ post.content|truncatewords:80 }}</span>
+					<span id="rp2" style="display: none"><b id="rpb2" style="display: none"></b><br><br>
+						{{ post.content }}</span>
 				</div>
-				<div class="col-md-12 bg-light border-left border-dark mb-0 py-3 px-3 text-dark" id="replyPst2">
+				<div class="col-md-12 bg-light border-left border-dark mb-0 py-3 px-3 text-dark reply-content" id="replyPst2">
 					To <b>{{ post.author }}</b><br><br>
 					{{ post.content }}
 				</div>
@@ -134,17 +150,22 @@
 					&#129129
 				</button>
 				{% else %}
-				<div class="col-md-12 bg-light border-left border-dark mb-5 py-3 px-3 text-dark" id="replyPst">
+				<div class="col-md-12 bg-light border-left border-dark mb-5 py-3 px-3 text-dark reply-content" id="replyPst">
 					To <b>{{ post.author }}</b><br><br>
 					{{ post.content }}
 				</div>
 				{% endif %}
 			</div>
-			<form action="" method="GET">
+			<form action="{% url 'submit_reply' %}" method="POST">
 				<div class="row">
-					<textarea class="form-control" id="replyTextArea" rows="3"
+					<input type="hidden" name="entity_type" id="entityType">
+					<input type="hidden" name="entity_id" id="entityId">
+					<input type="hidden" name="post_id" value="{{ post.id }}">
+					{% csrf_token %}
+					<textarea class="form-control" id="replyTextArea" rows="3" name="reply"
 						placeholder="Write your reply..."></textarea>
-					<button class="btn btn-primary my-2" id="publishReplyBtn">Publish Reply</button>
+					<button type="submit" class="btn btn-primary my-2" id="publishReplyBtn">Publish Reply</button>
+					<span class="btn btn-secondary my-2 mx-2" id="publishReplyBtn1" onclick="undo()">Cancel</span>
 				</div>
 			</form>
 		</div>
@@ -177,6 +198,12 @@
 	</div>
 </div>
 <style>
+	.publishReplyBtn1 {
+		decorations: none;
+	}
+	.reply-content {
+		word-wrap: break-word;
+	}
 	@media (min-width: 992px) { 
 		#content1 {
 			margin-left: 8px;
@@ -388,7 +415,7 @@
 	/* Styling for the comment list */
 	.comment-list {
 		padding-left: 0;
-		margin-top: 30px;
+		margin-top: 10px;
 		list-style: none;
 	}
 
@@ -426,8 +453,24 @@
 <script>
 	let opened = false;
 
-	function reply() {
-		document.getElementById('userRpl').style.display = 'flex'
+	function reply(entityType, entityId, replyContent, replyAuthor) {
+		document.getElementById('userRpl').style.display = 'flex';
+		document.getElementById('entityType').value = entityType;
+		document.getElementById('entityId').value = entityId;
+	
+		if (entityType === 'reply') {
+			document.getElementById('rp1').style.display = 'none';
+			document.getElementById('rp2').style.display = 'block';
+			document.getElementById('rpb1').style.display = 'none';
+			document.getElementById('rpb2').style.display = 'block';
+			document.getElementById('rpb2').innerHTML = replyContent; // Update reply content
+			document.getElementById('rpb2').innerText = replyAuthor; // Update reply author
+		} else {
+			document.getElementById('rp1').style.display = 'block';
+			document.getElementById('rp2').style.display = 'none';
+			document.getElementById('rpb1').style.display = 'block';
+			document.getElementById('rpb2').style.display = 'none';
+		}
 	}
 	function expand() {
 		if (!opened) {
@@ -446,6 +489,10 @@
 			opened = false;
 		}
 
+	}
+
+	function undo() {
+		document.getElementById('userRpl').style.display = 'none';
 	}
 </script>
 {% endblock %}

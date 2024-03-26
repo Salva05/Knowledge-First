@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import EmailValidator
 from django.core.exceptions import ValidationError
 from .forms import CategoryChoices
+from django.shortcuts import get_object_or_404
 from django.db.models import F
 from django.contrib.auth import login, logout
 
@@ -100,6 +101,7 @@ def detail(request, id):
         'user_authenticated': user_authenticated,
         'profile': profile,
     }
+
     return HttpResponse(template.render(context, request))
 
 def signup(request):
@@ -241,3 +243,29 @@ def required_signin(request):
     user_authenticated = request.user.is_authenticated
 
     return render(request, 'required_signin.html', {'categories': Post.get_categories(), 'user_authenticated': user_authenticated})
+
+def submit_reply(request):
+    if request.method == 'POST':
+        reply_entity = request.POST.get('entity_type')
+        if reply_entity == 'reply':
+            text = request.POST['reply']
+            post_id = request.POST['post_id']
+            reply_id = request.POST['entity_id']
+            
+            rpl = Reply.objects.create(
+                content=text,
+                author=request.user.profile,
+                reply_to_reply=Reply.objects.get(pk=reply_id),
+                post=Post.objects.get(pk=post_id)
+            )
+            print(Reply.objects.get(pk=reply_id).content)
+        else:
+            text = request.POST['reply']
+            post_id = request.POST['post_id']
+            rpl = Reply.objects.create(
+                content=text,
+                author=request.user.profile,
+                post=Post.objects.get(pk=post_id)
+            )
+        return redirect('detail', id=post_id)
+    return HttpResponse("Invalid request or data", status=400)

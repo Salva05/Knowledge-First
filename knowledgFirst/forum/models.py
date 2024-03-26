@@ -98,6 +98,7 @@ class Reply(models.Model):
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     pinned = models.BooleanField(default=False)
     likes = models.IntegerField(default=0)
+    reply_to_reply = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, default=None)
 
     def __str__(self):
         return f"{self.author.user.username} - {self.post.title}"
