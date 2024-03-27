@@ -61,7 +61,7 @@
 	</div>
 	{% endif %}
 	{% else %}
-	<h2 class="comments-title text-center">Replies:</h2>
+	<h2 class="comments-title text-center">Replies</h2>
 	{% for reply in replies %}
 	<div class="col-12 row justify-content-center mx-0 px-0">
 		<div class="card" id="userCard2">
@@ -130,32 +130,40 @@
 		</div>
 		<!-- The post to be replied -->
 		<!-- Main body of the reply -->
-		<div class="col-lg-8 post-container px-4 d-flex flex-column" id="content1">
+		<div class="col-lg-8 post-container mx-0 px-4 d-flex flex-column" id="content1">
 			<div class="row">
-				{% if post.content|wordcount > 80 %}
-				<div class="col-md-12 bg-light border-left border-dark mb-0 py-3 px-3 text-dark" id="replyPst1">
-					To <span id="rp1" class="reply-content"><b id="rpb1">{{ post.author }}</b><br><br>
-					{{ post.content|truncatewords:80 }}</span>
-					<span id="rp2" style="display: none"><b id="rpb2" style="display: none"></b><br><br>
-						{{ post.content }}</span>
+			<span id="is_post" style="width: 100%;">
+					{% if post.content|wordcount > 80 %}
+					<div class="col-md-12 bg-light border-left border-dark mb-0 py-3 px-3 text-dark" id="replyPst1">
+						To <span class="reply-content"><b>{{ post.author }}</b><br><br>
+						{{ post.content|truncatewords:80 }}</span>
+						<span style="display: none"><br><br>
+							{{ post.content }}</span>
+					</div>
+					<div class="col-md-12 bg-light border-left border-dark mb-0 py-3 px-3 text-dark reply-content" id="replyPst2">
+						To <b>{{ post.author }}</b><br><br>
+						{{ post.content }}
+					</div>
+					<button class="col-md-12 mb-4" style="border: 0.5px solid black" id="expandButton1" onclick="expand()">
+						&#129131
+					</button>
+					<button class="col-md-12 mb-4" style="border: 0.5px solid black" id="expandButton2" onclick="expand()">
+						&#129129
+					</button>
+					{% else %}
+					<div class="col-md-12 bg-light border-left border-dark mb-5 mx-0 py-3 px-3 text-dark reply-content" id="replyPst">
+						To <b>{{ post.author }}</b><br><br>
+						{{ post.content }}
+					</div>
+					{% endif %}
 				</div>
-				<div class="col-md-12 bg-light border-left border-dark mb-0 py-3 px-3 text-dark reply-content" id="replyPst2">
-					To <b>{{ post.author }}</b><br><br>
-					{{ post.content }}
+			</span>
+			<span id="is_reply">
+				<div class="col-md-12 bg-light border-left border-dark mb-5 mx-0 py-3 px-3 text-dark reply-content" id="replyPst">
+					To <b id="replyTo"></b><br><br>
+					<span id="replyContent"></span>
 				</div>
-				<button class="col-md-12 mb-4" style="border: 0.5px solid black" id="expandButton1" onclick="expand()">
-					&#129131
-				</button>
-				<button class="col-md-12 mb-4" style="border: 0.5px solid black" id="expandButton2" onclick="expand()">
-					&#129129
-				</button>
-				{% else %}
-				<div class="col-md-12 bg-light border-left border-dark mb-5 py-3 px-3 text-dark reply-content" id="replyPst">
-					To <b>{{ post.author }}</b><br><br>
-					{{ post.content }}
-				</div>
-				{% endif %}
-			</div>
+			</span>
 			<form action="{% url 'submit_reply' %}" method="POST">
 				<div class="row">
 					<input type="hidden" name="entity_type" id="entityType">
@@ -198,6 +206,16 @@
 	</div>
 </div>
 <style>
+	#is_reply {
+		margin-right: -15px;
+		margin-left: -15px;
+		margin-bottom: -15px;
+	}
+
+	#is_post {
+		margin-bottom: -15px;
+	}
+
 	.publishReplyBtn1 {
 		decorations: none;
 	}
@@ -457,34 +475,30 @@
 		document.getElementById('userRpl').style.display = 'flex';
 		document.getElementById('entityType').value = entityType;
 		document.getElementById('entityId').value = entityId;
-	
-		if (entityType === 'reply') {
-			document.getElementById('rp1').style.display = 'none';
-			document.getElementById('rp2').style.display = 'block';
-			document.getElementById('rpb1').style.display = 'none';
-			document.getElementById('rpb2').style.display = 'block';
-			document.getElementById('rpb2').innerHTML = replyContent; // Update reply content
-			document.getElementById('rpb2').innerText = replyAuthor; // Update reply author
+
+		if (entityType == 'reply') {
+			document.getElementById('replyTo').innerHTML = replyAuthor;
+			document.getElementById('replyContent').innerHTML = replyContent;
+			document.getElementById('is_reply').style.display = 'flex';
+			document.getElementById('is_post').style.display = 'none';
 		} else {
-			document.getElementById('rp1').style.display = 'block';
-			document.getElementById('rp2').style.display = 'none';
-			document.getElementById('rpb1').style.display = 'block';
-			document.getElementById('rpb2').style.display = 'none';
+			document.getElementById('is_reply').style.display = 'none';
+			document.getElementById('is_post').style.display = 'flex';
 		}
 	}
 	function expand() {
 		if (!opened) {
 			document.getElementById('replyPst1').style.display = 'none';
-			document.getElementById('replyPst2').style.display = 'block';
+			document.getElementById('replyPst2').style.display = 'flex';
 
 			document.getElementById('expandButton1').style.display = 'none';
-			document.getElementById('expandButton2').style.display = 'block';
+			document.getElementById('expandButton2').style.display = 'flex';
 			opened = true;
 		} else {
-			document.getElementById('replyPst1').style.display = 'block';
+			document.getElementById('replyPst1').style.display = 'flex';
 			document.getElementById('replyPst2').style.display = 'none';
 
-			document.getElementById('expandButton1').style.display = 'block';
+			document.getElementById('expandButton1').style.display = 'flex';
 			document.getElementById('expandButton2').style.display = 'none';
 			opened = false;
 		}

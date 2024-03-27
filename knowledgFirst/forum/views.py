@@ -89,7 +89,7 @@ def detail(request, id):
     
     profile = None
     user_authenticated = request.user.is_authenticated
-    if user_authenticated:
+    if user_authenticated and not request.user.is_superuser:
         user = request.user
         profile = Profile.objects.get(user=user)
 
