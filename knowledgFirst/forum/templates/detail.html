@@ -33,7 +33,9 @@
 			<div class="post-meta">Published on {{ post.pub_date }}</div>
 			
 			<!-- Trash icon container -->
-			
+			<button class="trash-btn position-absolute mt-2 mr-2" data-toggle="popover" data-placement="top" title="Click to delete" data-content="Click to delete">
+				<i class="fas fa-trash trash-icon"></i>
+			</button>
 			<!-- Post Title -->
 			<h1 class="post-title">{{ post.title }}</h1>
 			<!-- Post Metadata -->
@@ -212,6 +214,34 @@
 	</div>
 </div>
 <style>
+	.trash-btn {
+		width: 25px;
+		height: 25px;
+		border: 2px solid #ff4d4d; /* Red border by default */
+		background-color: transparent; /* Transparent background */
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		transition: all 0.3s ease; /* Transition for all properties */
+		right: 0;
+		top: 0;
+	  }
+  
+	  .trash-btn:hover {
+		background-color: #ff4d4d; /* Red background on hover */
+		border-color: #ff4d4d; /* Red border on hover */
+	  }
+  
+	  .trash-btn:hover .trash-icon {
+		color: white; /* White color for trash icon on hover */
+	  }
+	  
+	  .trash-icon {
+		font-size: 13px;
+		color: #ff4d4d; /* Red color for trash icon by default */
+		transition: color 0.3s ease; /* Transition for color property */
+	  }
+
 	#is_reply {
 		margin-right: -15px;
 		margin-left: -15px;
@@ -515,5 +545,9 @@
 	function undo() {
 		document.getElementById('userRpl').style.display = 'none';
 	}
+
+	$(function () {
+		$('[data-toggle="popover"]').popover();
+	});
 </script>
 {% endblock %}
