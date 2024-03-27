@@ -71,10 +71,9 @@ class Post(models.Model):
     total_replies = models.IntegerField(default=0)
     state = models.CharField(max_length=20, choices=POST_STATE_CHOICES, default=DEFAULT_STATE)
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    likes = models.IntegerField(default=0)
+    total_likes = models.IntegerField(default=0)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, blank=True, null=True)
     views = models.IntegerField(default=0)
-    likes = models.IntegerField(default=0)
 
     def get_categories():
         return [category for category, other in CATEGORY_CHOICES]
@@ -95,7 +94,13 @@ class Reply(models.Model):
     def __str__(self):
         return f"{self.author.user.username} - {self.post.title}"
 
+class PostLike(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='liked_posts')
 
+    def __str__(self):
+        return f"{self.user.user.username} likes {self.post.title}"
+    
 class Tag(models.Model):
     name = models.CharField(max_length=20)
 
@@ -115,15 +120,6 @@ class PostTag(models.Model):
 
     def get_absolute_url(self):
         return reverse('post-detail', kwargs={'pk': self.post.pk})
-
-
-class PostLike(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.post.title} - {self.user.user.username}"
-
 
 class ReplyLike(models.Model):
     reply = models.ForeignKey(Reply, on_delete=models.CASCADE)

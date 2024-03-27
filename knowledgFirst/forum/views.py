@@ -17,7 +17,7 @@ def index(request):
     latest_posts = Post.objects.all().order_by('-pub_date')[:5]
 
     most_quoted = Post.objects.all().order_by('-likes')
-    most_quoted = [post for post in most_quoted if post.likes > 0][:5]
+    most_quoted = [post for post in most_quoted if post.total_likes > 0][:5]
 
     most_active = Profile.objects.all().order_by('-replies')
     most_active = [post for post in most_active if post.replies > 0][:5]
@@ -86,12 +86,16 @@ def detail(request, id):
 
     replies = Reply.objects.all().filter(post=target_post)
     categories = Post.get_categories()
-    
+
     profile = None
+    liked_by_user = None
+
     user_authenticated = request.user.is_authenticated
     if user_authenticated and not request.user.is_superuser:
         user = request.user
         profile = Profile.objects.get(user=user)
+        p = Post.objects.get(pk=id)
+        liked_by_user = p.likes.filter(user=request.user.profile).exists()
 
     
     context = {
@@ -100,6 +104,7 @@ def detail(request, id):
         'categories': categories,
         'user_authenticated': user_authenticated,
         'profile': profile,
+        'liked_by_user': liked_by_user
     }
 
     return HttpResponse(template.render(context, request))
@@ -282,4 +287,18 @@ def delete_reply(request):
         reply = Reply.objects.get(pk=reply_id)
         reply.content = '[deleted]'
         reply.save()
+    return redirect('detail', id=post_id)
+
+def post_like(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+
+    if PostLike.objects.filter(post=post).exists():
+        pass
+    else:
+        post_like = PostLike(post=post, user=request.user.profile)
+        post_like.save()
+
+        post.total_likes += F('total_likes') + 1
+        post.save()
+
     return redirect('detail', id=post_id)

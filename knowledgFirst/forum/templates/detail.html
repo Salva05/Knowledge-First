@@ -36,9 +36,11 @@
 			<!-- Trash icon container -->
 			{% if user_authenticated %}
 			{% if post.author.id == profile.id %}
+			<span data-toggle="tooltip" data-placement="top" title="Delete the post">
 			<button class="trash-btn position-absolute mt-2 mr-2" data-toggle="modal" data-target="#exampleModalCenter3">
     			<i class="fas fa-trash trash-icon"></i>
 			</button>
+		</span>
 			{% endif %}
 			{% endif %}
 			<!-- Post Title -->
@@ -52,12 +54,17 @@
 				<a href="#" data-toggle="modal" data-target="#exampleModalCenter2">{{ post.likes }} Likes </a>-
 				<span>{{ post.views }} Views</span>
 			</div>
-			<div class="mt-auto text-muted lks position-absolute bottom-0 end-0 mr-4">
-				{% if user_authenticated %}
+			{% if user_authenticated %}
+			<div class="mt-auto text-muted lks position-absolute bottom-0 end-0 pstRplButtons">
 				<a href="#userRpl" onclick="reply('post', {{ post.id }})">Reply</a> <span class="text-muted mx-1">|</span>
 				<a class="re" href="#">Like</a>
-				{% endif %}
 			</div>
+			{% if liked_by_user %}
+			<i class="fas fa-thumbs-up" style="position: absolute; bottom: 0; right: 0; color: #007bff;"></i>
+			{% else %}
+			<a class="far fa-thumbs-up" style="position: absolute; bottom: 0; right: 0; color: lightgrey" href="{% url 'post_like' post_id=post.id %}"></a>
+			{% endif %}
+			{% endif %}
 		</div>
 	</div>
 
@@ -91,9 +98,11 @@
 		<div class="col-lg-8 post-container px-4 mx-2 border-left border-dark d-flex flex-column">
 		{% if user_authenticated %}
 		{% if reply.author.id == profile.id %}
+		<span data-toggle="tooltip" data-placement="top" title="Delete the reply">
 		<button class="trash-btn position-absolute mt-2 mr-2" data-toggle="modal" data-target="#exampleModalCenter4" data-reply-id="{{ reply.id }}">
 			<i class="fas fa-trash trash-icon"></i>
 		</button>
+		</span>
 		{% endif %}
 		{% endif %}
 			<div class="comment-meta mb-3">Published on {{ reply.reply_date }}</div>
@@ -159,18 +168,18 @@
 		<div class="col-lg-8 post-container mx-0 px-4 d-flex flex-column" id="content1">
 			<div class="row">
 			<span id="is_post" style="width: 100%;">
+				<row style="width: 100%;">
 					{% if post.content|wordcount > 80 %}
 					<div class="col-md-12 bg-light border-left border-dark mb-0 py-3 px-3 text-dark" id="replyPst1">
-						To <span class="reply-content"><b>{{ post.author }}</b><br><br>
+						<span>To <span class="reply-content"><b>{{ post.author }}</b><br><br>
 						{{ post.content|truncatewords:80 }}</span>
-						<span style="display: none"><br><br>
-							{{ post.content }}</span>
+						</span>
 					</div>
 					<div class="col-md-12 bg-light border-left border-dark mb-0 py-3 px-3 text-dark reply-content" id="replyPst2">
-						To <b>{{ post.author }}</b><br><br>
-						{{ post.content }}
+						<span>To <b>{{ post.author }}</b><br><br>
+						{{ post.content }}</span>
 					</div>
-					<button class="col-md-12 mb-4" style="border: 0.5px solid black" id="expandButton1" onclick="expand()">
+					<button class="col-md-12 mb-4" style="border: 0.5px solid black;" id="expandButton1" onclick="expand()">
 						&#129131
 					</button>
 					<button class="col-md-12 mb-4" style="border: 0.5px solid black" id="expandButton2" onclick="expand()">
@@ -183,6 +192,7 @@
 					</div>
 					{% endif %}
 				</div>
+			</row>
 			</span>
 			<span id="is_reply">
 				<div class="col-md-12 bg-light border-left border-dark mb-5 mx-0 py-3 px-3 text-dark reply-content" id="replyPst">
@@ -242,7 +252,7 @@
 			</button>
 			</div>
 			<div class="modal-body text-dark">
-			Are you sure you want to delete this item? This action cannot be undone.
+				Are you sure you want to delete this post? This action cannot be undone.
 			</div>
 			<div class="modal-footer">
 			<button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
@@ -265,7 +275,7 @@
 			</button>
 			</div>
 			<div class="modal-body text-dark">
-			Are you sure you want to delete this item? This action cannot be undone.
+				Are you sure you want to delete this reply? This action cannot be undone.
 			</div>
 			<div class="modal-footer">
 			<button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
@@ -292,7 +302,16 @@
 		right: 0;
 		top: 0;
 	  }
-  
+	  
+	  .fa-thumbs-up {
+		margin-bottom: 36px;
+		margin-right: 10px;
+	  }
+
+	  .pstRplButtons {
+		margin-right: 30px;
+	  }
+
 	  .trash-btn:hover {
 		background-color: #ff4d4d; /* Red background on hover */
 		border-color: #ff4d4d; /* Red border on hover */
@@ -334,6 +353,7 @@
 	#expandButton2 {
 		background-color: white;
 		transition: background-color 0.4s;
+		justify-content: center;
 	}
 
 	#expandButton:hover,
@@ -341,6 +361,7 @@
 	#expandButton2:hover {
 		background-color: lightgrey;
 		cursor: pointer;
+		justify-content: center;
 	}
 
 	#replyPst2 {
@@ -611,19 +632,7 @@
 	function undo() {
 		document.getElementById('userRpl').style.display = 'none';
 	}
-jQuery(document).ready(function() {
-		jQuery(function () {
-			$('[data-toggle="popover"]').popover();
-		});
-
-		jQuery(document).ready(function(){
-			$('[data-toggle="popover"]').popover({
-				title: 'Click to delete',
-				content: 'Click to delete',
-				placement: 'top'
-			});
-		});
-
+	jQuery(document).ready(function() {
 		jQuery(document).ready(function() {
 			$('.trash-btn').click(function() {
 				console.log('Are you sure you want to delete this item? This action cannot be undone.');
