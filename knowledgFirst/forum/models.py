@@ -78,14 +78,6 @@ class Post(models.Model):
 
     def get_categories():
         return [category for category, other in CATEGORY_CHOICES]
-
-    def delete(self, *args, **kwargs):
-        self.update_posts()
-        super(Post, self).delete(*args, **kwargs)
-
-    def update_posts(self):
-        deleted_user = Profile.objects.get_or_create(username='deleted')[0]
-        self.post_set.update(author=deleted_user)
     
     def __str__(self):
         return self.title

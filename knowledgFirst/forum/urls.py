@@ -15,4 +15,6 @@ urlpatterns = [
     path('new_topic/', views.new_topic, name='new_topic'),
     path('required_signin/', views.required_signin, name='required_signin'),
     path('submit_reply/', views.submit_reply, name='submit_reply'),
+    path('delete_topic/<int:id>', views.delete_topic, name='delete_topic'),
+    path('delete_reply/', views.delete_reply, name='delete_reply'),
 ]

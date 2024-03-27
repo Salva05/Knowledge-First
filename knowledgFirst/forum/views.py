@@ -35,7 +35,7 @@ def index(request):
         'categories': categories,
         'user_authenticated': user_authenticated
     }
-    
+
     return HttpResponse(template.render(context=context, request=request))
 
 def elenco(request):
@@ -269,3 +269,17 @@ def submit_reply(request):
             )
         return redirect('detail', id=post_id)
     return HttpResponse("Invalid request or data", status=400)
+
+def delete_topic(request, id):
+    post = get_object_or_404(Post, pk=id)
+    post.delete()
+    return redirect('elenco')
+
+def delete_reply(request):
+    if request.method == 'POST':
+        reply_id = request.POST['reply_id']
+        post_id = request.POST['post_id']
+        reply = Reply.objects.get(pk=reply_id)
+        reply.content = '[deleted]'
+        reply.save()
+    return redirect('detail', id=post_id)
