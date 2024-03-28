@@ -1,13 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import EmailValidator
 from django.core.exceptions import ValidationError
-from .forms import CategoryChoices
-from django.shortcuts import get_object_or_404
 from django.db.models import F
 from django.contrib.auth import login, logout
+
 
 from .models import *
 
@@ -292,13 +291,12 @@ def delete_reply(request):
 def post_like(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
 
-    if PostLike.objects.filter(post=post).exists():
-        pass
+    if PostLike.objects.filter(post=post, user=request.user.profile).exists():
+        return JsonResponse({'success': False, 'message': 'User already liked this post.'})
     else:
         post_like = PostLike(post=post, user=request.user.profile)
         post_like.save()
 
-        post.total_likes += F('total_likes') + 1
+        post.total_likes += 1
         post.save()
-
-    return redirect('detail', id=post_id)
+        return JsonResponse({'success': True, 'message': 'Post liked successfully.'})
