@@ -6,20 +6,21 @@ from django.core.validators import EmailValidator
 from django.core.exceptions import ValidationError
 from django.db.models import F
 from django.contrib.auth import login, logout
+from django.db.models import Count
+
 
 
 from .models import *
 
 def index(request):
+    print(Post.objects.all())
     template = loader.get_template('index.html')
 
     latest_posts = Post.objects.all().order_by('-pub_date')[:5]
 
-    most_quoted = Post.objects.all().order_by('-likes')
-    most_quoted = [post for post in most_quoted if post.total_likes > 0][:5]
+    most_quoted = Post.objects.annotate(num_likes=Count('likes')).filter(num_likes__gt=0).order_by('-num_likes')[:5]
 
-    most_active = Profile.objects.all().order_by('-replies')
-    most_active = [post for post in most_active if post.replies > 0][:5]
+    most_active = Profile.objects.annotate(num_replies=Count('reply')).filter(num_replies__gt=0).order_by('-num_replies')[:5]
 
     members = Profile.objects.all()
     categories = Post.get_categories()
@@ -237,7 +238,7 @@ def new_topic(request):
         post = Post.objects.create(title=title, content=content, category=category, author=author)
 
         # increace total topics of the user by one
-        author.total_posts += F('total_posts') + 1
+        author.total_posts = F('total_posts') + 1
         author.save()
         
         return redirect('detail', id=post.id)
@@ -271,6 +272,11 @@ def submit_reply(request):
                 author=request.user.profile,
                 post=Post.objects.get(pk=post_id)
             )
+        # increase user's replies
+        author=request.user.profile
+        author.replies = F('replies') + 1
+        author.save()
+        
         return redirect('detail', id=post_id)
     return HttpResponse("Invalid request or data", status=400)
 

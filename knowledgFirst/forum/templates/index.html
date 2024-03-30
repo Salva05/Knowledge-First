@@ -81,7 +81,7 @@
                     {% for topic in most_quoted %}
                     <span class="border-bottom">
                     <li class="list-group-item">
-                        <a href="{% url 'detail' id=topic.id %}">{{ topic.title }}</a><span class="text-muted font-italic"> - {{ topic.likes }} likes</span>
+                        <a href="{% url 'detail' id=topic.id %}">{{ topic.title }}</a><span class="text-muted font-italic"> - {{ topic.total_likes }} likes</span>
                     </li>
                 </span>
                     {% endfor %}

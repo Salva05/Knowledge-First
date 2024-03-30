@@ -51,7 +51,7 @@
 			<div class="post-content mb-4 reply-content">
 				{{ post.content | safe }}
 			</div>
-			<div class="mt-auto text-muted lks">
+			<div class="mt-auto text-muted lks likes-updated">
 				<a href="#" data-toggle="modal" data-target="#exampleModalCenter2">{{ post.total_likes }} Likes </a>-
 				<span>{{ post.views }} Views</span>
 			</div>
@@ -62,7 +62,7 @@
 			{% if liked_by_user %}
 			<i class="fas fa-thumbs-up" style="position: absolute; bottom: 0; right: 0; color: #007bff;"></i>
 			{% else %}
-			<a class="far fa-thumbs-up" style="position: absolute; bottom: 0; right: 0; color: lightgrey" href="" id="like-btn" data-post-id="{{ post.id }}" data-toggle="popover" data-placement="top" data-content="Thanks!"></a>
+			<a class="far fa-thumbs-up" style="position: absolute; bottom: 0; right: 0; color: lightgrey" href="" id="like-btn" data-post-id="{{ post.id }}" data-toggle="popover" data-placement="top" data-content="Like the post!"></a>
 			{% endif %}
 			{% endif %}
 		</div>	
@@ -639,11 +639,17 @@
 	}
 
 	jQuery(document).ready(function() {
-		$('#like-btn').popover();
-		
+		$('#like-btn').popover({
+			trigger: 'manual', 
+			placement: 'top' 
+		});
+
+		// AJAX request for liking a post
 		$('#like-btn').click(function(e) {
-			e.preventDefault(); // Prevent default action
+			e.preventDefault(); 
 			var postId = $(this).data('post-id');
+			var $likeBtn = $(this);
+
 			$.ajax({
 				type: 'POST',
 				url: '/post_like/' + postId + '/',
@@ -652,15 +658,20 @@
 				},
 				success: function(response) {
 					if (response.success) {
-						$('#like-btn').removeClass('far').addClass('fas');
-						$('#like-btn').css('color', '#007bff');
-
+						$likeBtn.removeClass('far').addClass('fas').css('color', '#007bff');
+						// Change popover content to 'Thanks'
+						$likeBtn.attr('data-content', 'Thanks');
 						// Show popover
-						$('#like-btn').popover('show');
+						$likeBtn.popover('show');
 						// Hide popover after a delay
 						setTimeout(function() {
-							$('#like-btn').popover('hide');
+							$likeBtn.popover('hide');
 						}, 2000);
+
+						// Update the number of likes on the page
+						var currentLikes = parseInt($('.likes-updated a').text().split(' ')[0]);
+						var newLikes = currentLikes + 1;
+						$('.likes-updated a').text(newLikes + ' Likes ');
 					} 
 				},
 				error: function(xhr, status, error) {
@@ -668,6 +679,14 @@
 					console.error(xhr.responseText);
 				}
 			});
+		});
+
+		$('#like-btn').mouseenter(function() {
+			$(this).popover('show');
+		});
+
+		$('#like-btn').mouseleave(function() {
+			$(this).popover('hide');
 		});
 
 		$('.trash-btn').click(function() {
