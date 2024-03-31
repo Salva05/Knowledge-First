@@ -122,7 +122,7 @@ class PostTag(models.Model):
         return reverse('post-detail', kwargs={'pk': self.post.pk})
 
 class ReplyLike(models.Model):
-    reply = models.ForeignKey(Reply, on_delete=models.CASCADE)
+    reply = models.ForeignKey(Reply, on_delete=models.CASCADE, related_name='reply_like')
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     def __str__(self):

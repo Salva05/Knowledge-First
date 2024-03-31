@@ -18,4 +18,5 @@ urlpatterns = [
     path('delete_topic/<int:id>', views.delete_topic, name='delete_topic'),
     path('delete_reply/', views.delete_reply, name='delete_reply'),
     path('post_like/<int:post_id>/', views.post_like, name='post_like'),
+    path('reply_like/<int:reply_id>/', views.reply_like, name='reply_like'),
 ]

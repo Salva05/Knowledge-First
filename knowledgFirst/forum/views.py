@@ -4,16 +4,14 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import EmailValidator
 from django.core.exceptions import ValidationError
-from django.db.models import F
+from django.db.models import F, Count
 from django.contrib.auth import login, logout
-from django.db.models import Count
 
 
 
 from .models import *
 
 def index(request):
-    print(Post.objects.all())
     template = loader.get_template('index.html')
 
     latest_posts = Post.objects.all().order_by('-pub_date')[:5]
@@ -85,13 +83,22 @@ def detail(request, id):
     target_post = Post.objects.get(pk=id)
 
     replies = Reply.objects.all().filter(post=target_post)
+    
     categories = Post.get_categories()
 
     profile = None
     liked_by_user = None
-
+    replies_liked_by_user = {}
+    
     user_authenticated = request.user.is_authenticated
     if user_authenticated and not request.user.is_superuser:
+        # Create a dictionary to store whether the user liked each reply
+        for reply in replies:
+            if reply.reply_like.filter(user=request.user.profile).exists():
+                replies_liked_by_user[reply.id] = True
+            else:
+                replies_liked_by_user[reply.id] = False
+
         user = request.user
         profile = Profile.objects.get(user=user)
         p = Post.objects.get(pk=id)
@@ -104,7 +111,8 @@ def detail(request, id):
         'categories': categories,
         'user_authenticated': user_authenticated,
         'profile': profile,
-        'liked_by_user': liked_by_user
+        'liked_by_user': liked_by_user,
+        'replies_liked_by_user': replies_liked_by_user
     }
 
     return HttpResponse(template.render(context, request))
@@ -305,4 +313,18 @@ def post_like(request, post_id):
 
         post.total_likes += 1
         post.save()
+        return JsonResponse({'success': True, 'message': 'Post liked successfully.'})
+    
+def reply_like(request, reply_id):
+    reply = get_object_or_404(Reply, pk=reply_id)
+    print('view chiamata')
+
+    if ReplyLike.objects.filter(reply=reply, user=request.user.profile).exists():
+        return JsonResponse({'success': False, 'message': 'User already liked this post.'})
+    else:
+        reply_like = ReplyLike(reply=reply, user=request.user.profile)
+        reply_like.save()
+
+        reply.likes += 1
+        reply.save()
         return JsonResponse({'success': True, 'message': 'Post liked successfully.'})

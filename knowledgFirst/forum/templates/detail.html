@@ -1,5 +1,5 @@
 {% extends "master.html" %}
-
+{% load custom_filters %}
 {% load static %}
 
 {% block back %}
@@ -122,16 +122,20 @@
 					<div class="reply-content">{{ reply.content | linebreaks }}</div>
 				</div>
 			</div>
-			<div class="mt-auto text-muted lks">
-				<a href="#" data-toggle="modal" data-target="#exampleModalCenter">{{ reply.likes }} Likes</a>
+			<div class="mt-auto text-muted lks lksToTarget">
+				<a href="#" data-toggle="modal" data-target="#exampleModalCenter" id="rplLikes">{{ reply.likes }} Likes</a>
 			</div>
+			{% if user_authenticated %}
 			<div class="mt-auto text-muted lks position-absolute bottom-0 end-0 mr-4">
-				{% if user_authenticated %}
 					<a href="#userRpl" onclick="reply('reply', {{ reply.id }}, '{{ reply.content|escapejs }}', '{{ reply.author|escapejs }}')">Reply</a> 
-					<span class="text-muted mx-1">|</span>
-					<a class="re" href="#">Like</a>
-				{% endif %}
+					<span class="text-muted mx-1">|</span>	
 			</div>
+				{% if replies_liked_by_user|get_liked_status:reply.id %}
+				<i class="fas fa-thumbs-up" style="position: absolute; bottom: -1px; right: -4px; color: #007bff;"></i>
+				{% else %}
+				<a class="far fa-thumbs-up reply-like-btn" style="position: absolute; bottom: -1px; right: -4px; color: lightgrey" href="" data-reply-id="{{ reply.id }}" data-toggle="popover" data-placement="top" data-content="Like the reply!"></a>
+				{% endif %}
+			{% endif %}
 		</div>
 	</div>
 	{% endif %}
@@ -290,7 +294,7 @@
 		</div>
 	</div>
 <style>
-	#like-btn:hover {
+	#like-btn:hover, .reply-like-btn:hover {
 		cursor: pointer;
 		border: 1px solid black;
 		padding: 1px;
@@ -644,6 +648,11 @@
 			placement: 'top' 
 		});
 
+		$('.reply-like-btn').popover({
+			trigger: 'manual', 
+			placement: 'top' 
+		});
+
 		// AJAX request for liking a post
 		$('#like-btn').click(function(e) {
 			e.preventDefault(); 
@@ -681,11 +690,57 @@
 			});
 		});
 
+		// AJAX request for liking a reply
+		$('.reply-like-btn').click(function(e) {
+			console.log('reply tried to liek')
+			e.preventDefault(); 
+			var replyId = $(this).data('reply-id');
+			var $likeBtn = $(this);
+
+			$.ajax({
+				type: 'POST',
+				url: '/reply_like/' + replyId + '/',
+				data: {
+					'csrfmiddlewaretoken': '{{ csrf_token }}',
+				},
+				success: function(response) {
+					if (response.success) {
+						$likeBtn.removeClass('far').addClass('fas').css('color', '#007bff');
+						// Change popover content to 'Thanks'
+						$likeBtn.attr('data-content', 'Thanks');
+						// Show popover
+						$likeBtn.popover('show');
+						// Hide popover after a delay
+						setTimeout(function() {
+							$likeBtn.popover('hide');
+						}, 2000);
+
+						// Update the number of likes for this specific reply
+						var currentLikes = parseInt($likeBtn.siblings('.lksToTarget').find('a').text().split(' ')[0]);
+						var newLikes = currentLikes + 1;
+						$likeBtn.siblings('.lksToTarget').find('a').text(newLikes + ' Likes ');
+					} 
+				},
+				error: function(xhr, status, error) {
+					alert('An error occurred while processing your request.');
+					console.error(xhr.responseText);
+				}
+			});
+		});
+
 		$('#like-btn').mouseenter(function() {
 			$(this).popover('show');
 		});
 
 		$('#like-btn').mouseleave(function() {
+			$(this).popover('hide');	
+		});
+
+		$('.reply-like-btn').mouseenter(function() {
+			$(this).popover('show');
+		});
+
+		$('.reply-like-btn').mouseleave(function() {
 			$(this).popover('hide');
 		});
 
