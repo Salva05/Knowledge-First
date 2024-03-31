@@ -1,5 +1,6 @@
 {% extends "master.html" %}
 {% load static %}
+{% load custom_filters %}
 {% block content %}
 
 <!-- Bootstrap CSS -->
@@ -53,19 +54,27 @@
                         friend, to our digital oasis.</p>
                 </div>
                 <div class="container-fluid">
-                    <h3 class="header">Latest topics</h3>
-                    {% if latest_posts.count == 0 %}
-                    <p class="text-muted">No topics yet</p>
-                    {% else %}
-                    <p>
-                    <ul class="topic-list">
+                    <h3 class="header text-center mb-3">Latest topics</h3>
+                    <div class="card-columns">
+                        {% if latest_posts.count == 0 %}
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-text text-muted">No topics yet</p>
+                            </div>
+                        </div>
+                        {% else %}
                         {% for post in latest_posts %}
-                        <li class="topic-item"><a href="{% url 'detail' id=post.id %}">{{ post.title }} - 
-                        {{ post.pub_date }}</a></li>
+                        <a href="{% url 'detail' id=post.id %}" class="card-link">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ post.title }}</h5>
+                                    <p class="card-text text-muted">{{ post.pub_date|custom_timesince }} by <b><i>{{ post.author }}</i></b></p>
+                                </div>
+                            </div>
+                        </a>
                         {% endfor %}
-                    </ul>
-                    </p>
-                    {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -81,7 +90,7 @@
                     {% for topic in most_quoted %}
                     <span class="border-bottom">
                     <li class="list-group-item">
-                        <a href="{% url 'detail' id=topic.id %}">{{ topic.title }}</a><span class="text-muted font-italic"> - {{ topic.total_likes }} likes</span>
+                        <a href="{% url 'detail' id=topic.id %}">{{ topic.title }}</a><span class="text-muted font-italic"> | {{ topic.total_likes }} likes</span>
                     </li>
                 </span>
                     {% endfor %}
@@ -152,6 +161,39 @@
     }
     .list-group-item:hover {
         background-color: #e9ecef;
+    }
+    .card-columns {
+        column-count: 1;
+    }
+    
+    .card {
+        background-color: #fff;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-title {
+        color: #333;
+    }
+    
+    .card-text {
+        font-size: 14px;
+    }
+    .card-link {
+        text-decoration: none; /* Remove underline */
+        color: inherit; /* Inherit text color */
+    }
+    
+    .card-link:hover .card {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     }
 </style>
 {% endblock %}

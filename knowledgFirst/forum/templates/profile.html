@@ -10,72 +10,99 @@
         /* Custom styles */
         .user-profile-container {
             padding: 20px;
+            background-color: #f2f2f2;
         }
 
         .user-profile-card {
-            background-color: #ffffff; /* White background */
-            color: #000000; /* Black text color */
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            background-color: #ffffff;
+            color: #333333;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
         }
 
         .user-profile-header {
             background-color: #007bff;
             color: white;
             padding: 20px;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-        }
-
-        .user-profile-header h1 {
-            font-size: 28px;
-            margin-bottom: 0;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            text-align: center; /* Center align the header text */
         }
 
         .user-profile-info {
             padding: 20px;
+            margin-bottom: 30px;
         }
 
         .info-item {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
         }
 
         .info-item span {
-            font-weight: bold;
             color: #555555;
+            flex: 1;
         }
 
-        @media screen and (min-width: 576px) {
-            .user-profile-card {
-                margin: 0 auto;
-                max-width: 500px;
-            }
+        .value {
+            font-size: 16px;
+            flex: 2;
         }
 
-        @media screen and (min-width: 768px) {
-            .user-profile-card {
-                max-width: 700px;
-            }
+        .additional-info-container {
+            margin-top: 30px;
         }
 
-        @media screen and (min-width: 992px) {
-            .user-profile-card {
-                max-width: 900px;
-            }
+        .additional-info-header {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        @media screen and (min-width: 1200px) {
-            .user-profile-card {
-                max-width: 1100px;
-            }
+        .additional-info-header:hover {
+            background-color: #0056b3;
         }
 
-        /* Adjust email text size for small screens */
-        @media screen and (max-width: 340px) {
-            .info-item.email .value {
-                font-size: 14px;
-            }
+        .additional-info-body {
+            background-color: #ffffff;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .additional-info-body .row {
+            margin-bottom: 10px;
+        }
+
+        .additional-info-body span {
+            font-size: 14px;
+            color: #333333;
+        }
+
+        /* Style the collapse button */
+        .collapse-btn {
+            color: white;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .collapse-btn:hover {
+            text-decoration: underline;
         }
     </style>
 
@@ -87,48 +114,64 @@
         {% else %}
             <div class="user-profile-card">
                 <div class="user-profile-header">
-                    <h1>Personal Area</h1>
+                    Personal Area
                 </div>
                 <div class="user-profile-info">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="info-item">
-                                <span>Username:</span>
+                                <span><b>Username:</b></span>
                                 <span class="value">{{ user_profile.user.username }}</span>
                             </div>
                             <div class="info-item email">
-                                <span>Email:</span>
+                                <span><b>Email:</b></span>
                                 <span class="value">{{ user_profile.email }}</span>
                             </div>
                             <div class="info-item">
-                                <span>Join date:</span>
-                                <span class="value">{{ user_profile.user.date_joined }}</span>
+                                <span><b>Join Date:</b></span>
+                                <span class="value">{{ user_profile.user.date_joined|date:"d/m/Y" }}</span>
                             </div>
                             <div class="info-item">
-                                <span>Grade:</span>
+                                <span><b>Grade:</b></span>
                                 <span class="value">{{ user_profile.grade }}</span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="info-item">
-                                <span>Total Topics:</span>
+                                <span><b>Opened Topics:</b></span>
                                 <span class="value">{{ user_profile.total_posts }}</span>
                             </div>
                             <div class="info-item">
-                                <span>Total Replies:</span>
+                                <span><b>Total Replies:</b></span>
                                 <span class="value">{{ user_profile.replies }}</span>
                             </div>
                             <div class="info-item">
-                                <span>Followers:</span>
+                                <span><b>Followers:</b></span>
                                 <span class="value">{{ user_profile.followers }}</span>
                             </div>
                             <div class="info-item">
-                                <span>Followees:</span>
+                                <span><b>Followees:</b></span>
                                 <span class="value">{{ user_profile.following }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="additional-info-header" data-toggle="collapse" data-target="#interestsCollapse" aria-expanded="true" aria-controls="interestsCollapse">
+                    <span class="collapse-btn">Interests</span>
+                    <span class="fas fa-chevron-down"></span> <!-- Added a down chevron icon -->
+                </div>
+                <div id="interestsCollapse" class="collapse show">
+                    <div class="additional-info-body">
+                        {% for interest in user_profile.interests %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span>{{ interest }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- Add similar collapsible sections for other fields here -->
             </div>
         {% endif %}
     </div>
