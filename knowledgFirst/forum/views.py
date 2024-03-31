@@ -103,8 +103,16 @@ def detail(request, id):
         profile = Profile.objects.get(user=user)
         p = Post.objects.get(pk=id)
         liked_by_user = p.likes.filter(user=request.user.profile).exists()
-
-    
+        
+        # Check if the user has already viewed this post
+        viewed_posts = request.session.get('viewed_posts', [])
+        if not id in viewed_posts:
+            target_post.views += 1
+            target_post.save()
+            # Add the post ID to the list of viewed posts in the session
+            viewed_posts.append(id)
+            request.session['viewed_posts'] = viewed_posts
+        
     context = {
         'post': target_post,
         'replies': replies,
@@ -271,7 +279,7 @@ def submit_reply(request):
                 reply_to_reply=Reply.objects.get(pk=reply_id),
                 post=Post.objects.get(pk=post_id)
             )
-            print(Reply.objects.get(pk=reply_id).content)
+            
         else:
             text = request.POST['reply']
             post_id = request.POST['post_id']
@@ -285,6 +293,9 @@ def submit_reply(request):
         author.replies = F('replies') + 1
         author.save()
         
+        # Increment the total replies count for the post
+        Post.objects.filter(pk=post_id).update(total_replies=F('total_replies') + 1)
+
         return redirect('detail', id=post_id)
     return HttpResponse("Invalid request or data", status=400)
 
