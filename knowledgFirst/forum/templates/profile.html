@@ -104,6 +104,30 @@
         .collapse-btn:hover {
             text-decoration: underline;
         }
+    
+        .topic-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .topic-card:hover {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .topic-info {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .topic-info li {
+            margin-bottom: 5px;
+        }
+
+        .topic-info li i {
+            margin-right: 5px;
+        }
     </style>
 
     <div class="container user-profile-container">
@@ -156,23 +180,90 @@
                         </div>
                     </div>
                 </div>
+                <!-- Additional informations -->
+                <!-- Collapbasle elements -->
+                <!-- Interests -->
                 <div class="additional-info-header" data-toggle="collapse" data-target="#interestsCollapse" aria-expanded="true" aria-controls="interestsCollapse">
                     <span class="collapse-btn">Interests</span>
                     <span class="fas fa-chevron-down"></span> <!-- Added a down chevron icon -->
                 </div>
-                <div id="interestsCollapse" class="collapse show">
+                <div id="interestsCollapse" class="collapse mb-3">
                     <div class="additional-info-body">
-                        {% for interest in user_profile.interests %}
                             <div class="row">
                                 <div class="col-md-12">
-                                    <span>{{ interest }}</span>
+                                    {% if user_profile.interests|length > 0 %}
+                                    <span>{{ user_profile.interests }}</span>
+                                    {% else %}
+                                    <span class="text-muted font-italic">You haven't set up a description yet.</span>
+                                    {% endif %}
                                 </div>
                             </div>
-                        {% endfor %}
                     </div>
                 </div>
-                <!-- Add similar collapsible sections for other fields here -->
+                <!-- My Topics -->
+                <div class="additional-info-header" data-toggle="collapse" data-target="#openedTopics" aria-expanded="true" aria-controls="openedTopics">
+                    <span class="collapse-btn">My Topics</span>
+                    <span class="fas fa-chevron-down"></span>
+                </div>
+                <div id="openedTopics" class="collapse mb-3">
+                    <div class="additional-info-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                {% if posts %}
+                                    {% for post in posts %}
+                                        <div class="card topic-card mb-3" onclick="redirectToPostDetail('{% url 'detail' post.id %}')">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <h5 class="card-title"><b>{{ post.title }}</b></h5>
+                                                        <p class="card-text">{{ post.content|truncatechars:20 }}</p>
+                                                        <p class="card-text">
+                                                            <small class="text-muted">Posted on {{ post.pub_date }}</small>
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <ul class="topic-info">
+                                                            <li><i class="fas fa-comments"></i> Replies: {{ post.total_replies }}</li>
+                                                            <li><i class="fas fa-thumbs-up"></i> Likes: {{ post.total_likes }}</li>
+                                                            <li style="color: {% if post.opened %}green{% else %}red{% endif %};"><i class="fas fa-circle"></i> {% if post.opened %}Opened{% else %}Closed{% endif %}</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                <span class="text-muted font-italic">No topics published yet.</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         {% endif %}
     </div>
+    <script>
+        function redirectToPostDetail(url) {
+            window.location.href = url;
+        }
+        
+        window.addEventListener("DOMContentLoaded", () => {
+            var interestsBtn = document.querySelector("[data-target='#interestsCollapse']");
+            var topicsBtn = document.querySelector("[data-target='#openedTopics']");
+    
+            interestsBtn.addEventListener("click", toggleArrow);
+            topicsBtn.addEventListener("click", toggleArrow);
+
+            function toggleArrow() {
+                var icon = this.querySelector("span.fas");
+                if (icon.classList.contains("fa-chevron-down")) {
+                    icon.classList.remove("fa-chevron-down");
+                    icon.classList.add("fa-chevron-up");
+                } else {
+                    icon.classList.remove("fa-chevron-up");
+                    icon.classList.add("fa-chevron-down");
+                }
+            }
+        });
+    </script>
 {% endblock %}

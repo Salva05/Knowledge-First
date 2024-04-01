@@ -52,7 +52,7 @@
 					{{ post.content | safe }}
 				</div>
 				<div class="mt-auto text-muted lks likes-updated">
-					<a href="#" data-toggle="modal" data-target="#exampleModalCenter2">{{ post.total_likes }} Likes </a>-
+					<a href="#" data-toggle="modal" data-target="#exampleModalCenter2">{{ post.total_likes }} Likes </a>|
 					<span>{{ post.views }} Views</span>
 				</div>
 				{% if user_authenticated %}
@@ -99,7 +99,7 @@
 		{% if user_authenticated %}
 		{% if reply.author.id == profile.id %}
 		<span data-toggle="tooltip" data-placement="top" title="Delete the reply">
-		<button class="trash-btn position-absolute mt-2 mr-2" data-toggle="modal" data-target="#exampleModalCenter4" data-reply-id="{{ reply.id }}">
+		<button class="trash-btn position-absolute mt-2 mr-2" data-toggle="modal" data-target="#examppleModalCenter4" data-reply-id="{{ reply.id }}">
 			<i class="fas fa-trash trash-icon"></i>
 		</button>
 		</span>
@@ -107,23 +107,34 @@
 		{% endif %}
 			<div class="comment-meta mb-3">Published on {{ reply.reply_date }}</div>
 			<!-- Main body of the reply -->
-			{% if reply.reply_to_reply != None %}
+			{% if reply.has_quote %}
 			<div class="bg-light border-left border-dark mb-3 py-3 px-3 text-dark">
-				To <b>{{ reply.reply_to_reply.author }}</b><br><br>
+				To <b>{{ reply.author }}</b><br><br>
 				{% if reply.reply_to_reply.content == '[deleted]' %}
 				<div class="reply-content font-italic text-muted">This reply has been deleted.</div>
 				{% else %}
-				<div class="reply-content">{{ reply.reply_to_reply.content }}</div>
+				<div class="reply-content">{{ reply.has_quote }}</div>
 				{% endif %}
 			</div>
+			{% else %}
+				{% if reply.reply_to_reply != None %}
+				<div class="bg-light border-left border-dark mb-3 py-3 px-3 text-dark">
+					To <b>{{ reply.reply_to_reply.author }}</b><br><br>
+					{% if reply.reply_to_reply.content == '[deleted]' %}
+					<div class="reply-content font-italic text-muted">This reply has been deleted.</div>
+					{% else %}
+					<div class="reply-content">{{ reply.reply_to_reply.content }}</div>
+					{% endif %}
+				</div>
+				{% endif %}
 			{% endif %}
-			<div class="comment-list">
+			<div class="comment-list border-top">
 				<div class="comment-item">
-					<div class="reply-content">{{ reply.content | linebreaks }}</div>
+					<div class="reply-content mt-3 quoteArea" data-reply-id="{{ reply.id }}" data-reply-author="{{ reply.author | escapejs }}">{{ reply.content | linebreaks }}</div>
 				</div>
 			</div>
 			<div class="mt-auto text-muted lks lksToTarget">
-				<a href="#" data-toggle="modal" data-target="#exampleModalCenter" id="rplLikes">{{ reply.likes }} Likes</a>
+				<a href="#" data-toggle="modal" data-target="#exampleModalCenter{{ reply.id }}" id="rplLikes">{{ reply.likes }} Likes</a>
 			</div>
 			{% if user_authenticated %}
 			<div class="mt-auto text-muted lks position-absolute bottom-0 end-0 mr-4">
@@ -137,6 +148,36 @@
 				{% endif %}
 			{% endif %}
 		</div>
+
+		<!-- Modal to display user's like in Replies -->
+		{% for reply in replies %}
+		<div class="modal fade" id="exampleModalCenter{{ reply.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLongTitle">Likes</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<ul>
+							{% if users_who_liked_replies|get_item:reply.id %}
+								{% for user in users_who_liked_replies|get_item:reply.id %}
+								<li><a href="#">{{ user.user.username }}</a></li>
+								{% endfor %}
+							{% else %}
+							<li>No users liked this reply.</li>
+							{% endif %}
+						</ul>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
 	</div>
 	{% endif %}
 	{% endfor %}
@@ -209,6 +250,7 @@
 					<input type="hidden" name="entity_type" id="entityType">
 					<input type="hidden" name="entity_id" id="entityId">
 					<input type="hidden" name="post_id" value="{{ post.id }}">
+					<input type="hidden" name="reply_quote" id="quote">
 					{% csrf_token %}
 					<textarea class="form-control" id="replyTextArea" rows="3" name="reply"
 						placeholder="Write your reply..."></textarea>
@@ -221,7 +263,7 @@
 	{% endif %}
 
 </div>
-<!-- Modal to display user's like -->
+<!-- Modal to display user's like in Posts -->
 <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
 	aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
@@ -234,9 +276,13 @@
 			</div>
 			<div class="modal-body">
 				<ul>
-					<li>John Doe - 2020-01-01</li>
-					<li>Jane Doe - 2020-01-02</li>
-					<li>John Smith - 2020-01-03</li>
+					{% if user_who_liked %}
+						{% for user in user_who_liked %}
+						<li><a href="#">{{ user }}</a></li>
+						{% endfor%}
+					{% else %}
+					<li>No users liked this post.</li>
+					{% endif %}
 				</ul>
 			</div>
 			<div class="modal-footer">
@@ -245,6 +291,30 @@
 		</div>
 	</div>
 </div>
+
+	<!-- Modal to display user's like in Replies -->
+	<div class="modal fade" id="exampleModalCenter5" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Likes</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<ul>
+						<!-- TO DO -->
+					</ul>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 <!-- Modal to delete post -->
 	<div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
@@ -269,7 +339,7 @@
 		</div>
 	</div>
 	<!-- Modal to delete reply -->
-	<div class="modal fade" id="exampleModalCenter4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	<div class="modal fade" id="examppleModalCenter4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header text-dark">
@@ -572,12 +642,8 @@
 	}
 
 	/* Styling for each comment item */
-	.comment-item {
-		background-color: #eaeaea;
-		border-radius: 5px;
-		padding: 15px;
-		margin-bottom: 30px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	.comment-item {	
+		margin-bottom: 25px;
 	}
 
 	.post-container p {
@@ -601,6 +667,10 @@
 		font-size: 0.9rem;
 		font-style: italic;
 	}
+
+	#ppv {
+		
+	}
 </style>
 <script>
 	let opened = false;
@@ -614,6 +684,12 @@
 		if (entityType == 'reply') {
 			document.getElementById('replyTo').innerHTML = replyAuthor;
 			document.getElementById('replyContent').innerHTML = replyContent;
+			document.getElementById('is_reply').style.display = 'flex';
+			document.getElementById('is_post').style.display = 'none';
+		} else if (entityType == 'specificReply') {
+			document.getElementById('replyTo').innerHTML = replyAuthor;
+			document.getElementById('replyContent').innerHTML = replyContent;
+			document.getElementById('quote').value = replyContent;
 			document.getElementById('is_reply').style.display = 'flex';
 			document.getElementById('is_post').style.display = 'none';
 		} else {
@@ -644,7 +720,69 @@
 		document.getElementById('userRpl').style.display = 'none';
 	}
 
+	window.addEventListener("DOMContentLoaded", () => {
+		const quoteAreas = document.querySelectorAll('.quoteArea');
+		let popover = null; // Track the current popover
+	
+		// Function to handle text selection
+		function handleSelection(event, replyId, replyAuthor) {
+			const selectedText = window.getSelection().toString().trim();
+			if (selectedText.length > 0) {
+				if (!popover) {
+					// If popover doesn't exist, create and display it
+					const popoverContent = `<a id="ppv" class="btn  btn-primary py-0 px-1" href="#userRpl" onclick="reply('specificReply', '${replyId}', '${selectedText}', '${replyAuthor}')">Quote</a>`; // Example popover content
+					popover = document.createElement('div');
+					popover.classList.add('popover');
+					popover.innerHTML = popoverContent;
+					popover.style.position = 'absolute'; // Set position to fixed for screen-relative positioning
+					popover.style.top = (event.clientY + window.scrollY - 60) + 'px'; // Adjusted top position to be 20px above the mouse
+					popover.style.left = (event.clientX - 40) + 'px';
+					document.body.appendChild(popover);
+
+					document.getElementById('ppv').addEventListener('click', () => {
+						document.getElementById('ppv').style.display = 'none';
+					})
+					// Attach click event listener to the popover to prevent propagation
+					popover.addEventListener('click', function(event) {
+						event.stopPropagation();
+					});
+
+					// Hide popover when user clicks outside
+					setTimeout(() => {
+						document.addEventListener('click', hidePopover);
+					}, 0); // Delay adding the event listener to ensure it's added after the current event loop
+				} else {
+					// If popover exists, remove it
+					hidePopover();
+				}
+			}
+		}
+		// Function to hide the popover
+		function hidePopover(event) {
+			if (popover && !popover.contains(event.target)) {
+				popover.remove();
+				popover = null;
+				document.removeEventListener('click', hidePopover);
+			}
+		}
+	
+		// Loop through each quote area and attach event listener
+		quoteAreas.forEach(quoteArea => {
+			// Access the related reply.id and reply.author within the loop
+			const replyId = quoteArea.dataset.replyId;
+			const replyAuthor = quoteArea.dataset.replyAuthor;
+
+			// Attach event listener with closure
+			quoteArea.addEventListener('mouseup', function(event) {
+				handleSelection(event, replyId, replyAuthor);
+			});
+		});
+	});
+
 	jQuery(document).ready(function() {
+		// logic of quoting
+
+
 		$('#like-btn').popover({
 			trigger: 'manual', 
 			placement: 'top' 

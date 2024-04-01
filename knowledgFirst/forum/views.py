@@ -104,15 +104,28 @@ def detail(request, id):
         p = Post.objects.get(pk=id)
         liked_by_user = p.likes.filter(user=request.user.profile).exists()
         
-        # Check if the user has already viewed this post
-        viewed_posts = request.session.get('viewed_posts', [])
-        if not id in viewed_posts:
-            target_post.views += 1
-            target_post.save()
-            # Add the post ID to the list of viewed posts in the session
-            viewed_posts.append(id)
-            request.session['viewed_posts'] = viewed_posts
+    # Check if the user has already viewed this post
+    viewed_posts = request.session.get('viewed_posts', [])
+    if not id in viewed_posts:
+        target_post.views += 1
+        target_post.save()
+        # Add the post ID to the list of viewed posts in the session
+        viewed_posts.append(id)
+        request.session['viewed_posts'] = viewed_posts
         
+    # Retrieve the likes associated with the post
+    user_who_liked = {}
+    likes = target_post.likes.all()
+
+    # Access the user who liked the post
+    for like in likes:
+        user_who_liked[like.user] = like.user.id
+
+    # Retrieve the users who liked each reply
+    users_who_liked_replies = {}
+    for reply in replies:
+        users_who_liked_replies[reply.id] = [like.user for like in reply.reply_like.all()]
+
     context = {
         'post': target_post,
         'replies': replies,
@@ -120,9 +133,11 @@ def detail(request, id):
         'user_authenticated': user_authenticated,
         'profile': profile,
         'liked_by_user': liked_by_user,
-        'replies_liked_by_user': replies_liked_by_user
+        'replies_liked_by_user': replies_liked_by_user,
+        'user_who_liked': user_who_liked,
+        'users_who_liked_replies': users_who_liked_replies,
     }
-
+    
     return HttpResponse(template.render(context, request))
 
 def signup(request):
@@ -224,7 +239,7 @@ def profile(request):
             user_profile = Profile.objects.get(user=user)
         except Profile.DoesNotExist:
             is_admin = True
-
+    
     if is_admin:
         context = {
             'categories': categories,
@@ -233,10 +248,12 @@ def profile(request):
             'user_authenticated': user_authenticated,
         }
     else:
+        posts = user_profile.post_set.all()
         context = {
             'categories': categories,
             'user_profile': user_profile,
             'user_authenticated': user_authenticated,
+            'posts': posts,
         }
 
     return HttpResponse(template.render(context, request))
@@ -279,7 +296,21 @@ def submit_reply(request):
                 reply_to_reply=Reply.objects.get(pk=reply_id),
                 post=Post.objects.get(pk=post_id)
             )
-            
+
+        elif reply_entity == 'specificReply':
+            text = request.POST['reply']
+            post_id = request.POST['post_id']
+            reply_id = request.POST['entity_id']
+            quote = request.POST['reply_quote']
+
+            rpl = Reply.objects.create(
+                content=text,
+                author=request.user.profile,
+                has_quote=quote,
+                reply_to_reply=Reply.objects.get(pk=reply_id),
+                post=Post.objects.get(pk=post_id)
+            )
+        
         else:
             text = request.POST['reply']
             post_id = request.POST['post_id']
@@ -311,6 +342,10 @@ def delete_reply(request):
         reply = Reply.objects.get(pk=reply_id)
         reply.content = '[deleted]'
         reply.save()
+
+        # Decrement the total replies count for the post
+        Post.objects.filter(pk=post_id).update(total_replies=F('total_replies') - 1)
+
     return redirect('detail', id=post_id)
 
 def post_like(request, post_id):
@@ -328,7 +363,6 @@ def post_like(request, post_id):
     
 def reply_like(request, reply_id):
     reply = get_object_or_404(Reply, pk=reply_id)
-    print('view chiamata')
 
     if ReplyLike.objects.filter(reply=reply, user=request.user.profile).exists():
         return JsonResponse({'success': False, 'message': 'User already liked this post.'})

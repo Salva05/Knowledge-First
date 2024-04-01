@@ -81,7 +81,6 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
-
 class Reply(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     content = models.TextField()
@@ -90,6 +89,7 @@ class Reply(models.Model):
     pinned = models.BooleanField(default=False)
     likes = models.IntegerField(default=0)
     reply_to_reply = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, default=None)
+    has_quote = models.TextField(null=True, blank=True, default=None)
 
     def __str__(self):
         return f"{self.author.user.username} - {self.post.title}"
@@ -123,7 +123,7 @@ class PostTag(models.Model):
 
 class ReplyLike(models.Model):
     reply = models.ForeignKey(Reply, on_delete=models.CASCADE, related_name='reply_like')
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='liker')
 
     def __str__(self):
         return f"{self.reply.author.user.username} - {self.user.user.username}"

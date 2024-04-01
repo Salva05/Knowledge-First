@@ -31,3 +31,8 @@ def custom_timesince(value):
         return '{} hour{} ago'.format(delta.seconds // 3600, 's' if delta.seconds // 3600 > 1 else '')
     else:
         return 'Just now'
+    
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
+
