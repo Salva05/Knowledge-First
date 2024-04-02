@@ -13,46 +13,45 @@
         <!-- Highlights Section -->
         <div class="col-md-3 mb-3">
             <div class="p-3 bg-light text-dark d-flex flex-column h-100" id="overflow">
-                <h3 id="highlights">
+                <h3 id="highlights" class="mb-4">
                     Members
                 </h3>
+                <!-- Total Members -->
+                <div class="total-members">
+                    <p class="mb-3">Total Members: <span class="badge badge-primary">{{ members.count }}</span></p>
+                </div>
                 <!-- Members -->
-                <table class="table table-hover border-bottom border-dark mb-5">
-                    <thead class="thead-light">
-                        <tr>
-                            <th class="text-center font-italic">
-                            {{ members.count }} total 
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for member in members %}
-                        <tr>
-                        <td class="text-center">{{ member.user.username }}<span class="text-muted font-italic"> - {{ member.grade }}</span></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                <div class="list-group">
+                    {% for member in members %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <img src="{% static 'avatars/user.png' %}" class="rounded-circle mr-3" alt="Avatar" style="width: 50px; height: 50px;">
+                                <div>
+                                    <h5 class="card-title mb-0">{{ member.user.username }}</h5>
+                                    <small class="text-muted">{{ member.grade }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
+        
         <!-- General Informations -->
         <div class="col-md-6 mb-3">
             <div class="p-3 bg-light text-dark">
-                <div class="forum-intro">
-                    <h2>Welcome to our vibrant community!</h2>
-                    <p>Whether you're a seasoned developer, a visionary designer, a creative soul, or simply someone
-                        who's passionate about the ever-evolving world of technology, you've arrived at the perfect
-                        destination. Here, amidst the digital tapestry of our forum, connections are forged, ideas
-                        take flight, and innovation finds its voice.</p>
-                    <p>Within these virtual walls, curiosity reigns supreme. Feel free to wander through our
-                        corridors of knowledge, pose your burning questions, and bask in the collective wisdom of
-                        our diverse members. Remember, this is a sanctuary of learning and collaboration, where
-                        mutual respect and camaraderie guide our interactions.</p>
-                    <p>So, whether you're here to seek guidance, share your expertise, or simply soak in the
-                        electrifying atmosphere of camaraderie, know that you've found your tribe. Together, let's
-                        embark on a journey of exploration, enlightenment, and boundless possibility. Welcome, dear
-                        friend, to our digital oasis.</p>
+                <div class="forum-intro-container">
+                    <div class="forum-intro">
+                        <div class="intro-text">
+                            <h2>Welcome to Our Vibrant Community!</h2>
+                            <p>Join us in exploring the exciting world of technology, where creativity knows no bounds and innovation thrives.</p>
+                            <p>Connect with like-minded individuals, share your expertise, and embark on a journey of learning and collaboration.</p>
+                        </div>
+                    </div>
                 </div>
+                
                 <div class="container-fluid">
                     <h3 class="header text-center mb-3">Latest topics</h3>
                     <div class="card-columns">
@@ -80,23 +79,26 @@
         </div>
         <div class="col-md-3 mb-3">
             <div class="p-3 bg-light text-dark d-flex flex-column h-100">
-                <h5 class="font-italic">
+                <h5 class="font-italic mb-4">
                     <b>Most quoted topics</b>
                 </h5>
                 {% if most_quoted|length == 0 %}
-                <p class="text-muted">No topics yet</p>
+                    <p class="text-muted">No topics yet</p>
                 {% else %}
-                <ul class="list-group">
-                    {% for topic in most_quoted %}
-                    <span class="border-bottom">
-                    <li class="list-group-item">
-                        <a href="{% url 'detail' id=topic.id %}">{{ topic.title }}</a><span class="text-muted font-italic"> | {{ topic.total_likes }} likes</span>
-                    </li>
-                </span>
-                    {% endfor %}
-                </ul>
+                    <div class="list-group">
+                        {% for topic in most_quoted %}
+                            <a href="{% url 'detail' id=topic.id %}" class="list-group-item list-group-item-action d-flex border-bottom mt-1 justify-content-between align-items-center">
+                                <div class="topic-info">
+                                    <h6 class="mb-0">{{ topic.title|truncatechars:30 }}</h6>
+                                    <small class="text-muted">Posted by <b class="font-italic">{{ topic.author }}</b><br>{{ topic.pub_date|date:"d/m/Y" }}</small>
+                                </div>
+                                <span class="badge badge-primary badge-pill">{{ topic.total_likes }} likes</span>
+                            </a>
+                        {% endfor %}
+                    </div>
                 {% endif %}
-                <h5 class="font-italic mt-5">
+                
+                <h5 class="font-italic mt-4">
                     <b>Most active users</b>
                 </h5>
                 {% if most_active|length == 0 %}
@@ -104,12 +106,13 @@
                 {% else %}
                 <ul class="list-group">
                     {% for user in most_active %}
-                    <span class="border-bottom"><li class="list-group-item">&#9733 {{ user.user.username }}<span class="text-muted font-italic"> - {{ user.replies }} Total replies</span></li></span>
+                    <li class="border-bottom mb-1 list-group-item d-flex justify-content-between align-items-center">&#9733 {{ user.user.username }}<span class="badge badge-primary badge-pill">{{ user.replies }} Total replies</span></li>
                     {% endfor %}
                 </ul>
                 {% endif %}
             </div>
         </div>
+        
     </div>
     <div class="row">
         <div class="col-md-3">
@@ -118,6 +121,35 @@
     </div>
 </div>
 <style>
+    .forum-intro-container {
+        background-color: #f8f9fa;
+        padding: 40px 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+    
+    .forum-intro {
+        display: flex;
+        flex-direction: column-reverse; /* Reverse the order of flex items */
+    }
+    
+    .intro-text {
+        flex: 1;
+    }
+    
+    .intro-text h2 {
+        font-size: 28px;
+        margin-bottom: 20px;
+        color: #4CAF50;
+    }
+    
+    .intro-text p {
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 10px;
+    }
+
     html {
         height: 100%;
         margin: 0;

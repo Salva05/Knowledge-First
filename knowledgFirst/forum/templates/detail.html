@@ -109,7 +109,7 @@
 			<!-- Main body of the reply -->
 			{% if reply.has_quote %}
 			<div class="bg-light border-left border-dark mb-3 py-3 px-3 text-dark">
-				To <b>{{ reply.author }}</b><br><br>
+				To <b>{{ reply.reply_to_reply.author }}</b><br><br>
 				{% if reply.reply_to_reply.content == '[deleted]' %}
 				<div class="reply-content font-italic text-muted">This reply has been deleted.</div>
 				{% else %}
@@ -771,7 +771,7 @@
 			// Access the related reply.id and reply.author within the loop
 			const replyId = quoteArea.dataset.replyId;
 			const replyAuthor = quoteArea.dataset.replyAuthor;
-
+			
 			// Attach event listener with closure
 			quoteArea.addEventListener('mouseup', function(event) {
 				handleSelection(event, replyId, replyAuthor);
