@@ -20,4 +20,5 @@ urlpatterns = [
     path('post_like/<int:post_id>/', views.post_like, name='post_like'),
     path('reply_like/<int:reply_id>/', views.reply_like, name='reply_like'),
     path('discussions/', views.discussions, name='discussions'),
+    path('update_post', views.update_post, name='update_post'),
 ]

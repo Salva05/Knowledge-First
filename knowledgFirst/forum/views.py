@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.http import HttpResponse, JsonResponse
+from django.views.decorators.http import require_POST
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import EmailValidator
 from django.core.exceptions import ValidationError
@@ -391,6 +392,9 @@ def reply_like(request, reply_id):
         return JsonResponse({'success': True, 'message': 'Post liked successfully.'})
     
 def discussions(request):
+    user_authenticated = request.user.is_authenticated
+    categories = Post.get_categories()
+
     template = loader.get_template('discussions.html')
 
     profile = Profile.objects.get(user=request.user)
@@ -407,7 +411,50 @@ def discussions(request):
         'posts': posts,
         'replies': replies,
         'profile': profile,
-        'replied_posts': replied_posts
+        'replied_posts': replied_posts,
+        'user_authenticated': user_authenticated,
+        'categories': categories,
     }
     
     return HttpResponse(template.render(context, request))
+
+@require_POST
+def update_post(request):
+    user = request.user
+    user.authenticated = request.user.is_authenticated
+
+    post_id = request.POST.get('post_id')
+    
+    # Check if the action is 'delete'
+    action = request.POST.get('action')
+
+    if action == 'delete':
+        post = Post.objects.get(pk=post_id)
+        post.delete()
+        return JsonResponse({'success': True, 'action': 'delete'})
+    
+    if action == 'solved':
+        post = Post.objects.get(pk=post_id)
+        post.state = "Solved"
+        post.save()
+        return JsonResponse({'success': True, 'action': 'solved'})
+
+    if action == 'open':
+        post = Post.objects.get(pk=post_id)
+        post.state = "Open"
+        post.save()
+        return JsonResponse({'success': True, 'action': 'open'})
+    
+    # else the action is 'update'
+    updated_title = request.POST.get('title')
+    updated_content = request.POST.get('content')
+    
+
+
+    # Update the post
+    post = Post.objects.get(pk=post_id)
+    post.title = updated_title
+    post.content = updated_content
+    post.save()
+    
+    return JsonResponse({'success': True})

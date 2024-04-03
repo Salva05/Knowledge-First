@@ -6,169 +6,354 @@
 {% endblock %}
 
 {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 <div class="container">
-    <!-- Section for My Threads -->
-    <div class="section">
-        <h1 class="section-title">My Threads</h1>
-        <div class="row">
-            {% for post in posts %}
-                <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <i class="fas fa-cog settings-icon float-right" onclick="settings('{{ post.id }}', '{{ post.title }}', '{{ post.content }}')" title="Settings"></i>
-                                <a href="{% url 'detail' post.id %}" class="card-title text-primary" style="text-decoration: none;">{{ post.title }}</a>
-                                <p class="card-text">{{ post.content|truncatechars:100 }}</p>
-                                {% if post.state == 'Open' %}
-                                    <span class="badge badge-success">Opened</span>
-                                {% else %}
-                                    <span class="badge badge-warning">Solved</span>
-                                {% endif %}
-                            </div>
-                            <div class="card-footer">
-                                <small class="text-light">{{ post.total_replies }} replies • {{ post.total_likes }} likes • {{ post.views }} views • Published {{ post.pub_date|timesince }} ago</small>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="section">
+                <h2 class="text-center mb-4">My Threads</h2>
+                {% if posts %}
+                <div class="row">
+                    {% for post in posts %}
+                        <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <i class="fas fa-cog settings-icon float-right" onclick="settings('{{ post.id }}', '{{ post.title|escapejs }}', '{{ post.content|escapejs }}', '{{ post.state }}')" title="Settings"></i>
+                                    <a href="{% url 'detail' post.id %}" class="card-title text-primary" style="text-decoration: none;">{{ post.title }}</a>
+                                    <p class="card-text">{{ post.content|truncatechars:100 }}</p>
+                                    {% if post.state == 'Open' %}
+                                        <span class="badge badge-success">Opened</span>
+                                    {% else %}
+                                        <span class="badge badge-warning">Solved</span>
+                                    {% endif %}
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-light">{{ post.total_replies }} replies • {{ post.total_likes }} likes • {{ post.views }} views • Published {{ post.pub_date|timesince }} ago</small>
+                                </div>
                             </div>
                         </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
+                {% else %}
+                <h1 class="text-center text-muted font-italic">No threads at the moment.<br>Start a Discussion!</h1>
+                {% endif %}
+            </div>
         </div>
     </div>
-
-    <!-- Section for My Replied Threads -->
-    <div class="section">
-        <h1 class="section-title">Replied Threads</h1>
-        <div class="row">
-            {% for replied_post in replied_posts %}
-                <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <a href="{% url 'detail' replied_post.id %}" class="card-title text-primary" style="text-decoration: none;">{{ replied_post.title }}</a>
-                                <p class="card-text">{{ replied_post.content|truncatechars:100 }}</p>
-                                {% if replied_post.state == 'Open' %}
-                                    <span class="badge badge-success">Opened</span>
-                                {% else %}
-                                    <span class="badge badge-warning">Solved</span>
-                                {% endif %}
-                            </div>
-                            <div class="card-footer">
-                                <small class="text-light">{{ replied_post.total_replies }} replies • {{ replied_post.total_likes }} likes • {{ replied_post.views }} views • Started by <b>{{ replied_post.author }}</b> • {{ replied_post.pub_date|timesince }} ago</small>
+    
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="section">
+                <h2 class="text-center mb-4">Recent Threads</h2>
+                {% if replied_posts %}
+                <div class="row">
+                    {% for replied_post in replied_posts %}
+                        <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <a href="{% url 'detail' replied_post.id %}" class="card-title text-primary" style="text-decoration: none;">{{ replied_post.title }}</a>
+                                    <p class="card-text">{{ replied_post.content|truncatechars:100 }}</p>
+                                    {% if replied_post.state == 'Open' %}
+                                        <span class="badge badge-success">Opened</span>
+                                    {% else %}
+                                        <span class="badge badge-warning">Solved</span>
+                                    {% endif %}
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-light">{{ replied_post.total_replies }} replies • {{ replied_post.total_likes }} likes • {{ replied_post.views }} views • Started by <b>{{ replied_post.author }}</b> • {{ replied_post.pub_date|timesince }} ago</small>
+                                </div>
                             </div>
                         </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
+                {% else %}
+                <h1 class="text-center text-muted font-italic">No threads at the moment.<br>Join a Discussion!</h1>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Modal -->
+<!-- New Modal -->
 <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
+            <div class="modal-header bg-dark text-white">
                 <h5 class="modal-title" id="settingsModalLabel">Post Settings</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true" class="text-light">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="text-dark mb-4" id="postTitle">Post Title</h4>
+                        <p class="text-dark" id="postContent">Post Content</p>
+                    </div>
+                </div>
+                <div class="row mt-4">
                     <div class="col-md-6">
-                        <h5 class="text-dark" id="postTitle"></h5>
-                        <p class="text-dark" id="postContent"></p>
+                        <button type="button" class="btn btn-outline-info btn-block mb-1" onclick="editTitle()">
+                            <i class="fas fa-edit"></i> Edit Title
+                        </button>
                     </div>
                     <div class="col-md-6">
-                        <div class="text-right">
-                            <button type="button" class="btn btn-danger mb-2" onclick="deletePost()">Delete Post</button>
-                            <!-- Edit Post buttons with icons -->
-                            <div class="mb-2">
-                                <button type="button" class="btn btn-info btn-sm mr-2" onclick="editTitle()">
-                                    <i class="fas fa-edit"></i> Edit Title
-                                </button>
-                            </div>
-                            <div>
-                                <button type="button" class="btn btn-info btn-sm mr-2" onclick="editContent()">
-                                    <i class="fas fa-edit"></i> Edit Content
-                                </button>
-                            </div>
-                        </div>
+                        <button type="button" class="btn btn-outline-info btn-block mb-1" onclick="editContent()">
+                            <i class="fas fa-edit"></i> Edit Content
+                        </button>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-outline-success btn-block mb-1" onclick="markAsSolved()">
+                            <i class="fas fa-check"></i> Mark as Solved
+                        </button>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" onclick="saveChanges()">Save changes</button>
+                <button type="button" class="btn btn-danger" onclick="deletePost()">Delete Post</button>
             </div>
         </div>
     </div>
 </div>
 
+<style>
+    .editable {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        outline: none; /* Remove the default focus border */
+    }
 
-    <style>
-        .settings-icon:hover {
-            cursor: pointer;
-            color: grey;
-        }
+    #postContent {
+        max-height: 300px; 
+        overflow-y: auto;
+    }
 
-        body {
-            background-color: #222;
-            color: #eee;
-        }
+    .settings-icon:hover {
+        cursor: pointer;
+        color: grey;
+    }
 
-        .section {
-            margin-bottom: 40px;
-        }
+    body {
+        background-color: #222;
+        color: #eee;
+    }
 
-        .section-title {
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
+    .section {
+        margin-bottom: 40px;
+    }
 
-        .card {
-            background-color: #333;
-            color: #eee;
-            border: 1px solid #444;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
+    .section-title {
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
 
-        .card:hover {
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            transform: translateY(-5px);
-        }
+    .card {
+        background-color: #333;
+        color: #eee;
+        border: 1px solid #444;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
 
-        .card-title {
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
+    .card:hover {
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
+    }
 
-        .badge {
-            margin-right: 5px;
-        }
+    .card-title {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
 
-        .card-footer {
-            background-color: #444;
-            border-top: 1px solid #555;
-            border-radius: 0 0 8px 8px;
-            padding: 10px 15px;
-        }
+    .badge {
+        margin-right: 5px;
+    }
 
-        .card-footer small {
-            font-size: 14px;
-            color: #ccc; /* Light grey color */
-        }
+    .card-footer {
+        background-color: #444;
+        border-top: 1px solid #555;
+        border-radius: 0 0 8px 8px;
+        padding: 10px 15px;
+    }
 
-        .post-link {
-            text-decoration: none;
-            color: inherit;
+    .card-footer small {
+        font-size: 14px;
+        color: #ccc; /* Light grey color */
+    }
+
+    .post-link {
+        text-decoration: none;
+        color: inherit;
+    }
+</style>
+
+<script>
+    let postIdToUpdate = null; // Variable to store the post ID being edited
+
+    function settings(postId, postTitle, postContent, postState) {
+        // ensure the modal is reset
+        let div;
+        if (postState == "Open") {
+            div = `
+                <button type="button" class="btn btn-outline-success btn-block mb-1" onclick="markAsSolved()">
+                    <i class="fas fa-check"></i> Mark as Solved
+                </button>
+            `;
+        } else {
+            div = `
+                <button type="button" class="btn btn-outline-danger btn-block mb-1" onclick="markAsOpen()">
+                    <i class="fas fa-times"></i> Mark as Open
+                </button>
+            `;
         }
-    </style>
-    <script>
-        function settings(postId, postTitle, postContent) {
-            $('#postTitle').text(postTitle); // Populate post title
-            $('#postContent').text(postContent); // Populate post content
-            $('#settingsModal').modal('show'); // Show the modal dialog box
-        }
-    </script>
+        $('#settingsModalLabel').text('Post Settings');
+        $('#settingsModal .modal-body').html(`
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="text-dark mb-4" id="postTitle">Post Title</h4>
+                    <p class="text-dark" id="postContent">Post Content</p>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-outline-info btn-block mb-1" onclick="editTitle()">
+                        <i class="fas fa-edit"></i> Edit Title
+                    </button>
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-outline-info btn-block mb-1" onclick="editContent()">
+                        <i class="fas fa-edit"></i> Edit Content
+                    </button>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    ${div}
+                </div>
+            </div>
+        `);
+        postIdToUpdate = postId; // Store the post ID
+        $('#postTitle').text(postTitle).removeAttr('contenteditable').removeClass('editable'); // Reset title
+        $('#postContent').text(postContent).removeAttr('contenteditable').removeClass('editable'); // Reset content
+        $('#settingsModal').modal('show'); // Show the modal dialog box
+    }
+
+    function editTitle() {
+        $('#postTitle').attr('contenteditable', true).addClass('editable').focus(); // Make title editable and focus on it
+    }
+
+    function editContent() {
+        $('#postContent').attr('contenteditable', true).addClass('editable').focus(); // Make content editable and focus on it
+    }
+
+    function saveChanges() {
+        // Get the updated title and content
+        let updatedTitle = $('#postTitle').text();
+        let updatedContent = $('#postContent').text();
+
+        // Send the updated data (title, content, and post ID) to the server
+        $.ajax({
+            type: 'POST',
+            url: '{% url "update_post" %}', // URL to send the data
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}', // Include CSRF token
+                post_id: postIdToUpdate,
+                title: updatedTitle,
+                content: updatedContent
+            },
+            success: function(response) {
+                // reload the page
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                // Handle error, if needed
+                console.error("Error occurred while saving changes:", error);
+            }
+        });
+    }
+
+    function deletePost() {
+        // change the title of the modal
+        $('#settingsModalLabel').text('Delete Post');
+        // change the body of the modal
+        $('#settingsModal .modal-body').html('<p class="text-dark">Are you sure you want to delete this post?</p>');
+        // change the footer of the modal
+        $('#settingsModal .modal-footer').html(`
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger" onclick="confirmDelete()">Confirm</button>
+        `);
+    }
+
+    function confirmDelete() {
+        // Send the post ID to the server to delete the post
+        $.ajax({
+            type: 'POST',
+            url: '{% url "update_post" %}', // URL to send the data
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}', // Include CSRF token
+                post_id: postIdToUpdate,
+                action: 'delete'
+            },
+            success: function(response) {
+                // reload the page
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                // Handle error, if needed
+                console.error("Error occurred while deleting the post:", error);
+            }
+        });
+    }
+
+    function markAsSolved() {
+        // Send the post ID to the server to mark the post as solved
+        $.ajax({
+            type: 'POST',
+            url: '{% url "update_post" %}', // URL to send the data
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}', // Include CSRF token
+                post_id: postIdToUpdate,
+                action: 'solved'
+            },
+            success: function(response) {
+                // reload the page
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                // Handle error, if needed
+                console.error("Error occurred while marking the post as solved:", error);
+            }
+        });
+    }
+
+    function markAsOpen() {
+        // Send the post ID to the server to mark the post as open
+        $.ajax({
+            type: 'POST',
+            url: '{% url "update_post" %}', // URL to send the data
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}', // Include CSRF token
+                post_id: postIdToUpdate,
+                action: 'open'
+            },
+            success: function(response) {
+                // reload the page
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                // Handle error, if needed
+                console.error("Error occurred while marking the post as open:", error);
+            }
+        });
+    }
+</script>
 {% endblock %}
