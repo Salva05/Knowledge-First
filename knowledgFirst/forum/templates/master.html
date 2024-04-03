@@ -18,7 +18,13 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
-
+<style>
+@media (min-width: 992px) {
+    .newTopic {
+        margin-right: 8px;
+    }
+}
+</style>
 <body class="p-3 mb-2 bg-dark text-white rounded">
     <!-- Header -->
     <div class="container-fluid border-bottom border-secondary my-3">
@@ -121,11 +127,13 @@
         </nav>
     </div>
     <!-- Body -->
+    <div>
     {% block content %}
     {% endblock %}
 
     {% block signout %}
     {% endblock %}
+    </div>
     <!-- Footer -->
     <div class="row">
         <div class="col-md-12">
@@ -145,10 +153,4 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 </body>
-<style>
-@media (min-width: 992px) {
-    .newTopic {
-        margin-right: 8px;
-    }
-}
 </html>

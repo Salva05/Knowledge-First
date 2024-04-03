@@ -265,7 +265,7 @@
                                                             <li><i class="fas fa-user"></i> Author: {{ post.post.author }}</li>
                                                             <li><i class="fas fa-comments"></i> Replies: {{ post.post.total_replies }}</li>
                                                             <li><i class="fas fa-thumbs-up"></i> Likes: {{ post.post.total_likes }}</li>
-                                                            <li style="color: {% if post.post.state == 'Open' %}green{% else %}orange{% endif %};"><i class="fas fa-circle"></i> {% if post.post.state == 'Open' %}Open{% else %}Closed{% endif %}</li>
+                                                            <li style="color: {% if post.post.state == 'Open' %}green{% else %}orange{% endif %};"><i class="fas fa-circle"></i> {% if post.post.state == 'Open' %}Opened{% else %}Closed{% endif %}</li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -290,9 +290,11 @@
         window.addEventListener("DOMContentLoaded", () => {
             var interestsBtn = document.querySelector("[data-target='#interestsCollapse']");
             var topicsBtn = document.querySelector("[data-target='#openedTopics']");
-    
+            var likedTopicsBtn = document.querySelector("[data-target='#likedTopics']");
+
             interestsBtn.addEventListener("click", toggleArrow);
             topicsBtn.addEventListener("click", toggleArrow);
+            likedTopicsBtn.addEventListener("click", toggleArrow);
 
             function toggleArrow() {
                 var icon = this.querySelector("span.fas");

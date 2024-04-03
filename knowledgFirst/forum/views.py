@@ -388,3 +388,18 @@ def reply_like(request, reply_id):
         reply.likes += 1
         reply.save()
         return JsonResponse({'success': True, 'message': 'Post liked successfully.'})
+    
+def discussions(request):
+    template = loader.get_template('discussions.html')
+
+    profile = Profile.objects.get(user=request.user)
+    replies = Reply.objects.filter(author=profile)
+    replied_posts = [reply.post for reply in replies]
+
+    context = {
+        'replies': replies,
+        'profile': profile,
+        'replied_posts': replied_posts
+    }
+    
+    return HttpResponse(template.render(context, request))
