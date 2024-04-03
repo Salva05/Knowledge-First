@@ -6,63 +6,108 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <!-- Section for My Threads -->
-        <div class="section">
-            <h1 class="section-title">My Threads</h1>
-            <div class="row">
-                {% for post in posts %}
-                    <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
-                        <a href="{% url 'detail' post.id %}" class="post-link" style="text-decoration: none;">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title">{{ post.title }}</h4>
-                                    <p class="card-text">{{ post.content|truncatechars:100 }}</p>
-                                    {% if post.state == 'Open' %}
-                                        <span class="badge badge-success">Opened</span>
-                                    {% else %}
-                                        <span class="badge badge-warning">Solved</span>
-                                    {% endif %}
-                                </div>
-                                <div class="card-footer">
-                                    <small class="text-light">{{ post.total_replies }} replies • {{ post.total_likes }} likes • {{ post.views }} views • Published {{ post.pub_date|timesince }} ago</small>
-                                </div>
+<div class="container">
+    <!-- Section for My Threads -->
+    <div class="section">
+        <h1 class="section-title">My Threads</h1>
+        <div class="row">
+            {% for post in posts %}
+                <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <i class="fas fa-cog settings-icon float-right" onclick="settings('{{ post.id }}', '{{ post.title }}', '{{ post.content }}')" title="Settings"></i>
+                                <a href="{% url 'detail' post.id %}" class="card-title text-primary" style="text-decoration: none;">{{ post.title }}</a>
+                                <p class="card-text">{{ post.content|truncatechars:100 }}</p>
+                                {% if post.state == 'Open' %}
+                                    <span class="badge badge-success">Opened</span>
+                                {% else %}
+                                    <span class="badge badge-warning">Solved</span>
+                                {% endif %}
                             </div>
-                        </a>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- Section for My Replied Threads -->
-        <div class="section">
-            <h1 class="section-title">My Replied Threads</h1>
-            <div class="row">
-                {% for replied_post in replied_posts %}
-                    <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
-                        <a href="{% url 'detail' replied_post.id %}" class="post-link" style="text-decoration: none;">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title">{{ replied_post.title }}</h4>
-                                    <p class="card-text">{{ replied_post.content|truncatechars:100 }}</p>
-                                    {% if replied_post.state == 'Open' %}
-                                        <span class="badge badge-success">Opened</span>
-                                    {% else %}
-                                        <span class="badge badge-warning">Solved</span>
-                                    {% endif %}
-                                </div>
-                                <div class="card-footer">
-                                    <small class="text-light">{{ replied_post.total_replies }} replies • {{ replied_post.total_likes }} likes • {{ replied_post.views }} views • Started by <b>{{ replied_post.author }}</b> • {{ replied_post.pub_date|timesince }} ago</small>
-                                </div>
+                            <div class="card-footer">
+                                <small class="text-light">{{ post.total_replies }} replies • {{ post.total_likes }} likes • {{ post.views }} views • Published {{ post.pub_date|timesince }} ago</small>
                             </div>
-                        </a>
-                    </div>
-                {% endfor %}
-            </div>
+                        </div>
+                </div>
+            {% endfor %}
         </div>
     </div>
 
+    <!-- Section for My Replied Threads -->
+    <div class="section">
+        <h1 class="section-title">Replied Threads</h1>
+        <div class="row">
+            {% for replied_post in replied_posts %}
+                <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <a href="{% url 'detail' replied_post.id %}" class="card-title text-primary" style="text-decoration: none;">{{ replied_post.title }}</a>
+                                <p class="card-text">{{ replied_post.content|truncatechars:100 }}</p>
+                                {% if replied_post.state == 'Open' %}
+                                    <span class="badge badge-success">Opened</span>
+                                {% else %}
+                                    <span class="badge badge-warning">Solved</span>
+                                {% endif %}
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-light">{{ replied_post.total_replies }} replies • {{ replied_post.total_likes }} likes • {{ replied_post.views }} views • Started by <b>{{ replied_post.author }}</b> • {{ replied_post.pub_date|timesince }} ago</small>
+                            </div>
+                        </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="settingsModalLabel">Post Settings</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-dark" id="postTitle"></h5>
+                        <p class="text-dark" id="postContent"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-right">
+                            <button type="button" class="btn btn-danger mb-2" onclick="deletePost()">Delete Post</button>
+                            <!-- Edit Post buttons with icons -->
+                            <div class="mb-2">
+                                <button type="button" class="btn btn-info btn-sm mr-2" onclick="editTitle()">
+                                    <i class="fas fa-edit"></i> Edit Title
+                                </button>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-info btn-sm mr-2" onclick="editContent()">
+                                    <i class="fas fa-edit"></i> Edit Content
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
     <style>
+        .settings-icon:hover {
+            cursor: pointer;
+            color: grey;
+        }
+
         body {
             background-color: #222;
             color: #eee;
@@ -119,4 +164,11 @@
             color: inherit;
         }
     </style>
+    <script>
+        function settings(postId, postTitle, postContent) {
+            $('#postTitle').text(postTitle); // Populate post title
+            $('#postContent').text(postContent); // Populate post content
+            $('#settingsModal').modal('show'); // Show the modal dialog box
+        }
+    </script>
 {% endblock %}
