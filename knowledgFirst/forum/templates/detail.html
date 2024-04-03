@@ -759,7 +759,7 @@
 		}
 		// Function to hide the popover
 		function hidePopover(event) {
-			if (popover && !popover.contains(event.target)) {
+			if (event && popover && !popover.contains(event.target)) {
 				popover.remove();
 				popover = null;
 				document.removeEventListener('click', hidePopover);
@@ -832,7 +832,6 @@
 
 		// AJAX request for liking a reply
 		$('.reply-like-btn').click(function(e) {
-			console.log('reply tried to liek')
 			e.preventDefault(); 
 			var replyId = $(this).data('reply-id');
 			var $likeBtn = $(this);
