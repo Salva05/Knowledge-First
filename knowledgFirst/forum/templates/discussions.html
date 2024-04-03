@@ -6,59 +6,117 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="display-4 mb-4">My Discussions</h1>
+    <div class="container">
+        <!-- Section for My Threads -->
+        <div class="section">
+            <h1 class="section-title">My Threads</h1>
+            <div class="row">
+                {% for post in posts %}
+                    <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+                        <a href="{% url 'detail' post.id %}" class="post-link" style="text-decoration: none;">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">{{ post.title }}</h4>
+                                    <p class="card-text">{{ post.content|truncatechars:100 }}</p>
+                                    {% if post.state == 'Open' %}
+                                        <span class="badge badge-success">Opened</span>
+                                    {% else %}
+                                        <span class="badge badge-warning">Solved</span>
+                                    {% endif %}
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-light">{{ post.total_replies }} replies • {{ post.total_likes }} likes • {{ post.views }} views • Published {{ post.pub_date|timesince }} ago</small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
             </div>
         </div>
-        <div class="row">
-            {% for replied_post in replied_posts %}
-                <div class="col-12 col-sm-12 col-md-6 my-2">
-                    <a href="{% url 'detail' replied_post.id %}" style="text-decoration: none;">
-                        <div class="card mb-4 border-0 shadow h-100">
-                            <div class="card-body">
-                                <h4 class="card-title text-primary">{{ replied_post.title }}</h4>
-                                {% if replied_post.state == 'Open' %}
-                                    <span class="badge badge-success float-left">Opened</span><br>
-                                {% else %}
-                                    <span class="badge badge-warning float-left">Solved</span><br>
-                                {% endif %}
-                                <p class="card-text text-dark mt-3">{{ replied_post.content|truncatechars:50 }}</p>
+
+        <!-- Section for My Replied Threads -->
+        <div class="section">
+            <h1 class="section-title">My Replied Threads</h1>
+            <div class="row">
+                {% for replied_post in replied_posts %}
+                    <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+                        <a href="{% url 'detail' replied_post.id %}" class="post-link" style="text-decoration: none;">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">{{ replied_post.title }}</h4>
+                                    <p class="card-text">{{ replied_post.content|truncatechars:100 }}</p>
+                                    {% if replied_post.state == 'Open' %}
+                                        <span class="badge badge-success">Opened</span>
+                                    {% else %}
+                                        <span class="badge badge-warning">Solved</span>
+                                    {% endif %}
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-light">{{ replied_post.total_replies }} replies • {{ replied_post.total_likes }} likes • {{ replied_post.views }} views • Started by <b>{{ replied_post.author }}</b> • {{ replied_post.pub_date|timesince }} ago</small>
+                                </div>
                             </div>
-                            <!-- Further details about the post: total replies, likes, views, and state of the topic: open or close (green or white circle) -->
-                            <div class="card-footer bg-transparent border-top-0 text-muted">
-                            
-                            </div>
-                            <!-- Started by the author and the time since the post was created -->
-                            <div class="card-footer bg-transparent border-top-0 text-muted" style="position: relative;">
-                            <small>{{ replied_post.total_replies }} replies • {{ replied_post.total_likes }} likes • {{ replied_post.views }} views</small><br>
-                                <small>Started by <b class="font-italic">{{ replied_post.author }}</b> • {{ replied_post.pub_date|timesince }} ago</small>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            {% endfor %}
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 
     <style>
+        body {
+            background-color: #222;
+            color: #eee;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
         .card {
-            border-radius: 15px;
-            transition: transform 0.3s;
-            position: relative;
+            background-color: #333;
+            color: #eee;
+            border: 1px solid #444;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .card:hover {
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             transform: translateY(-5px);
         }
 
-        .jumbotron {
-            background: linear-gradient(135deg, #2E8B57, #3CB371);
-            color: #fff;
-            padding: 40px 20px;
-            border-radius: 15px;
-            margin-bottom: 30px;
+        .card-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            margin-right: 5px;
+        }
+
+        .card-footer {
+            background-color: #444;
+            border-top: 1px solid #555;
+            border-radius: 0 0 8px 8px;
+            padding: 10px 15px;
+        }
+
+        .card-footer small {
+            font-size: 14px;
+            color: #ccc; /* Light grey color */
+        }
+
+        .post-link {
+            text-decoration: none;
+            color: inherit;
         }
     </style>
 {% endblock %}

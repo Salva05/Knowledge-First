@@ -6,6 +6,7 @@ from django.core.validators import EmailValidator
 from django.core.exceptions import ValidationError
 from django.db.models import F, Count
 from django.contrib.auth import login, logout
+from datetime import datetime, timedelta
 
 
 
@@ -393,10 +394,17 @@ def discussions(request):
     template = loader.get_template('discussions.html')
 
     profile = Profile.objects.get(user=request.user)
+
+    # Rtrive all the opened topics
+    posts = Post.objects.filter(author=profile)
+    
+    # Retrive the posts whose the reply has been made in the last 7 days
     replies = Reply.objects.filter(author=profile)
-    replied_posts = [reply.post for reply in replies]
+    recent_replies = replies.filter(reply_date__gte=datetime.now() - timedelta(days=7))
+    replied_posts = set(reply.post for reply in recent_replies)
 
     context = {
+        'posts': posts,
         'replies': replies,
         'profile': profile,
         'replied_posts': replied_posts
