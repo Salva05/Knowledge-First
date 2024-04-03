@@ -225,7 +225,7 @@
                                                         <ul class="topic-info">
                                                             <li><i class="fas fa-comments"></i> Replies: {{ post.total_replies }}</li>
                                                             <li><i class="fas fa-thumbs-up"></i> Likes: {{ post.total_likes }}</li>
-                                                            <li style="color: {% if post.opened %}green{% else %}red{% endif %};"><i class="fas fa-circle"></i> {% if post.opened %}Opened{% else %}Closed{% endif %}</li>
+                                                            <li style="color: {% if post.state == 'Open' %}green{% else %}orange{% endif %};"><i class="fas fa-circle"></i> {% if post.state == 'Open' %}Opened{% else %}Solved{% endif %}</li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -234,6 +234,46 @@
                                     {% endfor %}
                                 {% else %}
                                 <span class="text-muted font-italic">No topics published yet.</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Liked Topics -->
+                <div class="additional-info-header" data-toggle="collapse" data-target="#likedTopics" aria-expanded="true" aria-controls="likedTopics">
+                    <span class="collapse-btn">Liked Topics</span>
+                    <span class="fas fa-chevron-down"></span>
+                </div>
+                <div id="likedTopics" class="collapse mb-3">
+                    <div class="additional-info-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                {% if liked_posts %}
+                                    {% for post in liked_posts %}
+                                        <div class="card topic-card mb-3" onclick="redirectToTopicDetail('{% url 'detail' post.post.id %}')">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <h5 class="card-title"><b>{{ post.post.title }}</b></h5>
+                                                        <p class="card-text">{{ post.post.content|truncatechars:20 }}</p>
+                                                        <p class="card-text">
+                                                            <small class="text-muted">Liked on {{ post.like_date }}</small>
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <ul class="topic-info">
+                                                            <li><i class="fas fa-user"></i> Author: {{ post.post.author }}</li>
+                                                            <li><i class="fas fa-comments"></i> Replies: {{ post.post.total_replies }}</li>
+                                                            <li><i class="fas fa-thumbs-up"></i> Likes: {{ post.post.total_likes }}</li>
+                                                            <li style="color: {% if post.post.state == 'Open' %}green{% else %}orange{% endif %};"><i class="fas fa-circle"></i> {% if post.post.state == 'Open' %}Open{% else %}Closed{% endif %}</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <span class="text-muted font-italic">No liked topics yet.</span>
                                 {% endif %}
                             </div>
                         </div>

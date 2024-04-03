@@ -30,7 +30,8 @@
                                 <tr onclick="window.location='{% url 'detail' topic.id %}'" style="cursor: pointer;">
                                     <td class="font-weight-bold">{{ topic.title }}</td>
                                     <td><img src="../{{ topic.author.avatar }}" alt="profile image" width="30" height="30"><br>{{ topic.author }}</td>
-                                    <td class="{% if topic.state == 'Open' %}text-success{% else %}text-danger{% endif %}">{{ topic.state }}</td>
+                                    <td>{{ topic.pub_date|date:"d/m/Y" }}</td>
+                                    <td class="{% if topic.state == 'Open' %}text-success{% else %}text-warning{% endif %}">{{ topic.state }}</td>
                                     <td>{{ topic.total_replies }}</td>
                                     <td>{{ topic.views }}</td>
                                     <td>{{ topic.total_likes }}</td>

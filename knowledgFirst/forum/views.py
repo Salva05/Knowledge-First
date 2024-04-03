@@ -232,11 +232,25 @@ def profile(request):
     is_admin = False
     user = request.user
 
+    # prepare the variable to hold the liked posts by the user
+    liked_posts = []     # and initialize it after checking if the user is not Admin
+
     if user.is_superuser:  # Check if the user is a superuser (admin)
         is_admin = True
     else:
         try:
             user_profile = Profile.objects.get(user=user)
+            
+            # Access all the related PostLike objects using the liked_posts attribute
+            liked_post_likes = user_profile.liked_posts.all()
+            
+            # Access the post attribute of each PostLike object to get the liked post
+            for post_like in liked_post_likes:
+                liked_posts.append({
+                    'post': post_like.post,
+                    'like_date': post_like.like_date
+                })
+
         except Profile.DoesNotExist:
             is_admin = True
     
@@ -254,6 +268,7 @@ def profile(request):
             'user_profile': user_profile,
             'user_authenticated': user_authenticated,
             'posts': posts,
+            'liked_posts': liked_posts,
         }
 
     return HttpResponse(template.render(context, request))

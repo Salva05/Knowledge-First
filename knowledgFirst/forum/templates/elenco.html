@@ -33,7 +33,7 @@
                                     <td class="font-weight-bold">{{ post.title }}</td>
                                     <td><img src="{{ post.author.avatar }}" alt="profile image" width="30" height="30"><br>{{ post.author }}</td>
                                     <td>{{ post.pub_date|date:"d/m/Y" }}</td>
-                                    <td class="{% if post.state == 'Open' %}text-success{% else %}text-danger{% endif %}">{{ post.state }}</td>
+                                    <td class="{% if post.state == 'Open' %}text-success{% else %}text-warning{% endif %}">{{ post.state }}</td>
                                     <td>{{ post.total_replies }}</td>
                                     <td>{{ post.views }}</td>
                                     <td>{{ post.total_likes }}</td>
