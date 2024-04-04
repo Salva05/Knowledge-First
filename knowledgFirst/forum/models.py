@@ -83,6 +83,7 @@ class Post(models.Model):
 
 class Reply(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    resolutive = models.BooleanField(default=False)
     content = models.TextField()
     reply_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)

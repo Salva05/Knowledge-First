@@ -83,15 +83,26 @@ def detail(request, id):
     template = loader.get_template('detail.html')
 
     target_post = Post.objects.get(pk=id)
-
-    replies = Reply.objects.all().filter(post=target_post)
     
+    replies = Reply.objects.filter(post=target_post)
+
+    # Check if the post is solved
+    if target_post.state == 'Solved':
+        # Get the resolutive reply
+        resolutive_reply = Reply.objects.filter(post=target_post, resolutive=True).first()
+        
+        # Move the resolutive reply to the front of the list
+        replies = list(replies)
+        if resolutive_reply in replies:
+            replies.remove(resolutive_reply)
+            replies.insert(0, resolutive_reply)
+
     categories = Post.get_categories()
 
     profile = None
     liked_by_user = None
     replies_liked_by_user = {}
-    
+
     user_authenticated = request.user.is_authenticated
     if user_authenticated and not request.user.is_superuser:
         # Create a dictionary to store whether the user liked each reply
@@ -434,13 +445,20 @@ def update_post(request):
         return JsonResponse({'success': True, 'action': 'delete'})
     
     if action == 'solved':
+        reply_id = request.POST.get('reply_id')
         post = Post.objects.get(pk=post_id)
         post.state = "Solved"
         post.save()
+        reply = Reply.objects.get(pk=reply_id)
+        reply.resolutive = True
+        reply.save()
         return JsonResponse({'success': True, 'action': 'solved'})
 
     if action == 'open':
         post = Post.objects.get(pk=post_id)
+        # unset any resolutive reply;
+        Reply.objects.filter(post=post).update(resolutive=False)
+
         post.state = "Open"
         post.save()
         return JsonResponse({'success': True, 'action': 'open'})

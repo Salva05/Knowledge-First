@@ -13,8 +13,7 @@
 		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<link rel="stylesheet" href="{% static 'css/style.css' %}">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-
+	
 	<div class="container" id="ctnr">
 		{% if post.state == 'Solved'%}
 		<h3 class="text-center mt-3 text-dark font-italic">This discussion has been resolved and replies are now closed.</h3>
@@ -100,7 +99,7 @@
 						class="text-secondary font-italic mr-2">{{ reply.author.grade }}<span></p>
 			</div>
 		</div>
-		<div class="col-lg-8 post-container px-4 mx-2 border-left border-dark d-flex flex-column">
+		<div class="col-lg-8 post-container px-4 mx-2 {% if not reply.resolutive %} border-left border-dark {% endif %} d-flex flex-column" {% if reply.resolutive %} style="border: 2px solid green;" {% endif %}>
 		{% if user_authenticated %}
 		{% if reply.author.id == profile.id %}
 		<span data-toggle="tooltip" data-placement="top" title="Delete the reply">
@@ -110,6 +109,19 @@
 		</span>
 		{% endif %}
 		{% endif %}
+		<div id="solution" class="px-1 py-1">
+			{% if post.state == 'Open' %}
+			<button class="btn btn-success btn-sm solvedBtn" id="solvedBtn{{ reply.id }}" data-toggle="popover" title="Mark as Resolutive" data-content="This action will set the post to solved and close it." onclick="resolve('{{ post.id }}', '{{ reply.id }}')">
+				<i class="fas fa-check"></i>
+			</button>
+			{% else %}
+				{% if reply.resolutive %}
+				<button class="btn btn-success btn-sm solvedBtn" id="solvedBtn{{ reply.id }}" data-toggle="popover" title="Marked as Resolutive" data-content="This reply has been marked as resolutive." disabled>
+					<i class="fas fa-check"></i>
+				</button>
+				{% endif %}
+			{% endif %}
+		</div>
 			<div class="comment-meta mb-3">Published on {{ reply.reply_date }}</div>
 			<!-- Main body of the reply -->
 			{% if reply.has_quote %}
@@ -371,6 +383,37 @@
 		</div>
 	</div>
 <style>
+	.popover-header {
+        color: #000 !important; /* Dark color for the popover title */
+    }
+	@keyframes moveUp {
+		from {
+			top: -5px; /* Initial position */
+		}
+		to {
+			top: -10px; /* Final position */
+		}
+	}
+
+	#solution {
+		position: absolute;
+		background-color: lightgrey;
+		top: -15px;
+		left: 55%;
+		border-radius: 30%;
+	}
+
+	#solution:hover .solvedBtn{
+		background-color: darkgreen;
+		top: -5px;
+		animation: moveUp 0.3s ease forwards; /* Apply animation when hovered */
+	}
+
+	.solvedBtn {
+		border-radius: 30%;
+		position:relative;
+	}
+
 	#like-btn:hover, .reply-like-btn:hover {
 		cursor: pointer;
 		border: 1px solid black;
@@ -682,6 +725,25 @@
 <script>
 	let opened = false;
 
+	function resolve(postId, replyId) {
+        $.ajax({
+            url: '{% url "update_post" %}',
+            method: 'POST',  // or 'GET' depending on your view
+            data: {
+				csrfmiddlewaretoken: '{{ csrf_token }}',
+				action: 'solved',
+				post_id: postId,
+                reply_id: replyId  // Pass the reply ID to your Django view
+            },
+            success: function(response) {
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    }
+
 	function reply(entityType, entityId, replyContent, replyAuthor) {
 		
 		document.getElementById('userRpl').style.display = 'flex';
@@ -787,8 +849,9 @@
 	});
 
 	jQuery(document).ready(function() {
-		// logic of quoting
-
+		$('.btn-success').popover({
+			trigger: 'hover' // This line sets the trigger to hover
+		});
 
 		$('#like-btn').popover({
 			trigger: 'manual', 
