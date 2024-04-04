@@ -1,4 +1,4 @@
-a{% extends "master.html" %}
+{% extends "master.html" %}
 {% load static %}
 {% load custom_filters %}
 {% block content %}
@@ -9,10 +9,10 @@ a{% extends "master.html" %}
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 <div class="container-fluid ctnr1">
-    <div class="row">
+    <div class="row" id="ctnr2">
         <!-- Highlights Section -->
         <div class="col-md-3 mb-3">
-            <div class="p-3 bg-light text-dark d-flex flex-column h-100" id="overflow">
+            <div class="p-3 bg-light text-dark d-flex flex-column h-100 border-dark" id="overflow">
                 <h3 id="highlights" class="mb-4">
                     Members
                 </h3>
@@ -41,7 +41,7 @@ a{% extends "master.html" %}
         
         <!-- General Informations -->
         <div class="col-md-6 mb-3">
-            <div class="p-3 bg-light text-dark">
+            <div class="p-3 bg-light text-dark border-dark" id="ctnr2">
                 <div class="forum-intro-container">
                     <div class="forum-intro">
                         <div class="intro-text">
@@ -85,7 +85,7 @@ a{% extends "master.html" %}
             </div>
         </div>
         <div class="col-md-3 mb-3">
-            <div class="p-3 bg-light text-dark d-flex flex-column h-100">
+            <div class="p-3 bg-light text-dark d-flex flex-column h-100 border-dark">
                 <h5 class="font-italic mb-4">
                     <b>Most quoted topics</b>
                 </h5>
@@ -215,6 +215,7 @@ a{% extends "master.html" %}
     .ctnr1 {
 		background-color: lightgrey;
         padding: 20px;
+        min-height: 70vh;
 	}
     #overflow {
         overflow-y: auto;
@@ -263,6 +264,9 @@ a{% extends "master.html" %}
     .card-link:hover .card {
         transform: translateY(-5px);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+    #ctnr2 {
+        min-height: 65vh;
     }
 </style>
 {% endblock %}
