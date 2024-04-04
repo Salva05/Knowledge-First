@@ -1,4 +1,4 @@
-{% extends "master.html" %}
+a{% extends "master.html" %}
 {% load static %}
 {% load custom_filters %}
 {% block content %}
@@ -66,7 +66,14 @@
                         <a href="{% url 'detail' id=post.id %}" class="card-link">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ post.title }}</h5>
+                                    <h5 class="card-title">
+                                        {{ post.title }}
+                                        {% if post.state == 'Open' %}
+                                            <span class="circle green" data-toggle="popover" title="Post State" data-content="This discussion is open"></span> <!-- Green circle for open posts -->
+                                        {% elif post.state == 'Solved' %}
+                                            <span class="circle orange" data-toggle="popover" title="Post State" data-content="This discussion is soloved"></span> <!-- Orange circle for solved posts -->
+                                        {% endif %}
+                                    </h5>
                                     <p class="card-text text-muted">{{ post.pub_date|custom_timesince }} by <b><i>{{ post.author }}</i></b></p>
                                 </div>
                             </div>
@@ -89,7 +96,12 @@
                         {% for topic in most_quoted %}
                             <a href="{% url 'detail' id=topic.id %}" class="list-group-item list-group-item-action d-flex border-bottom mt-1 justify-content-between align-items-center">
                                 <div class="topic-info">
-                                    <h6 class="mb-0">{{ topic.title|truncatechars:30 }}</h6>
+                                    <h6 class="mb-0">{{ topic.title|truncatechars:30 }} 
+                                    {% if topic.state == 'Open' %}
+                                        <span class="circle green" data-toggle="popover" title="Post State" data-content="This discussion is open"></span> <!-- Green circle for open posts -->
+                                    {% elif topic.state == 'Solved' %}
+                                        <span class="circle orange" data-toggle="popover" title="Post State" data-content="This discussion is soloved"></span> <!-- Orange circle for solved posts -->
+                                    {% endif %}</h6>
                                     <small class="text-muted">Posted by <b class="font-italic">{{ topic.author }}</b><br>{{ topic.pub_date|date:"d/m/Y" }}</small>
                                 </div>
                                 <span class="badge badge-primary badge-pill">{{ topic.total_likes }} likes</span>
@@ -120,7 +132,29 @@
         </div>
     </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="popover"]').popover({
+            trigger: 'hover' // Show popover on hover
+        });
+    });
+</script>
 <style>
+    .circle {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .green {
+        background-color: rgb(0, 180, 0);
+    }
+
+    .orange {
+        background-color: orange;
+    }
     .forum-intro-container {
         background-color: #f8f9fa;
         padding: 40px 20px;
@@ -167,9 +201,8 @@
         background-color: antiquewhite;
     }
     
-    .row [class^="col-"] {
-        padding-right: 5px;
-        padding-left: 5px;
+    .popover-header {
+        color: #000 !important; /* Dark color for the popover title */
     }
     
     .header {
@@ -207,7 +240,7 @@
     }
     
     .card:hover {
-        transform: translateY(-5px);
+        transform: translateY(-5px);/* Dark color for the popover title */
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     }
     
@@ -215,6 +248,10 @@
         color: #333;
     }
     
+    .spand[title=..] {
+        color: #000;
+    }
+
     .card-text {
         font-size: 14px;
     }
