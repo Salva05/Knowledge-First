@@ -1,5 +1,6 @@
 {% extends "master.html" %}
 {% load static %}
+{% load custom_filters %}
 
 {% block back %}
     <a href="#" onclick="history.back();" class="btn btn-outline-secondary ml-2">Back</a>
@@ -20,6 +21,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <i class="fas fa-cog settings-icon float-right" onclick="settings('{{ post.id }}', '{{ post.title|escapejs }}', '{{ post.content|escapejs }}', '{{ post.state }}')" title="Settings"></i>
+                                    <small class="text-muted font-italic">Published {{ post.pub_date|custom_timesince }}<br></small>
                                     <a href="{% url 'detail' post.id %}" class="card-title text-primary" style="text-decoration: none;">{{ post.title }}</a>
                                     <p class="card-text">{{ post.content|truncatechars:100 }}</p>
                                     {% if post.state == 'Open' %}
@@ -29,7 +31,7 @@
                                     {% endif %}
                                 </div>
                                 <div class="card-footer">
-                                    <small class="text-light">{{ post.total_replies }} replies • {{ post.total_likes }} likes • {{ post.views }} views • Published {{ post.pub_date|timesince }} ago</small>
+                                    <small class="text-light">{{ post.total_replies }} replies • {{ post.total_likes }} likes • {{ post.views }} views</small>
                                 </div>
                             </div>
                         </div>
@@ -52,6 +54,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
                             <div class="card">
                                 <div class="card-body">
+                                    <small class="text-muted font-italic">Started by <b>{{ replied_post.author }}</b> • {{ replied_post.pub_date|custom_timesince }}<br></small>
                                     <a href="{% url 'detail' replied_post.id %}" class="card-title text-primary" style="text-decoration: none;">{{ replied_post.title }}</a>
                                     <p class="card-text">{{ replied_post.content|truncatechars:100 }}</p>
                                     {% if replied_post.state == 'Open' %}
@@ -61,7 +64,7 @@
                                     {% endif %}
                                 </div>
                                 <div class="card-footer">
-                                    <small class="text-light">{{ replied_post.total_replies }} replies • {{ replied_post.total_likes }} likes • {{ replied_post.views }} views • Started by <b>{{ replied_post.author }}</b> • {{ replied_post.pub_date|timesince }} ago</small>
+                                    <small class="text-light">{{ replied_post.total_replies }} replies • {{ replied_post.total_likes }} likes • {{ replied_post.views }} views</small>
                                 </div>
                             </div>
                         </div>

@@ -67,7 +67,7 @@ class Post(models.Model):
     title = models.CharField(max_length=70)
     content = models.TextField()
     pub_date = models.DateTimeField(auto_now_add=True)
-    last_modify = models.DateTimeField(default=None)
+    last_modify = models.DateTimeField(default=None, null=True)
     total_replies = models.IntegerField(default=0)
     state = models.CharField(max_length=20, choices=POST_STATE_CHOICES, default=DEFAULT_STATE)
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)

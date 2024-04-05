@@ -55,7 +55,7 @@
 				</div>
 				<div class="mt-auto text-muted lks likes-updated">
 					<a href="#" data-toggle="modal" data-target="#exampleModalCenter2">{{ post.total_likes }} Likes </a>•
-					<span>{{ post.views }} Views •<small class="text-muted my-1 font-italic"> edited 3 hours ago</small></span>
+					<span>{{ post.views }} Views {% if post.last_modify %}<small class="text-muted my-1 font-italic"> • edited {{ post.last_modify|custom_timesince }} </small>{% endif %}</span>
 				</div>
 				{% if user_authenticated %}
 				{% if post.state == 'Open' %}
