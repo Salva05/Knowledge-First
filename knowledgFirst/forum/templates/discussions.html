@@ -20,7 +20,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
                             <div class="card">
                                 <div class="card-body">
-                                    <i class="fas fa-cog settings-icon float-right" onclick="settings('{{ post.id }}', '{{ post.title|escapejs }}', '{{ post.content|escapejs }}', '{{ post.state }}')" title="Settings"></i>
+                                    <i class="fas fa-cog settings-icon float-right" onclick="settings('{{ post.id }}', '{{ post.title|escapejs }}', '{{ post.content|escapejs }}', '{{ post.state }}')" data-toggle="popover" data-content="Settings"></i>
                                     <small class="text-muted font-italic">Published {{ post.pub_date|custom_timesince }}<br></small>
                                     <a href="{% url 'detail' post.id %}" class="card-title text-primary" style="text-decoration: none;">{{ post.title }}</a>
                                     <p class="card-text">{{ post.content|truncatechars:100 }}</p>
@@ -197,11 +197,19 @@
         text-decoration: none;
         color: inherit;
     }
+
+    .popover .popover-content {
+        display: none;
+    }
 </style>
 
 <script>
-    let postIdToUpdate = null; // Variable to store the post ID being edited
-
+    let postIdToUpdate = null; 
+    $(document).ready(function() {
+		$('.settings-icon').popover({
+			trigger: 'hover'
+		});
+    });
     function settings(postId, postTitle, postContent, postState) {
         // ensure the modal is reset
         let div;

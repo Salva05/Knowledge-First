@@ -181,12 +181,13 @@ def signup(request):
             # Create the profile for the user
             avatar = request.FILES.get('avatar', None)
             
-            if avatar == None:
+            if not avatar:
                 avatar = 'static/avatars/user.png'
                 
             interests = request.POST.get('interests', None)
             email = request.POST.get('email')
-
+            print(avatar)
+            
             # Create a new profile instance linked to the user
             profile = Profile.objects.create(
                 user=user,
@@ -417,7 +418,7 @@ def discussions(request):
     # Retrive the posts whose the reply has been made in the last 7 days
     replies = Reply.objects.filter(author=profile)
     recent_replies = replies.filter(reply_date__gte=datetime.now() - timedelta(days=7))
-    replied_posts = set(reply.post for reply in recent_replies)
+    replied_posts = set(reply.post for reply in recent_replies if reply.post.author != profile)
 
     context = {
         'posts': posts,

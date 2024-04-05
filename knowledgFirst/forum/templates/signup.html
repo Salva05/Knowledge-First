@@ -56,31 +56,31 @@
                 <div class="card-body">
                     <form action="{% url 'signup' %}" method="POST" class="needs-validation" novalidate autocomplete="off" enctype="multipart/form-data">
                         {% csrf_token %}
-         <!-- Display form fields -->
-         {% for field in form %}
-         <div class="form-group">
-            {% if field.label == 'Password' or field.label == 'Username' or field.label == 'Password confirmation' %}
-            <label for="{{ field.id_for_label }}"><span style="color: red;">*</span>{{ field.label }}</label>
-        {% else %}
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        {% endif %}
-             {{ field }}
-             {% if field.errors %}
-                 <div class="invalid-feedback">
-                     {% for error in field.errors %}
-                         {{ error }}
-                     {% endfor %}
-                 </div>
-             {% endif %}
-             {% if field.errors %}
-                 <div class="invalid-feedback d-block">
-                     {% for error in field.errors %}
-                         {{ error }}
-                     {% endfor %}
-                 </div>
-             {% endif %}
-         </div>
-     {% endfor %}
+                        <!-- Display form fields -->
+                        {% for field in form %}
+                        <div class="form-group">
+                            {% if field.label == 'Password' or field.label == 'Username' or field.label == 'Password confirmation' %}
+                            <label for="{{ field.id_for_label }}"><span style="color: red;">*</span>{{ field.label }}</label>
+                        {% else %}
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {% endif %}
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in field.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if field.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in field.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
                         <div class="form-group">
                             <label for="id_email"><span style="color: red;">*</span>Email</label>
                             <input type="email" name="email" class="form-control {% if email_error %} is-invalid {% endif %}" style="max-width: 300px;" placeholder="example@gmail.com" required>
@@ -90,7 +90,7 @@
                         </div>
                         <div class="form-group">
                             <label for="id_avatar">Avatar</label>
-                            <input type="file" name="avatar" class="form-control-file" id="id_avatar" default="">
+                            <input type="file" name="avatar" class="form-control-file" id="id_avatar">
                         </div>
                         <div class="form-group">
                             <label for="id_interests">Interests</label>

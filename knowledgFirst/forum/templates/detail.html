@@ -35,7 +35,6 @@
 			</div>
 			<div class="col-xs-9 col-lg-8 post-container mx-2 px-4 d-flex flex-column">
 				<div class="post-meta">Published on {{ post.pub_date }}</div>
-				
 				<!-- Trash icon container -->
 				{% if user_authenticated %}
 				{% if post.author.id == profile.id %}
@@ -147,7 +146,7 @@
 			{% endif %}
 			<div class="comment-list border-top">
 				<div class="comment-item">
-					<div class="reply-content mt-3 quoteArea" data-reply-id="{{ reply.id }}" data-reply-author="{{ reply.author | escapejs }}">{{ reply.content | linebreaks }}</div>
+					<div class="reply-content mt-3 {% if post.state == 'Open' %} quoteArea {% endif %}" data-reply-id="{{ reply.id }}" data-reply-author="{{ reply.author | escapejs }}">{{ reply.content | linebreaks }}</div>
 				</div>
 			</div>
 			<div class="mt-auto text-muted lks lksToTarget">
@@ -232,7 +231,7 @@
 		<div class="col-lg-8 post-container mx-0 px-4 d-flex flex-column" id="content1">
 			<div class="row">
 			<span id="is_post" style="width: 100%;">
-				<row style="width: 100%;">
+				<div style="width: 100%;">
 					{% if post.content|wordcount > 80 %}
 					<div class="col-md-12 bg-light border-left border-dark mb-0 py-3 px-3 text-dark" id="replyPst1">
 						<span>To <span class="reply-content"><b>{{ post.author }}</b><br><br>
@@ -256,7 +255,7 @@
 					</div>
 					{% endif %}
 				</div>
-			</row>
+			</div>
 			</span>
 			<span id="is_reply">
 				<div class="col-md-12 bg-light border-left border-dark mb-5 mx-0 py-3 px-3 text-dark reply-content" id="replyPst">
