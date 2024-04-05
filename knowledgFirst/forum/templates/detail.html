@@ -55,7 +55,7 @@
 				</div>
 				<div class="mt-auto text-muted lks likes-updated">
 					<a href="#" data-toggle="modal" data-target="#exampleModalCenter2">{{ post.total_likes }} Likes </a>•
-					<span>{{ post.views }} Views</span>
+					<span>{{ post.views }} Views •<small class="text-muted my-1 font-italic"> edited 3 hours ago</small></span>
 				</div>
 				{% if user_authenticated %}
 				{% if post.state == 'Open' %}
@@ -111,12 +111,12 @@
 		{% endif %}
 		<div id="solution" class="px-1 py-1">
 			{% if post.state == 'Open' %}
-			<button class="btn btn-success btn-sm solvedBtn" id="solvedBtn{{ reply.id }}" data-toggle="popover" title="Mark as Resolutive" data-content="This action will set the post to solved and close it." onclick="resolve('{{ post.id }}', '{{ reply.id }}')">
-				<i class="fas fa-check"></i>
+			<button class="btn btn-success btn-sm solvedBtn" id="solvedBtn{{ reply.id }}" data-toggle="popover" title="Mark as Solution" data-content="This action will mark the post as solved and close it." onclick="resolve('{{ post.id }}', '{{ reply.id }}')">
+				<i class="fas fa-check toSolve"></i>
 			</button>
 			{% else %}
 				{% if reply.resolutive %}
-				<button class="btn btn-success btn-sm solvedBtn" id="solvedBtn{{ reply.id }}" data-toggle="popover" title="Marked as Resolutive" data-content="This reply has been marked as resolutive." disabled>
+				<button class="btn btn-success btn-sm solved" id="solvedBtn{{ reply.id }}" data-toggle="popover" title="Marked as Solution" data-content="This reply has been marked as solution." disabled style="background-color: green;">
 					<i class="fas fa-check"></i>
 				</button>
 				{% endif %}
@@ -383,6 +383,12 @@
 		</div>
 	</div>
 <style>
+	.lastEdit {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
 	.popover-header {
         color: #000 !important; /* Dark color for the popover title */
     }
@@ -408,8 +414,22 @@
 		top: -5px;
 		animation: moveUp 0.3s ease forwards; /* Apply animation when hovered */
 	}
+	#solution:hover .toSolve {
+		color: white;
+		animation: moveUp 0.3s ease forwards; /* Apply animation when hovered */
+	}
+
+	.toSolve {
+		color: green;
+	}
 
 	.solvedBtn {
+		border-radius: 30%;
+		position:relative;
+		background-color: rgba(0, 128, 0, 0)
+	}
+
+	.solved {
 		border-radius: 30%;
 		position:relative;
 	}

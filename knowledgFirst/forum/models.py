@@ -67,13 +67,14 @@ class Post(models.Model):
     title = models.CharField(max_length=70)
     content = models.TextField()
     pub_date = models.DateTimeField(auto_now_add=True)
-    last_modify = models.DateTimeField(auto_now=True)
+    last_modify = models.DateTimeField(default=None)
     total_replies = models.IntegerField(default=0)
     state = models.CharField(max_length=20, choices=POST_STATE_CHOICES, default=DEFAULT_STATE)
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     total_likes = models.IntegerField(default=0)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, blank=True, null=True)
     views = models.IntegerField(default=0)
+    edited = models.BooleanField(default=False)
 
     def get_categories():
         return [category for category, other in CATEGORY_CHOICES]

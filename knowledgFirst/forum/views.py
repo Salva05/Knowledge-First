@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import F, Count
 from django.contrib.auth import login, logout
 from datetime import datetime, timedelta
+from django.utils import timezone
 
 
 
@@ -466,13 +467,12 @@ def update_post(request):
     # else the action is 'update'
     updated_title = request.POST.get('title')
     updated_content = request.POST.get('content')
-    
-
 
     # Update the post
     post = Post.objects.get(pk=post_id)
     post.title = updated_title
     post.content = updated_content
+    post.last_modify = timezone.now()
     post.save()
     
     return JsonResponse({'success': True})
