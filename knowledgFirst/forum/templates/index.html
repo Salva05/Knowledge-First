@@ -9,9 +9,9 @@
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 <div class="container-fluid ctnr1">
-    <div class="row" id="ctnr2">
+    <div class="row">
         <!-- Highlights Section -->
-        <div class="col-md-3 mb-3">
+        <div class="col-lg-3 col-md-12 mb-3">
             <div class="p-3 bg-light text-dark d-flex flex-column h-100 border-dark" id="overflow">
                 <h3 id="highlights" class="mb-4">
                     Members
@@ -23,8 +23,7 @@
                 <!-- Members -->
                 <div class="list-group">
                     {% for member in members %}
-                    <div class="card mb-3">
-                        <div class="card-body">
+                    <div class="card mb-3 py-1 px-1">
                             <div class="d-flex align-items-center">
                                 <img src="{{ member.avatar }}" class="rounded-circle mr-3" alt="Avatar" style="width: 50px; height: 50px;">
                                 <div>
@@ -32,15 +31,14 @@
                                     <small class="text-muted">{{ member.grade }}</small>
                                 </div>
                             </div>
-                        </div>
                     </div>
                     {% endfor %}
                 </div>
             </div>
         </div>
         
-        <!-- General Informations -->
-        <div class="col-md-6 mb-3">
+        <!-- General Information -->
+        <div class="col-lg-6 col-md-12 mb-3">
             <div class="p-3 bg-light text-dark border-dark" id="ctnr2">
                 <div class="forum-intro-container">
                     <div class="forum-intro">
@@ -71,7 +69,7 @@
                                         {% if post.state == 'Open' %}
                                             <span class="circle green" data-toggle="popover" title="Post State" data-content="This discussion is open"></span> <!-- Green circle for open posts -->
                                         {% elif post.state == 'Solved' %}
-                                            <span class="circle orange" data-toggle="popover" title="Post State" data-content="This discussion is soloved"></span> <!-- Orange circle for solved posts -->
+                                            <span class="circle orange" data-toggle="popover" title="Post State" data-content="This discussion is solved"></span> <!-- Orange circle for solved posts -->
                                         {% endif %}
                                     </h5>
                                     <p class="card-text text-muted">{{ post.pub_date|custom_timesince }} by <b><i>{{ post.author }}</i></b></p>
@@ -84,7 +82,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
+        
+        <!-- Most Quoted Topics & Most Active Users -->
+        <div class="most-active-users col-lg-3 col-md-12 mb-3">
             <div class="p-3 bg-light text-dark d-flex flex-column h-100 border-dark">
                 <h5 class="font-italic mb-4">
                     <b>Most quoted topics</b>
@@ -100,7 +100,7 @@
                                     {% if topic.state == 'Open' %}
                                         <span class="circle green" data-toggle="popover" title="Post State" data-content="This discussion is open"></span> <!-- Green circle for open posts -->
                                     {% elif topic.state == 'Solved' %}
-                                        <span class="circle orange" data-toggle="popover" title="Post State" data-content="This discussion is soloved"></span> <!-- Orange circle for solved posts -->
+                                        <span class="circle orange" data-toggle="popover" title="Post State" data-content="This discussion is solved"></span> <!-- Orange circle for solved posts -->
                                     {% endif %}</h6>
                                     <small class="text-muted">Posted by <b class="font-italic">{{ topic.author }}</b><br>{{ topic.pub_date|date:"d/m/Y" }}</small>
                                 </div>
@@ -124,12 +124,7 @@
                 {% endif %}
             </div>
         </div>
-        
-    </div>
-    <div class="row">
-        <div class="col-md-3">
 
-        </div>
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -213,10 +208,10 @@
     }
 
     .ctnr1 {
-		background-color: lightgrey;
+        background-color: lightgrey;
         padding: 20px;
         min-height: 70vh;
-	}
+    }
     #overflow {
         overflow-y: auto;
     }
@@ -267,6 +262,15 @@
     }
     #ctnr2 {
         min-height: 65vh;
+    }
+    @media (max-width: 1173px) {
+        .most-active-users .list-group-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .most-active-users .list-group-item .badge {
+            margin-top: 10px;
+        }
     }
 </style>
 {% endblock %}

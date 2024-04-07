@@ -19,6 +19,7 @@
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            text-align: center; /* Center align content */
         }
 
         .user-profile-header {
@@ -30,7 +31,6 @@
             font-size: 24px;
             margin-bottom: 20px;
             text-transform: uppercase;
-            text-align: center; /* Center align the header text */
         }
 
         .user-profile-info {
@@ -52,6 +52,14 @@
         .value {
             font-size: 16px;
             flex: 2;
+        }
+
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
         }
 
         .additional-info-container {
@@ -140,6 +148,7 @@
                 <div class="user-profile-header">
                     Personal Area
                 </div>
+                <img src="../{{ user_profile.avatar }}" alt="Profile Picture" class="avatar">
                 <div class="user-profile-info">
                     <div class="row">
                         <div class="col-md-6">
@@ -181,7 +190,7 @@
                     </div>
                 </div>
                 <!-- Additional informations -->
-                <!-- Collapbasle elements -->
+                <!-- Collapsible elements -->
                 <!-- Interests -->
                 <div class="additional-info-header" data-toggle="collapse" data-target="#interestsCollapse" aria-expanded="true" aria-controls="interestsCollapse">
                     <span class="collapse-btn">Interests</span>
@@ -189,15 +198,15 @@
                 </div>
                 <div id="interestsCollapse" class="collapse mb-3">
                     <div class="additional-info-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    {% if user_profile.interests|length > 0 %}
-                                    <span>{{ user_profile.interests }}</span>
-                                    {% else %}
-                                    <span class="text-muted font-italic">You haven't set up a description yet.</span>
-                                    {% endif %}
-                                </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                {% if user_profile.interests|length > 0 %}
+                                <span>{{ user_profile.interests }}</span>
+                                {% else %}
+                                <span class="text-muted font-italic">You haven't set up a description yet.</span>
+                                {% endif %}
                             </div>
+                        </div>
                     </div>
                 </div>
                 <!-- My Topics -->
