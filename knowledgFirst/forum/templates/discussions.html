@@ -123,86 +123,9 @@
         </div>
     </div>
 </div>
-
-<style>
-    .editable {
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        outline: none; /* Remove the default focus border */
-    }
-
-    #postContent {
-        max-height: 300px; 
-        overflow-y: auto;
-    }
-
-    .settings-icon:hover {
-        cursor: pointer;
-        color: grey;
-    }
-
-    body {
-        background-color: #222;
-        color: #eee;
-    }
-
-    .section {
-        margin-bottom: 40px;
-    }
-
-    .section-title {
-        font-size: 28px;
-        margin-bottom: 20px;
-    }
-
-    .card {
-        background-color: #333;
-        color: #eee;
-        border: 1px solid #444;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .card:hover {
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        transform: translateY(-5px);
-    }
-
-    .card-title {
-        font-size: 20px;
-        margin-bottom: 10px;
-    }
-
-    .badge {
-        margin-right: 5px;
-    }
-
-    .card-footer {
-        background-color: #444;
-        border-top: 1px solid #555;
-        border-radius: 0 0 8px 8px;
-        padding: 10px 15px;
-    }
-
-    .card-footer small {
-        font-size: 14px;
-        color: #ccc; /* Light grey color */
-    }
-
-    .post-link {
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .popover .popover-content {
-        display: none;
-    }
-</style>
-
+{% block extracss %}
+    	<link rel="stylesheet" type="text/css" href="{% static 'css/discussions.css' %}">
+{% endblock %}
 <script>
     let postIdToUpdate = null; 
     $(document).ready(function() {

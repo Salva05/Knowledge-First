@@ -52,32 +52,7 @@
         {% endif %}
     </div>
 </div>
-
-<style>
-    .card {
-        border: none;
-        background-color: #f8f9fa; /* Light gray background */
-    }
-
-    .table,
-    .table td {
-        vertical-align: middle;
-        font-size: 16px;
-        color: #343a40; /* Dark text color */
-		text-align: center;
-    }
-
-    th {
-        font-weight: bold;
-		vertical-align: middle;
-        font-size: 16px;
-		color: white;
-		text-align: center;
-    }
-
-    .table-hover tbody tr:hover {
-        background-color: rgba(0, 123, 255, 0.1); /* Light blue hover effect */
-        transition: background-color 0.3s ease;
-    }
-</style>
+{% block extracss %}
+    	<link rel="stylesheet" type="text/css" href="{% static 'css/elenco.css' %}">
+{% endblock %}
 {% endblock %}
