@@ -39,42 +39,7 @@
         </div>
     </div>
 </div>
-
-<style>
-    @media (max-width: 768px) {
-        .topic-form {
-            padding: 0px;
-        }
-    }
-
-    @media (min-width: 768px) {
-        .topic-form {
-            padding: 20px;
-        }
-    }
-    .form-label {
-        font-weight: bold;
-        color: #4a4a4a;
-    }
-
-    .form-control {
-        border-radius: 8px;
-        border: 1px solid #ced4da;
-    }
-
-    .form-control:focus {
-        border-color: #4a90e2;
-        box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
-    }
-
-    .btn-primary {
-        background-color: #4a90e2;
-        border: none;
-    }
-
-    .btn-primary:hover {
-        background-color: #357bd8;
-    }
-</style>
-
+{% block extracss %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/new_topic.css' %}">
+{% endblock %}
 {% endblock %}

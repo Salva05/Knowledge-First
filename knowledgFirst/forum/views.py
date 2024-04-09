@@ -9,8 +9,9 @@ from django.db.models import F, Count
 from django.contrib.auth import login, logout
 from datetime import datetime, timedelta
 from django.utils import timezone
-
-
+from django.http import HttpResponseBadRequest
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from .models import *
 
@@ -255,7 +256,7 @@ def profile(request):
     else:
         try:
             user_profile = Profile.objects.get(user=user)
-            
+
             # Access all the related PostLike objects using the liked_posts attribute
             liked_post_likes = user_profile.liked_posts.all()
             
@@ -278,12 +279,24 @@ def profile(request):
         }
     else:
         posts = user_profile.post_set.all()
+        # Query to get the count of followers and followees
+        total_followers = Follow.objects.filter(followee=user_profile.user).count()
+        total_following = Follow.objects.filter(follower=user_profile.user).count()
+
+        # Query to get the followers and followings of the member
+        followers = User.objects.filter(following__followee=user_profile.user)
+        following = User.objects.filter(followers__follower=user_profile.user)
+
         context = {
             'categories': categories,
             'user_profile': user_profile,
             'user_authenticated': user_authenticated,
             'posts': posts,
             'liked_posts': liked_posts,
+            'total_followers': total_followers,
+            'total_following': total_following,
+            'followers': followers,
+            'following': following,
         }
 
     return HttpResponse(template.render(context, request))
@@ -477,3 +490,80 @@ def update_post(request):
     post.save()
     
     return JsonResponse({'success': True})
+
+def member(request, profile_id):
+    # Retrieve any messages passed from previous views
+    messages_list = messages.get_messages(request)
+    
+    print('Session Data:', request.session)
+    
+    user_authenticated = request.user.is_authenticated
+    template = loader.get_template('member.html')
+    categories = Post.get_categories()
+
+    member = Profile.objects.get(pk=profile_id)
+
+    # Query to get the count of followers and followees
+    total_followers = Follow.objects.filter(followee=member.user).count()
+    total_following = Follow.objects.filter(follower=member.user).count()
+
+    # Query to get the followers and followings of the member
+    followers = User.objects.filter(following__followee=member.user)
+    following = User.objects.filter(followers__follower=member.user)
+
+    # Check if the current user is following the member
+    is_following = False
+    if user_authenticated:
+        is_following = request.user.following.filter(followee=member.user).exists()
+
+    context = {
+        'categories': categories,
+        'user_authenticated': user_authenticated,
+        'member': member,
+        'is_following': is_following,
+        'message': messages_list,
+        'total_followers': total_followers,
+        'total_following': total_following,
+        'followers': followers,
+        'following': following,
+    }
+
+    return HttpResponse(template.render(context, request))
+
+def follow_user(request, profile_id):
+    if request.method == 'POST' and request.user.is_authenticated:
+        # Get the profile being followed
+        profile_to_follow = Profile.objects.get(pk=profile_id)
+        
+        # Check if the user is not already following the profile
+        if not request.user.following.filter(followee=profile_to_follow.user).exists():
+            # Create a new follow instance
+            follow = Follow(follower=request.user, followee=profile_to_follow.user)
+            follow.save()
+            # Set a success message
+            messages.success(request, 'You have followed this user.')
+            print("Success message:", messages.get_messages(request))
+        else:
+            messages.warning(request, 'You are already following this user.')
+
+    # Redirect back to the member page
+    return redirect('member', profile_id=profile_id)
+
+@login_required
+def unfollow_user(request, profile_id):
+    if request.method == 'POST':
+        # Get the profile being unfollowed
+        profile_to_unfollow = Profile.objects.get(pk=profile_id)
+        
+        # Check if the user is following the profile
+        if request.user.following.filter(followee=profile_to_unfollow.user).exists():
+            # Delete the follow instance
+            follow = Follow.objects.filter(follower=request.user, followee=profile_to_unfollow.user)
+            follow.delete()
+            # Set a success message
+            messages.success(request, 'You have unfollowed this user.')
+        else:
+            messages.warning(request, 'You are not following this user.')
+
+    # Redirect back to the member page
+    return redirect('member', profile_id=profile_id)

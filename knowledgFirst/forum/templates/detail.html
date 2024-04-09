@@ -20,18 +20,22 @@
 		{% endif %}
 		<div class="col-12 row justify-content-center mx-0 px-0">
 			<div class="card" id="userCard2">
-				<div class="card-body py-1 px-1 text-dark">
-					<img src="../{{ post.author.avatar }}" alt="user image" width="40px" height="40px">
-					<strong class="mr-2">{{ post.author }}</strong> - <span class="text-secondary font-italic mr-2">{{ post.author.grade }}<span>
-				</div>
+				<a href="{% url 'member' post.author.id %}" class="card-link">
+					<div class="card-body py-1 px-1 text-dark">
+						<img src="../{{ post.author.avatar }}" alt="user image" width="40px" height="40px">
+						<strong class="mr-2">{{ post.author }}</strong> - <span class="text-secondary font-italic mr-2">{{ post.author.grade }}<span>
+					</div>
+				</a>
 			</div>
 			<div class="col-xs-3 card post-container py-0 mx-0 px-0" id="userCard" style="width: 10rem;">
-				<img class="card-img-top" src="../{{ post.author.avatar }}" alt="Card image cap">
-				<div class="card-body">
-					<p class="card-text text-center" style="color: black"><strong>{{ post.author }}</strong><br>-<br>
-						<span class="text-secondary font-italic mr-2">{{ post.author.grade }}<span>
-					</p>
-				</div>
+				<a href="{% url 'member' post.author.id %}" class="card-link">
+					<img class="card-img-top" src="../{{ post.author.avatar }}" alt="Card image cap">
+					<div class="card-body">
+						<p class="card-text text-center" style="color: black"><strong>{{ post.author }}</strong><br>-<br>
+							<span class="text-secondary font-italic mr-2">{{ post.author.grade }}<span>
+						</p>
+					</div>
+				</a>
 			</div>
 			<div class="col-xs-9 col-lg-8 post-container mx-2 px-4 d-flex flex-column">
 				<div class="post-meta">Published on {{ post.pub_date }}</div>
@@ -53,7 +57,7 @@
 					{{ post.content | safe }}
 				</div>
 				<div class="mt-auto text-muted lks likes-updated">
-					<a href="#" data-toggle="modal" data-target="#exampleModalCenter2">{{ post.total_likes }} Likes </a>•
+					<a href="#" data-toggle="modal" data-target="#examppleModalCenter2">{{ post.total_likes }} Likes </a>•
 					<span>{{ post.views }} Views {% if post.last_modify %}<small class="text-muted my-1 font-italic"> • edited {{ post.last_modify|custom_timesince }} </small>{% endif %}</span>
 				</div>
 				{% if user_authenticated %}
@@ -85,18 +89,22 @@
 	{% if reply.content != '[deleted]' %}
 	<div class="col-12 row justify-content-center mx-0 px-0">
 		<div class="card" id="userCard2">
-			<div class="card-body py-1 px-1 text-dark">
-				<img src="../{{ reply.author.avatar }}" alt="user image" width="40px" height="40px">
-				<strong class="mr-2">{{ reply.author }}</strong> - <span class="text-secondary font-italic mr-2">
-					{{ reply.author.grade }}<span>
-			</div>
+			<a href="{% url 'member' reply.author.id %}" class="card-link">
+				<div class="card-body py-1 px-1 text-dark">
+					<img src="../{{ reply.author.avatar }}" alt="user image" width="40px" height="40px">
+					<strong class="mr-2">{{ reply.author }}</strong> - <span class="text-secondary font-italic mr-2">
+						{{ reply.author.grade }}<span>
+				</div>
+			</a>
 		</div>
 		<div class="card post-container py-0 mx-0 px-0" id="userCard" style="width: 10rem;">
-			<img class="card-img-top" src="../{{ reply.author.avatar }}" alt="Card image cap">
-			<div class="card-body">
-				<p class="card-text text-center" style="color: black"><strong>{{ reply.author }}</strong><br>-<br><span
-						class="text-secondary font-italic mr-2">{{ reply.author.grade }}<span></p>
-			</div>
+			<a href="{% url 'member' reply.author.id %}" class="card-link">
+				<img class="card-img-top" src="../{{ reply.author.avatar }}" alt="Card image cap">
+				<div class="card-body">
+					<p class="card-text text-center" style="color: black"><strong>{{ reply.author }}</strong><br>-<br><span
+							class="text-secondary font-italic mr-2">{{ reply.author.grade }}<span></p>
+				</div>
+			</a>
 		</div>
 		<div class="col-lg-8 post-container px-4 mx-2 {% if not reply.resolutive %} border-left border-dark {% endif %} d-flex flex-column" {% if reply.resolutive %} style="border: 2px solid green;" {% endif %}>
 		{% if user_authenticated %}
@@ -182,7 +190,7 @@
 						<ul>
 							{% if users_who_liked_replies|get_item:reply.id %}
 								{% for user in users_who_liked_replies|get_item:reply.id %}
-								<li><a href="#">{{ user.user.username }}</a></li>
+								<li><a href="{% url 'member' user.id %}">{{ user.user.username }}</a></li>
 								{% endfor %}
 							{% else %}
 							<li>No users liked this reply.</li>
@@ -282,7 +290,7 @@
 
 </div>
 <!-- Modal to display user's like in Posts -->
-<div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+<div class="modal fade" id="examppleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
 	aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
@@ -296,7 +304,7 @@
 				<ul>
 					{% if user_who_liked %}
 						{% for user in user_who_liked %}
-						<li><a href="#">{{ user }}</a></li>
+						<li><a href="{% url 'member' user.id %}">{{ user }}</a></li>
 						{% endfor%}
 					{% else %}
 					<li>No users liked this post.</li>
@@ -309,29 +317,6 @@
 		</div>
 	</div>
 </div>
-
-	<!-- Modal to display user's like in Replies -->
-	<div class="modal fade" id="exampleModalCenter5" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-		aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLongTitle">Likes</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<ul>
-						<!-- TO DO -->
-					</ul>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
 
 <!-- Modal to delete post -->
 	<div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

@@ -54,8 +54,8 @@ class Profile(models.Model):
     replies = models.IntegerField(default=0)
     total_likes = models.IntegerField(default=0)
     interests = models.TextField()
-    followers = models.IntegerField(default=0)
-    following = models.IntegerField(default=0)
+    followers = models.ManyToManyField(User, related_name='user_followers')
+    following = models.ManyToManyField(User, related_name='user_following')
     email = models.EmailField(unique=True)
     def display_name(self):
         return self.user.username + '<br> - <br>' + self.grade
@@ -135,12 +135,13 @@ class ReplyLike(models.Model):
         return reverse('user-detail', kwargs={'pk': self.pk})
 
 
-class UserFollow(models.Model):
-    follower = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='follower')
-    followee = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='followee')
+class Follow(models.Model):
+    follower = models.ForeignKey(User, related_name='following', on_delete=models.CASCADE)
+    followee = models.ForeignKey(User, related_name='followers', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('follower', 'followee')
 
     def __str__(self):
-        return f"{self.follower.user.username} - {self.followee.user.username}"
-
-    def get_absolute_url(self):
-        return reverse('user-detail', kwargs={'pk': self.follower.pk})
+        return f'{self.follower.username} follows {self.followee.username}'

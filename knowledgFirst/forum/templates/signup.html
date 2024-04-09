@@ -6,46 +6,6 @@
 {% endblock %}
 
 {% block content %}
-<style>
-    /* Custom CSS styles */
-    .card-header {
-        background-color: #007bff; /* Blue */
-        color: #fff; /* White */
-    }
-    .card-body {
-        color: #000; /* Black */
-    }
-    .form-group label {
-        font-weight: bold;
-    }
-    .form-group input[type="email"],
-    .form-group input[type="file"],
-    .form-group textarea {
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        padding: 8px;
-        width: 100%;
-        box-sizing: border-box;
-    }
-    .form-group input[type="email"]:focus,
-    .form-group input[type="file"]:focus,
-    .form-group textarea:focus {
-        outline: none;
-        border-color: #007bff;
-        box-shadow: 0 0 5px #007bff;
-    }
-    .form-group .invalid-feedback {
-        color: red;
-    }
-    .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-    }
-    .btn-primary:hover {
-        background-color: #0069d9;
-        border-color: #0062cc;
-    }
-</style>
 <div class="container">
     <div class="row justify-content-center mt-5">
         <div class="col-md-8 col-lg-6">
@@ -103,4 +63,7 @@
         </div>
     </div>
 </div>
+{% block extracss %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/signup.css' %}">
+{% endblock %}
 {% endblock %}

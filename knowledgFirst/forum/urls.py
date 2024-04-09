@@ -21,4 +21,7 @@ urlpatterns = [
     path('reply_like/<int:reply_id>/', views.reply_like, name='reply_like'),
     path('discussions/', views.discussions, name='discussions'),
     path('update_post', views.update_post, name='update_post'),
+    path('member/<int:profile_id>', views.member, name='member'),
+    path('follow/<int:profile_id>/', views.follow_user, name='follow_user'),
+    path('unfollow/<int:profile_id>/', views.unfollow_user, name='unfollow_user'),
 ]

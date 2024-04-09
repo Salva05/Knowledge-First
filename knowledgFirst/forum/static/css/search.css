@@ -1,0 +1,22 @@
+.card {
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+.card-body {
+    margin-top: 5px; /* Adjust margin to reduce the gap between the image and title */
+}
+.highlight {
+    background-color: yellow; /* Change highlight color as needed */
+}
+.post-link {
+    text-decoration: none; /* Remove underline from link */
+    color: inherit; /* Inherit color from parent */
+}
+.post-link:hover {
+    text-decoration: none; /* Remove underline on hover */
+}

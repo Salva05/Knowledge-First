@@ -6,138 +6,6 @@
 {% endblock %}
 
 {% block content %}
-    <style>
-        /* Custom styles */
-        .user-profile-container {
-            padding: 20px;
-            background-color: #f2f2f2;
-        }
-
-        .user-profile-card {
-            background-color: #ffffff;
-            color: #333333;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center; /* Center align content */
-        }
-
-        .user-profile-header {
-            background-color: #007bff;
-            color: white;
-            padding: 20px;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-            font-size: 24px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-        }
-
-        .user-profile-info {
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        .info-item {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-        }
-
-        .info-item span {
-            color: #555555;
-            flex: 1;
-        }
-
-        .value {
-            font-size: 16px;
-            flex: 2;
-        }
-
-        .avatar {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 20px;
-        }
-
-        .additional-info-container {
-            margin-top: 30px;
-        }
-
-        .additional-info-header {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .additional-info-header:hover {
-            background-color: #0056b3;
-        }
-
-        .additional-info-body {
-            background-color: #ffffff;
-            padding: 15px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .additional-info-body .row {
-            margin-bottom: 10px;
-        }
-
-        .additional-info-body span {
-            font-size: 14px;
-            color: #333333;
-        }
-
-        /* Style the collapse button */
-        .collapse-btn {
-            color: white;
-            text-transform: uppercase;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .collapse-btn:hover {
-            text-decoration: underline;
-        }
-    
-        .topic-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .topic-card:hover {
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .topic-info {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .topic-info li {
-            margin-bottom: 5px;
-        }
-
-        .topic-info li i {
-            margin-right: 5px;
-        }
-    </style>
-
     <div class="container user-profile-container">
         {% if message %}
             <div class="alert alert-success" role="alert">
@@ -145,46 +13,37 @@
             </div>
         {% else %}
             <div class="user-profile-card">
-                <div class="user-profile-header">
-                    Personal Area
-                </div>
-                <img src="../{{ user_profile.avatar }}" alt="Profile Picture" class="avatar">
-                <div class="user-profile-info">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="info-item">
-                                <span><b>Username:</b></span>
-                                <span class="value">{{ user_profile.user.username }}</span>
-                            </div>
-                            <div class="info-item email">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="../{{ user_profile.avatar }}" alt="Profile Picture" class="avatar img-fluid mb-0">
+                        <h3 class="text-center">{{ user_profile.user.username }}</h3>
+                        <p class="text-muted font-italic text-center">{{ user_profile.grade }}</p>
+                        <div class="button-container text-center mb-3">
+                            <button type="button" class="custom-button btn-sm" data-toggle="modal" data-target="#followersModal">
+                                Followers <span class="badge badge-light">{{ total_followers }}</span>
+                            </button>
+                            <button type="button" class="custom-button btn-sm" data-toggle="modal" data-target="#followingModal">
+                                Following <span class="badge badge-light">{{ total_following }}</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="user-profile-info">
+                            <div class="info-item border-bottom">
                                 <span><b>Email:</b></span>
                                 <span class="value">{{ user_profile.email }}</span>
                             </div>
-                            <div class="info-item">
+                            <div class="info-item border-bottom">
                                 <span><b>Join Date:</b></span>
                                 <span class="value">{{ user_profile.user.date_joined|date:"d/m/Y" }}</span>
                             </div>
-                            <div class="info-item">
-                                <span><b>Grade:</b></span>
-                                <span class="value">{{ user_profile.grade }}</span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="info-item">
+                            <div class="info-item border-bottom">
                                 <span><b>Opened Topics:</b></span>
                                 <span class="value">{{ user_profile.total_posts }}</span>
                             </div>
-                            <div class="info-item">
+                            <div class="info-item border-bottom">
                                 <span><b>Total Replies:</b></span>
                                 <span class="value">{{ user_profile.replies }}</span>
-                            </div>
-                            <div class="info-item">
-                                <span><b>Followers:</b></span>
-                                <span class="value">{{ user_profile.followers }}</span>
-                            </div>
-                            <div class="info-item">
-                                <span><b>Followees:</b></span>
-                                <span class="value">{{ user_profile.following }}</span>
                             </div>
                         </div>
                     </div>
@@ -291,6 +150,89 @@
             </div>
         {% endif %}
     </div>
+
+    <!-- Modal to display user's followers -->
+    <div class="modal fade" id="followersModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-dark" id="exampleModalLongTitle">Followers</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        {% if followers %}
+                            {% for follower in followers %}
+                                <li class="text-dark"><a href="{% url 'member' profile_id=follower.id %}">{{ follower.username }}</a></li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="text-muted font-italic">This user does not have any followers yet.</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal to display user's followings -->
+    <div class="modal fade" id="followingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-dark" id="exampleModalLongTitle">Following</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        {% if following %}
+                            {% for user in following %}
+                                <li class="text-dark"><a href="{% url 'member' profile_id=user.id %}">{{ user.username }}</a></li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="text-muted font-italic">This user does not have any following yet.</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .custom-button {
+            background-color: #17a2b8;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 5px;
+        }
+        
+        .custom-button:hover {
+            background-color: #138496;
+        }
+        
+        .badge {
+            font-size: 10px;
+            margin-left: 3px;
+            vertical-align: middle;
+        }
+    </style>
+{% block extracss %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
+{% endblock %}
     <script>
         function redirectToPostDetail(url) {
             window.location.href = url;

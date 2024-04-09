@@ -1,0 +1,129 @@
+        /* Custom styles */
+        .user-profile-container {
+            padding: 20px;
+            background-color: #f2f2f2;
+        }
+
+        .user-profile-card {
+            background-color: #ffffff;
+            color: #333333;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center; /* Center align content */
+        }
+
+        .user-profile-header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .user-profile-info {
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-item span {
+            color: #555555;
+            flex: 1;
+        }
+
+        .value {
+            font-size: 16px;
+            flex: 2;
+        }
+
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+
+        .additional-info-container {
+            margin-top: 30px;
+        }
+
+        .additional-info-header {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .additional-info-header:hover {
+            background-color: #0056b3;
+        }
+
+        .additional-info-body {
+            background-color: #ffffff;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .additional-info-body .row {
+            margin-bottom: 10px;
+        }
+
+        .additional-info-body span {
+            font-size: 14px;
+            color: #333333;
+        }
+
+        /* Style the collapse button */
+        .collapse-btn {
+            color: white;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .collapse-btn:hover {
+            text-decoration: underline;
+        }
+    
+        .topic-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .topic-card:hover {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .topic-info {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .topic-info li {
+            margin-bottom: 5px;
+        }
+
+        .topic-info li i {
+            margin-right: 5px;
+        }

@@ -1,0 +1,441 @@
+{% extends "master.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block back %}
+<a href="#" onclick="history.back();" class="btn btn-outline-light ml-2">Back</a>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+<div class="container otherProf">
+    <div class="userHeader">
+        <img src="../{{ member.avatar }}" alt="Profile Picture" class="avatar">
+        <div class="userInfo">
+            <h3>{{ member.user.username }}</h3>
+            <small class="text-muted font-italic">{{member.grade}}</small><br>
+            <small class="text-muted font-italic">Joined {{member.user.date_joined|custom_timesince}}</small><br>
+            {% if user_authenticated %}
+            {% if is_following %}
+                <form action="{% url 'unfollow_user' member.user.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm mt-1 py-0">Unfollow</button>
+                </form>
+            {% else %}
+                <form action="{% url 'follow_user' member.user.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success btn-sm mt-1 py-0">Follow</button>
+                </form>
+            {% endif %}
+        {% endif %}
+        </div>
+    </div>
+    <div class="border-bottom mb-3">
+        <!-- Button trigger modal for followers -->
+        <button type="button" class="custom-button btn-sm" data-toggle="modal" data-target="#followersModal">
+            Followers <span class="badge badge-light">{{ total_followers }}</span>
+        </button>
+        
+        <!-- Modal to display user's followers -->
+        <div class="modal fade" id="followersModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-dark" id="exampleModalLongTitle">Followers</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <ul>
+                            {% if followers %}
+                                {% for follower in followers %}
+                                    <li class="text-dark"><a href="{% url 'member' profile_id=follower.id %}">{{ follower.username }}</a></li>
+                                {% endfor %}
+                            {% else %}
+                                <li class="text-muted font-italic">This user does not have any followers yet.</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Button trigger modal for following -->
+        <button type="button" class="custom-button btn-sm" data-toggle="modal" data-target="#followingModal">
+            Following <span class="badge badge-light">{{ total_following }}</span>
+        </button>
+
+        <!-- Modal to display user's followings -->
+        <div class="modal fade" id="followingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-dark" id="exampleModalLongTitle">Following</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <ul>
+                            {% if following %}
+                                {% for user in following %}
+                                    <li class="text-dark"><a href="{% url 'member' profile_id=user.id %}">{{ user.username }}</a></li>
+                                {% endfor %}
+                            {% else %}
+                                <li class="text-muted font-italic">This user does not have any following yet.</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="profile-block">
+        <div class="profile-header" onclick="toggleProfile('profileInterests', 'interestsArrow')">
+            <h2>Interests <i id="interestsArrow" class="fas fa-chevron-down"></i></h2>
+        </div>
+        <div class="profile-content" id="profileInterests">
+            <ul>
+                {%  if member.interests %}
+                        <li class="text-dark">{{ member.interests  }}</li>
+                {% else %} 
+                    <li class="font-italic text-muted text-dark">This member has not set any interest yet.</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    <div class="profile-block">
+        <div class="profile-header" onclick="toggleProfile('profileContent', 'postsArrow')">
+            <h2>Published Posts <i id="postsArrow" class="fas fa-chevron-down"></i></h2>
+        </div>
+        <div class="profile-content" id="profileContent">
+            {% if member.post_set.all %}
+                {% for post in member.post_set.all %}
+                    <div class="post">
+                        <h3 class="post-title"><a href="{% url 'detail' id=post.id %}">{{ post.title }}</a></h3>
+                        <p class="post-meta">Published on {{ post.pub_date }}</p>
+                        <div class="post-content">
+                            {{ post.content | safe }} <!-- Assuming content is safe HTML -->
+                        </div>
+                        <div class="post-details">
+                            <ul class="post-details-list">
+                                <li><i class="fas fa-heart"></i> {{ post.total_likes }}</li>
+                                <li><i class="fas fa-comments"></i> {{ post.total_replies }}</li>
+                                <li><i class="fas fa-eye"></i> {{ post.views }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="font-italic text-muted text-dark">No posts published by this member yet.</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="profile-block">
+        <div class="profile-header" onclick="toggleProfile('repliesContent', 'repliesArrow')">
+            <h2>Replies <i id="repliesArrow" class="fas fa-chevron-down"></i></h2>
+        </div>
+        <div class="profile-content" id="repliesContent">
+            {% if member.reply_set.all %}
+                {% for reply in member.reply_set.all %}
+                    <div class="reply">
+                        <div class="reply-header">
+                            <i class="fas fa-reply reply-icon"></i>
+                            <p class="reply-meta">To: <a href="{% url 'detail' id=reply.post.id %}">{{ reply.post.title }}</a></p>
+                        </div>
+                        <div class="reply-content">
+                            <p class="text-dark">{{ reply.content }}</p>
+                        </div>
+                        <div class="reply-info">
+                            <p class="reply-date">Reply Date: {{ reply.reply_date }}</p>
+                            <p class="reply-likes"><i class="fas fa-heart"></i> {{ reply.likes }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="font-italic text-muted text-dark">This member has not replied to any post yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-button {
+        background-color: #17a2b8; /* Bootstrap 4 info color */
+        color: #fff;
+        border: none;
+        padding: 5px 10px; /* Adjust padding to make button smaller */
+        font-size: 12px; /* Adjust font size */
+        border-radius: 3px; /* Adjust border radius */
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-bottom: 5px; /* Add margin between buttons */
+    }
+    
+    .custom-button:hover {
+        background-color: #138496; /* Darker shade of info color */
+    }
+    
+    /* Badge style */
+    .badge {
+        font-size: 10px; /* Adjust font size */
+        margin-left: 3px; /* Add margin between button text and badge */
+        vertical-align: middle; /* Align badge vertically with button text */
+    }
+
+    .reply {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        padding: 20px;
+        background-color: #fff;
+    }
+
+    .reply-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .reply-header .reply-icon {
+        color: #666;
+        margin-right: 5px;
+    }
+
+    .reply-meta {
+        font-size: 14px;
+        color: #666;
+        margin: 0;
+    }
+
+    .reply-content {
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 10px;
+    }
+
+    .reply-info {
+        font-size: 14px;
+        color: #666;
+    }
+
+    .reply-info p {
+        margin: 5px 0;
+    }
+
+    .reply-info a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .reply-info a:hover {
+        text-decoration: underline;
+    }
+
+    .reply-likes {
+        color: #007bff;
+    }
+
+    .reply-likes i {
+        margin-right: 5px;
+    }
+    .post {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        padding: 20px;
+        background-color: #fff;
+    }
+
+    .post-title {
+        font-size: 24px;
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    .post-meta {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 10px;
+    }
+
+    .post-content {
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    .post-details {
+        margin-top: 15px;
+    }
+
+    .post-details-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .post-details-list li {
+        display: inline-block;
+        margin-right: 15px;
+        color: #666;
+    }
+    .profile-header h2,
+    .block h2 {
+        margin: 0;
+        font-family: 'Your Chosen Font', sans-serif;
+        color: black;
+    }
+    .profile-block {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    
+    .profile-header {
+        background-color: #f5f5f5;
+        padding: 10px;
+        cursor: pointer;
+    }
+    
+    .profile-header h2 {
+        margin: 0;
+    }
+    
+    .profile-content {
+        display: none;
+        padding: 10px;
+    }
+    
+    .profile-content ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    .profile-content ul li {
+        margin-bottom: 5px;
+    }
+    
+    .profile-content ul li a {
+        text-decoration: none;
+        color: #333;
+        transition: color 0.3s ease;
+    }
+    
+    .profile-content ul li a:hover {
+        color: #666;
+    }
+    .otherProf {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 20px;
+        border: 5px solid #fff;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .userHeader {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .userInfo {
+        
+
+    }
+
+    .userInfo h3 {
+        margin: 0;
+        color: #333;
+        font-size: 24px;
+    }
+
+    .userDesc {
+        background-color: #fff;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .userDesc h2 {
+        color: #333;
+        margin-top: 0;
+        font-size: 24px;
+    }
+
+    .block {
+        background-color: #fff;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .block h2 {
+        color: #333;
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 24px;
+    }
+
+    .block ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .block ul li {
+        margin-bottom: 10px;
+        font-size: 18px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        font-size: 18px;
+        margin-left: 0;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+</style>
+<script>
+    function toggleProfile(contentId, arrowIconId) {
+        var content = document.getElementById(contentId);
+        var arrowIcon = document.getElementById(arrowIconId);
+        if (content.style.display === "none" || content.style.display === "") {
+            content.style.display = "block";
+            arrowIcon.classList.remove("fa-chevron-down");
+            arrowIcon.classList.add("fa-chevron-up");
+        } else {
+            content.style.display = "none";
+            arrowIcon.classList.remove("fa-chevron-up");
+            arrowIcon.classList.add("fa-chevron-down");
+        }
+    }
+</script>
+{% endblock %}
