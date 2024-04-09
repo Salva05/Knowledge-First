@@ -1,4 +1,4 @@
-# Knowledge First
+# Django Forum Application
 
 ## Introduction
 Welcome to the Django Forum Application! This project serves as a school project for [Your School/Class] to demonstrate proficiency in Django web development. The application provides a platform for users to engage in discussions, share ideas, and seek assistance on various topics.
@@ -10,6 +10,7 @@ Welcome to the Django Forum Application! This project serves as a school project
   - [Installation](#installation)
 - [Usage](#usage)
 - [Features](#features)
+- [Technologies Used](#technologies-used)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -65,6 +66,20 @@ Before you begin, ensure you have met the following requirements:
 - **User Profiles:** Users can view and edit their profiles, including profile pictures and bio.
 - **Notifications:** Notify users about new comments, replies, or other relevant activities.
 - **Responsive Design:** Ensure the application is accessible and usable across different devices and screen sizes.
+
+## Technologies Used
+### Backend
+- **Python 3.10:** The primary programming language used for backend development.
+- **Django 5.0.3:** The web framework used to build the backend of the application.
+- **Pillow 10.2:** Python Imaging Library used for image processing.
+- **SQLite3:** Lightweight relational database management system used for local development.
+
+### Frontend
+- **HTML, CSS, JavaScript:** The core technologies for building the frontend interface and interactivity.
+- **jQuery 3.2.1:** JavaScript library used for simplifying DOM manipulation and event handling.
+- **Bootstrap 4.0.0:** Frontend framework for building responsive and mobile-first websites.
+- **Popper.js:** Dependency used in combination with Bootstrap for creating tooltips, popovers, and dropdowns.
+- **Ajax 3.5:** JavaScript technique used for making asynchronous HTTP requests to the server.
 
 ## Contributing
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
