@@ -1,0 +1,243 @@
+.custom-button {
+    background-color: #17a2b8; /* Bootstrap 4 info color */
+    color: #fff;
+    border: none;
+    padding: 5px 10px; /* Adjust padding to make button smaller */
+    font-size: 12px; /* Adjust font size */
+    border-radius: 3px; /* Adjust border radius */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 5px; /* Add margin between buttons */
+}
+
+.custom-button:hover {
+    background-color: #138496; /* Darker shade of info color */
+}
+
+/* Badge style */
+.badge {
+    font-size: 10px; /* Adjust font size */
+    margin-left: 3px; /* Add margin between button text and badge */
+    vertical-align: middle; /* Align badge vertically with button text */
+}
+
+.reply {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #fff;
+}
+
+.reply-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.reply-header .reply-icon {
+    color: #666;
+    margin-right: 5px;
+}
+
+.reply-meta {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+}
+
+.reply-content {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.reply-info {
+    font-size: 14px;
+    color: #666;
+}
+
+.reply-info p {
+    margin: 5px 0;
+}
+
+.reply-info a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.reply-info a:hover {
+    text-decoration: underline;
+}
+
+.reply-likes {
+    color: #007bff;
+}
+
+.reply-likes i {
+    margin-right: 5px;
+}
+.post {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #fff;
+}
+
+.post-title {
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.post-meta {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.post-content {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.post-details {
+    margin-top: 15px;
+}
+
+.post-details-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.post-details-list li {
+    display: inline-block;
+    margin-right: 15px;
+    color: #666;
+}
+.profile-header h2,
+.block h2 {
+    margin: 0;
+    font-family: 'Your Chosen Font', sans-serif;
+    color: black;
+}
+.profile-block {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.profile-header {
+    background-color: #f5f5f5;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.profile-header h2 {
+    margin: 0;
+}
+
+.profile-content {
+    display: none;
+    padding: 10px;
+}
+
+.profile-content ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.profile-content ul li {
+    margin-bottom: 5px;
+}
+
+.profile-content ul li a {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+.profile-content ul li a:hover {
+    color: #666;
+}
+.otherProf {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+    border: 5px solid #fff;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+}
+
+.userHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.userInfo h3 {
+    margin: 0;
+    color: #333;
+    font-size: 24px;
+}
+
+.userDesc {
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.userDesc h2 {
+    color: #333;
+    margin-top: 0;
+    font-size: 24px;
+}
+
+.block {
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.block h2 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.block ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.block ul li {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    font-size: 18px;
+    margin-left: 0;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
