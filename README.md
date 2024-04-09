@@ -23,28 +23,93 @@ Before you begin, ensure you have met the following requirements:
 - **Django:** Django is the web framework used for building this application. You can install it globally or within a virtual environment.
 
 ### Installation
-1. **Clone the repository:**
-    ```bash
-    git clone https://github.com/yourusername/django-forum.git
-    ```
-2. **Navigate into the project directory:**
-    ```bash
-    cd django-forum
-    ```
-3. **Install project dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-4. **Apply database migrations:**
-    ```bash
-    python manage.py migrate
-    ```
-5. **Start the development server:**
-    ```bash
-    python manage.py runserver
-    ```
-6. **Access the application:**
-    - Visit `http://localhost:8000` in your web browser to interact with the application locally.
+## Step 1: Clone the Repository
+
+1. Open your terminal or command prompt.
+2. Clone this repository to your local machine using the following command:
+   
+   ```bash
+   git clone https://github.com/Salva05/Knowledge-First.git
+   ```
+
+## Step 2: Navigate to the Project Directory
+
+1. Change into the project directory:
+    
+   > **Side Note:** From the folder where the git repo has been cloned
+
+   ```bash
+   cd Knowledge-First
+   ```
+
+## Step 3: Create a Virtual Environment (Optional but Recommended)
+
+1. It's recommended to use a virtual environment to isolate project dependencies. Create one using the following command:
+
+   ```bash
+   python3 -m venv .venv
+   ```
+
+## Step 4: Activate the Virtual Environment
+
+1. Activate the virtual environment. Commands vary based on your operating system:
+
+   - **On Windows:**
+
+     ```bash
+     .venv\Scripts\activate
+     ```
+
+   - **On macOS and Linux:**
+
+     ```bash
+     source .venv/bin/activate
+     ```
+
+## Step 5: Install Dependencies
+
+1. Use pip to install the required Python packages:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+## Step 6: Database Setup
+
+1. Initialize the database and it's necessary elements:
+   
+   > **Side Note:** Be sure to run this command from the directory where the 'manage.py' file is located
+
+   ```bash
+   python manage.py migrate
+   ```
+
+## Step 7: Create Superuser (Optional)
+
+1. If you want to access the Django admin interface, create a superuser:
+
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+## Step 8: Run the Application
+
+1. Start the Django development server:
+
+   ```bash
+   python manage.py runserver
+   ```
+
+   The development server will be running at `http://127.0.0.1:8000/` by default.
+
+## Step 9: Explore the Application
+
+1. Open your web browser and navigate to `http://127.0.0.1:8000/` to access the Awesome Django Web Application.
+
+## Issues
+
+If you encounter any issues with the application, please feel free to open an issue on the GitHub repository.
+
 
 ## Usage
 - **User Registration and Authentication:** Users can register for an account and log in securely to access the forum features.
