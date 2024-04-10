@@ -1,7 +1,7 @@
 # Django Forum Application
 
 ## Introduction
-Welcome to the Django Forum Application! This project serves as a school project for [Your School/Class] to demonstrate proficiency in Django web development. The application provides a platform for users to engage in discussions, share ideas, and seek assistance on various topics.
+Welcome to the Knowledge First application. It provides a platform for users to engage in discussions, share ideas, and seek assistance on various topics.
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -11,8 +11,7 @@ Welcome to the Django Forum Application! This project serves as a school project
 - [Usage](#usage)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
-- [Contributing](#contributing)
-- [License](#license)
+- [Future Plans](#future-plans)
 
 ## Getting Started
 
@@ -36,7 +35,7 @@ Before you begin, ensure you have met the following requirements:
 
 1. Change into the project directory:
     
-   > **Side Note:** From the folder where the git repo has been cloned
+   > **Side Note:** Be sure to run this command from the folder where the git repo has been cloned
 
    ```bash
    cd Knowledge-First
@@ -111,33 +110,26 @@ Before you begin, ensure you have met the following requirements:
 If you encounter any issues with the application, please feel free to open an issue on the GitHub repository.
 
 
-## Usage
+## Usage and Features
 - **User Registration and Authentication:** Users can register for an account and log in securely to access the forum features.
 - **Create and Manage Posts:** Users can create new posts, edit their own posts, and delete them if necessary.
+- **Solution Marking Mechanism:** Users can mark a reply as the solution to a post, signaling the end of discussion on that topic and providing clarity to others seeking answers. This action will automatically highlight that reply and set it as the first reply of the discussion.
+- **Post State:**  Posts can be in one of two states: "Open" for ongoing discussions and "Solved" once a solution has been identified and marked by the user, preventing the post from receiving further replies.
 - **Comments and Discussions:** Users can engage in discussions by leaving comments on posts and replying to other users' comments.
-- **Categories and Tagging:** Posts are categorized and tagged for easy navigation and discovery of relevant topics.
+- **Quoting System:** Users can select subportions of text within a reply and click "Quote" to respond directly to that portion.
+- **Categories:** Posts are categorized for easy navigation of relevant topics.
 - **Search Functionality:** Users can search for specific posts or topics using the search feature.
-- **User Profiles:** Each user has a profile page where they can view their activity, edit their profile details, and manage their posts.
-- **Moderation Tools:** Administrators and moderators have access to moderation tools to manage user content, including editing and deleting posts and comments.
+- **User Profiles:** Each user has a profile page where they can view their activity.
+- **Follow-Unfollow System:** Users can choose to follow or unfollow profiles.
+- **Responsive Design:** The application is accessible and usable across different devices and screen sizes.
 
-## Features
-- **User Authentication:** Allow users to register, log in, and manage their accounts.
-- **Create Posts:** Users can create new posts to share their thoughts and questions.
-- **Comments:** Enable users to comment on posts for discussions.
-- **Categories:** Categorize posts for easier navigation and organization.
-- **Tags:** Tag posts with keywords for better categorization and searchability.
-- **Search:** Provide a search feature to find posts based on keywords.
-- **Moderation:** Allow moderators to manage posts and comments, including editing and deleting.
-- **User Profiles:** Users can view and edit their profiles, including profile pictures and bio.
-- **Notifications:** Notify users about new comments, replies, or other relevant activities.
-- **Responsive Design:** Ensure the application is accessible and usable across different devices and screen sizes.
 
 ## Technologies Used
 ### Backend
 - **Python 3.10:** The primary programming language used for backend development.
 - **Django 5.0.3:** The web framework used to build the backend of the application.
 - **Pillow 10.2:** Python Imaging Library used for image processing.
-- **SQLite3:** Lightweight relational database management system used for local development.
+- **SQLite3:** Lightweight relational database management system used as default by Django.
 
 ### Frontend
 - **HTML, CSS, JavaScript:** The core technologies for building the frontend interface and interactivity.
@@ -146,14 +138,4 @@ If you encounter any issues with the application, please feel free to open an is
 - **Popper.js:** Dependency used in combination with Bootstrap for creating tooltips, popovers, and dropdowns.
 - **Ajax 3.5:** JavaScript technique used for making asynchronous HTTP requests to the server.
 
-## Contributing
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. **Fork the repository.**
-2. **Create a new branch for your feature (`git checkout -b feature/AmazingFeature`).**
-3. **Commit your changes (`git commit -m 'Add some AmazingFeature'`).**
-4. **Push to the branch (`git push origin feature/AmazingFeature`).**
-5. **Open a pull request.**
-
-## License
-This project is licensed under the [Your License Name] License - see the `LICENSE` file for details.
+## Future Plans
