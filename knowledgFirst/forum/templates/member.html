@@ -128,8 +128,8 @@
                     <div class="post">
                         <h3 class="post-title"><a href="{% url 'detail' id=post.id %}">{{ post.title }}</a></h3>
                         <p class="post-meta">Published on {{ post.pub_date }}</p>
-                        <div class="post-content">
-                            {{ post.content | safe }} <!-- Assuming content is safe HTML -->
+                        <div class="post-content text-dark">
+                            {{ post.content|truncatewords:80 | safe }}
                         </div>
                         <div class="post-details">
                             <ul class="post-details-list">

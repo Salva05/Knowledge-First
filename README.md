@@ -1,7 +1,7 @@
 # Django Forum Application
 
 ## Introduction
-Welcome to the Knowledge First application. It provides a platform for users to engage in discussions, share ideas, and seek assistance on various topics.
+Welcome to the **Knowledge First** application. It aims to provide a platform for users to engage in discussions, share ideas, and seek assistance on various topics.
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -19,7 +19,7 @@ Welcome to the Knowledge First application. It provides a platform for users to 
 Before you begin, ensure you have met the following requirements:
 - **Python 3.x:** The application is built using Python, so make sure you have Python 3.x installed on your local machine.
 - **pip Package Manager:** Ensure that you have the pip package manager installed to easily install Python dependencies.
-- **Django:** Django is the web framework used for building this application. You can install it globally or within a virtual environment.
+- **Django:** Django is the web framework used for building this application. You can install it globally or within a virtual environment _recommended to avoid unnecessary dependancies.
 
 ### Installation
 ## Step 1: Clone the Repository
@@ -111,16 +111,32 @@ If you encounter any issues with the application, please feel free to open an is
 
 
 ## Usage and Features
-- **User Registration and Authentication:** Users can register for an account and log in securely to access the forum features.
-- **Create and Manage Posts:** Users can create new posts, edit their own posts, and delete them if necessary.
+
+- **User Registration and Authentication:** Users can register for an account and log in securely to access the forum features. Necessary fields as email, username and password will be required, so make sure to fill these fields (username and email must be unique)
+
+- **Create and Manage Posts:** Users can create new posts, edit their own posts, and delete them if necessary. Furthermore, each post has all the side infos, included the likes; an openable window containing all the users who left a like to the post. Each of them will represent a link to their profile.
+
 - **Solution Marking Mechanism:** Users can mark a reply as the solution to a post, signaling the end of discussion on that topic and providing clarity to others seeking answers. This action will automatically highlight that reply and set it as the first reply of the discussion.
+_Furthermore, it will set the state of the post, originary on 'Open', to 'Solved'.
+
 - **Post State:**  Posts can be in one of two states: "Open" for ongoing discussions and "Solved" once a solution has been identified and marked by the user, preventing the post from receiving further replies.
-- **Comments and Discussions:** Users can engage in discussions by leaving comments on posts and replying to other users' comments.
-- **Quoting System:** Users can select subportions of text within a reply and click "Quote" to respond directly to that portion.
+
+- **Comments and Discussions:** Users can engage in discussions by leaving comments on posts and replying to other users' comments. It's also given the possibility to delete an answer from the post. All the replies that were replying to it will instead display a *deleted message* preventing anyone to read it anymore.
+
+- **Quoting System:** Users can select (drag-select) subportions of text within a reply and click "Quote" to respond directly to that portion.
+
 - **Categories:** Posts are categorized for easy navigation of relevant topics.
+
 - **Search Functionality:** Users can search for specific posts or topics using the search feature.
-- **User Profiles:** Each user has a profile page where they can view their activity.
+
+- **User Profiles:** Each user has a profile page where they can view their activity and stats.
+
+- **Members:** Every user registered in the platform will be a member, giving to anyone else the possibility to interact with him/her and to see related contents and replies.
+
 - **Follow-Unfollow System:** Users can choose to follow or unfollow profiles.
+
+- **Discussions:** A section *Discussions* will allow the user to visualize their recent activity and their topics, along with the chance to modify/delete each of them 
+
 - **Responsive Design:** The application is accessible and usable across different devices and screen sizes.
 
 
@@ -138,4 +154,4 @@ If you encounter any issues with the application, please feel free to open an is
 - **Popper.js:** Dependency used in combination with Bootstrap for creating tooltips, popovers, and dropdowns.
 - **Ajax 3.5:** JavaScript technique used for making asynchronous HTTP requests to the server.
 
-## Future Plans
+## Yet to come
