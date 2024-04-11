@@ -113,7 +113,7 @@ If you encounter any issues with the application, please feel free to open an is
 ## Usage and Features
 - **Dynamic-content Home Page:** The homepage dynamically updates with fresh content triggered by significant events like new member registrations or post likes. 
 
-![Home page](http://salvoits.altervista.org/imagesKF/Home.png)
+![Home page](http://salvoits.altervista.org/imagesKF/HomePage.png)
 
 - **User Registration and Authentication:** Users can register for an account and log in securely to access the forum features. Necessary fields as email, username and password will be required, so make sure to fill these fields (username and email must be unique)
 
@@ -164,7 +164,7 @@ _Furthermore, it will set the state of the post, originary on 'Open', to 'Solved
 
 - **Responsive Design:** The application is accessible and usable across different devices and screen sizes.
 
-![Responsiveness demonstration, Post detail page in column layout](https://salvoits.altervista.org/imagesKF/responsive.png)
+![Responsiveness demonstration, Post detail page in column layout](https://salvoits.altervista.org/imagesKF/Responsive.png)
 
 
 ## Technologies Used
