@@ -138,13 +138,15 @@ _Furthermore, it will set the state of the post, originary on 'Open', to 'Solved
 
 - **Quoting System:** Users can select (drag-select) subportions of text within a reply and click "Quote" to respond directly to that portion.
 
-![Qotuing system](http://salvoits.altervista.org/imagesKF/quote.png)
+![Quotuing system](http://salvoits.altervista.org/imagesKF/quote.png)
 
 - **Categories:** Posts are categorized for easy navigation of relevant topics.
 
+![Content page along with Categories mechanism](https://salvoits.altervista.org/imagesKF/categories.png)
+
 - **Search Functionality:** Users can search for specific posts or topics using the search feature.
 
-![Search functionality](http://salvoits.altervista.org/imagesKF/Drawing-14.sketchpad.png)
+![Search functionality](http://salvoits.altervista.org/imagesKF/search.png)
 
 - **User Profiles:** Each user has a profile page where they can view their activity and stats.
 
@@ -161,6 +163,8 @@ _Furthermore, it will set the state of the post, originary on 'Open', to 'Solved
 ![Discussion's page](http://salvoits.altervista.org/imagesKF/Discussions.png)
 
 - **Responsive Design:** The application is accessible and usable across different devices and screen sizes.
+
+![Responsiveness demonstration, Post detail page in column layout](https://salvoits.altervista.org/imagesKF/responsive.png)
 
 
 ## Technologies Used
