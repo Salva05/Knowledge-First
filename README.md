@@ -111,34 +111,54 @@ If you encounter any issues with the application, please feel free to open an is
 
 
 ## Usage and Features
+- **Dynamic-content Home Page:** The homepage dynamically updates with fresh content triggered by significant events like new member registrations or post likes. 
+
+![Home page](http://salvoits.altervista.org/imagesKF/Home.png)
 
 - **User Registration and Authentication:** Users can register for an account and log in securely to access the forum features. Necessary fields as email, username and password will be required, so make sure to fill these fields (username and email must be unique)
 
 ![Signin-Singup](https://salvoits.altervista.org/imagesKF/singInUp.png)
 
-
 - **Create and Manage Posts:** Users can create new posts, edit their own posts, and delete them if necessary. Furthermore, each post has all the side infos, included the likes; an openable window containing all the users who left a like to the post. Each of them will represent a link to their profile.
+
+![Post's creation and edit](http://salvoits.altervista.org/imagesKF/post.png)
 
 - **Solution Marking Mechanism:** Users can mark a reply as the solution to a post, signaling the end of discussion on that topic and providing clarity to others seeking answers. This action will automatically highlight that reply and set it as the first reply of the discussion.
 _Furthermore, it will set the state of the post, originary on 'Open', to 'Solved'.
 
+![Reply marked as solution](http://salvoits.altervista.org/imagesKF/solution.png)
+
 - **Post State:**  Posts can be in one of two states: "Open" for ongoing discussions and "Solved" once a solution has been identified and marked by the user, preventing the post from receiving further replies.
+
+![State of the posts: Open-Solved](http://salvoits.altervista.org/imagesKF/postState.png)
 
 - **Comments and Discussions:** Users can engage in discussions by leaving comments on posts and replying to other users' comments. It's also given the possibility to delete an answer from the post. All the replies that were replying to it will instead display a *deleted message* preventing anyone to read it anymore.
 
+![Reply-to-reply system](http://salvoits.altervista.org/imagesKF/reply2.png)
+
 - **Quoting System:** Users can select (drag-select) subportions of text within a reply and click "Quote" to respond directly to that portion.
+
+![Qotuing system](http://salvoits.altervista.org/imagesKF/quote.png)
 
 - **Categories:** Posts are categorized for easy navigation of relevant topics.
 
 - **Search Functionality:** Users can search for specific posts or topics using the search feature.
 
+![Search functionality](http://salvoits.altervista.org/imagesKF/Drawing-14.sketchpad.png)
+
 - **User Profiles:** Each user has a profile page where they can view their activity and stats.
 
+![User porfile page](http://salvoits.altervista.org/imagesKF/profile.png)
+
 - **Members:** Every user registered in the platform will be a member, giving to anyone else the possibility to interact with him/her and to see related contents and replies.
+
+![Member's page](http://salvoits.altervista.org/imagesKF/member.png)
 
 - **Follow-Unfollow System:** Users can choose to follow or unfollow profiles.
 
 - **Discussions:** A section *Discussions* will allow the user to visualize their recent activity and their topics, along with the chance to modify/delete each of them 
+
+![Discussion's page](http://salvoits.altervista.org/imagesKF/Discussions.png)
 
 - **Responsive Design:** The application is accessible and usable across different devices and screen sizes.
 
