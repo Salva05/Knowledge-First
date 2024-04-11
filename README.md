@@ -114,6 +114,9 @@ If you encounter any issues with the application, please feel free to open an is
 
 - **User Registration and Authentication:** Users can register for an account and log in securely to access the forum features. Necessary fields as email, username and password will be required, so make sure to fill these fields (username and email must be unique)
 
+![Signin-Singup](https://salvoits.altervista.org/imagesKF/singInUp.png)
+
+
 - **Create and Manage Posts:** Users can create new posts, edit their own posts, and delete them if necessary. Furthermore, each post has all the side infos, included the likes; an openable window containing all the users who left a like to the post. Each of them will represent a link to their profile.
 
 - **Solution Marking Mechanism:** Users can mark a reply as the solution to a post, signaling the end of discussion on that topic and providing clarity to others seeking answers. This action will automatically highlight that reply and set it as the first reply of the discussion.
