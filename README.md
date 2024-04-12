@@ -35,7 +35,7 @@ Before you begin, ensure you have met the following requirements:
 
 1. Change into the project directory:
     
-   > **Side Note:** Be sure to run this command from the folder where the git repo has been cloned
+   > **Side Note:** Be sure to run this command from the folder where the repo has been cloned
 
    ```bash
    cd Knowledge-First
@@ -103,7 +103,7 @@ Before you begin, ensure you have met the following requirements:
 
 ## Step 9: Explore the Application
 
-1. Open your web browser and navigate to `http://127.0.0.1:8000/` to access the Awesome Django Web Application.
+1. Open your web browser and navigate to `http://127.0.0.1:8000/` to access the Application.
 
 ## Issues
 
@@ -124,7 +124,10 @@ If you encounter any issues with the application, please feel free to open an is
 ![Post's creation and edit](http://salvoits.altervista.org/imagesKF/post.png)
 
 - **Solution Marking Mechanism:** Users can mark a reply as the solution to a post, signaling the end of discussion on that topic and providing clarity to others seeking answers. This action will automatically highlight that reply and set it as the first reply of the discussion.
-_Furthermore, it will set the state of the post, originary on 'Open', to 'Solved'.
+<aside class="note">
+Furthermore, it will set the state of the post, originary on 'Open', to 'Solved'.
+</aside>
+
 
 ![Reply marked as solution](http://salvoits.altervista.org/imagesKF/solution.png)
 
