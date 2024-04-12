@@ -11,7 +11,7 @@ Welcome to the **Knowledge First** application. It aims to provide a platform fo
 - [Usage](#usage)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
-- [Future Plans](#future-plans)
+- [Yet to come](#yet-to-come)
 
 ## Getting Started
 
