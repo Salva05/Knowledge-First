@@ -19,7 +19,7 @@ Welcome to the **Knowledge First** application. It aims to provide a platform fo
 Before you begin, ensure you have met the following requirements:
 - **Python 3.x:** The application is built using Python, so make sure you have Python 3.x installed on your local machine.
 - **pip Package Manager:** Ensure that you have the pip package manager installed to easily install Python dependencies.
-- **Django:** Django is the web framework used for building this application. You can install it globally or within a virtual environment _recommended to avoid unnecessary dependancies.
+- **Django:** Django is the web framework used for building this application. You can install it globally or within a virtual environment (recommended to avoid unnecessary dependancies).
 
 ### Installation
 ## Step 1: Clone the Repository
@@ -185,11 +185,11 @@ If you encounter any issues with the application, please feel free to open an is
 ## Yet to come
 Below some of the future implementations that are listed to be done.
 
-### Improved Follow/Unfollow system:
+### - Improved Follow/Unfollow system:
 The idea behind the improved Follow/Unfollow system is to implement a section where poeple can stay up to date with the contents published by the followers.
 
-### Know Who's Online:
+### - Know Who's Online:
 Adding a little green circle next to member's profile pics so to know when they are connected and logged in the platform. It aims to enhance the interactions with other members.
 
-### Chat System:
+### - Chat System:
 A chat system, where the community can privately and comfortably talk with the one they follows, is behind the corner. It will be possible to start a chat only if there is a respective 'follow'.
