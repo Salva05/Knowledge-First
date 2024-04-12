@@ -1,4 +1,4 @@
-# Django Forum Application
+# Knowledge First
 
 ## Introduction
 Welcome to the **Knowledge First** application. It aims to provide a platform for users to engage in discussions, share ideas, and seek assistance on various topics.
