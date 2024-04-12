@@ -124,9 +124,7 @@ If you encounter any issues with the application, please feel free to open an is
 ![Post's creation and edit](http://salvoits.altervista.org/imagesKF/post.png)
 
 - **Solution Marking Mechanism:** Users can mark a reply as the solution to a post, signaling the end of discussion on that topic and providing clarity to others seeking answers. This action will automatically highlight that reply and set it as the first reply of the discussion.
-<aside class="note">
-Furthermore, it will set the state of the post, originary on 'Open', to 'Solved'.
-</aside>
+> **_NOTE:_** It will set the state of the post, originary on 'Open', to 'Solved'.
 
 
 ![Reply marked as solution](http://salvoits.altervista.org/imagesKF/solution.png)
@@ -185,3 +183,13 @@ Furthermore, it will set the state of the post, originary on 'Open', to 'Solved'
 - **Ajax 3.5:** JavaScript technique used for making asynchronous HTTP requests to the server.
 
 ## Yet to come
+Below some of the future implementations that are listed to be done.
+
+### Improved Follow/Unfollow system:
+The idea behind the improved Follow/Unfollow system is to implement a section where poeple can stay up to date with the contents published by the followers.
+
+### Know Who's Online:
+Adding a little green circle next to member's profile pics so to know when they are connected and logged in the platform. It aims to enhance the interactions with other members.
+
+### Chat System:
+A chat system, where the community can privately and comfortably talk with the one they follows, is behind the corner. It will be possible to start a chat only if there is a respective 'follow'.
