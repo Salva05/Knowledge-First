@@ -118,14 +118,16 @@
 		{% endif %}
 		<div id="solution" class="px-1 py-1">
 			{% if post.state == 'Open' %}
-			<button class="btn btn-success btn-sm solvedBtn" id="solvedBtn{{ reply.id }}" data-toggle="popover" title="Mark as Solution" data-content="This action will mark the post as solved and close it." onclick="resolve('{{ post.id }}', '{{ reply.id }}')">
-				<i class="fas fa-check toSolve"></i>
-			</button>
+				{% if post.author.id == profile.id %}
+					<button class="btn btn-success btn-sm solvedBtn" id="solvedBtn{{ reply.id }}" data-toggle="popover" title="Mark as Solution" data-content="This action will mark the post as solved and close it." onclick="resolve('{{ post.id }}', '{{ reply.id }}')">
+						<i class="fas fa-check toSolve"></i>
+					</button>
+				{% endif %}
 			{% else %}
 				{% if reply.resolutive %}
-				<button class="btn btn-success btn-sm solved" id="solvedBtn{{ reply.id }}" data-toggle="popover" title="Marked as Solution" data-content="This reply has been marked as solution." disabled style="background-color: green;">
-					<i class="fas fa-check"></i>
-				</button>
+					<button class="btn btn-success btn-sm solved" id="solvedBtn{{ reply.id }}" data-toggle="popover" title="Marked as Solution" data-content="This reply has been marked as solution." disabled style="background-color: green;">
+						<i class="fas fa-check"></i>
+					</button>
 				{% endif %}
 			{% endif %}
 		</div>
