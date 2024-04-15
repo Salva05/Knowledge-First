@@ -1,4 +1,4 @@
-# Django Forum Application
+# Knowledge First
 
 ## Introduction
 Welcome to the **Knowledge First** application. It aims to provide a platform for users to engage in discussions, share ideas, and seek assistance on various topics.
@@ -11,7 +11,7 @@ Welcome to the **Knowledge First** application. It aims to provide a platform fo
 - [Usage](#usage)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
-- [Future Plans](#future-plans)
+- [Yet to come](#yet-to-come)
 
 ## Getting Started
 
@@ -19,7 +19,7 @@ Welcome to the **Knowledge First** application. It aims to provide a platform fo
 Before you begin, ensure you have met the following requirements:
 - **Python 3.x:** The application is built using Python, so make sure you have Python 3.x installed on your local machine.
 - **pip Package Manager:** Ensure that you have the pip package manager installed to easily install Python dependencies.
-- **Django:** Django is the web framework used for building this application. You can install it globally or within a virtual environment _recommended to avoid unnecessary dependancies.
+- **Django:** Django is the web framework used for building this application. You can install it globally or within a virtual environment (recommended to avoid unnecessary dependancies).
 
 ### Installation
 ## Step 1: Clone the Repository
@@ -35,7 +35,7 @@ Before you begin, ensure you have met the following requirements:
 
 1. Change into the project directory:
     
-   > **Side Note:** Be sure to run this command from the folder where the git repo has been cloned
+   > **Side Note:** Be sure to run this command from the folder where the repo has been cloned
 
    ```bash
    cd Knowledge-First
@@ -103,7 +103,7 @@ Before you begin, ensure you have met the following requirements:
 
 ## Step 9: Explore the Application
 
-1. Open your web browser and navigate to `http://127.0.0.1:8000/` to access the Awesome Django Web Application.
+1. Open your web browser and navigate to `http://127.0.0.1:8000/` to access the Application.
 
 ## Issues
 
@@ -113,7 +113,7 @@ If you encounter any issues with the application, please feel free to open an is
 ## Usage and Features
 - **Dynamic-content Home Page:** The homepage dynamically updates with fresh content triggered by significant events like new member registrations or post likes. 
 
-![Home page](http://salvoits.altervista.org/imagesKF/Home.png)
+![Home page](http://salvoits.altervista.org/imagesKF/HomePage.png)
 
 - **User Registration and Authentication:** Users can register for an account and log in securely to access the forum features. Necessary fields as email, username and password will be required, so make sure to fill these fields (username and email must be unique)
 
@@ -124,7 +124,8 @@ If you encounter any issues with the application, please feel free to open an is
 ![Post's creation and edit](http://salvoits.altervista.org/imagesKF/post.png)
 
 - **Solution Marking Mechanism:** Users can mark a reply as the solution to a post, signaling the end of discussion on that topic and providing clarity to others seeking answers. This action will automatically highlight that reply and set it as the first reply of the discussion.
-_Furthermore, it will set the state of the post, originary on 'Open', to 'Solved'.
+> **_NOTE:_** It will set the state of the post, originary on 'Open', to 'Solved'.
+
 
 ![Reply marked as solution](http://salvoits.altervista.org/imagesKF/solution.png)
 
@@ -164,7 +165,7 @@ _Furthermore, it will set the state of the post, originary on 'Open', to 'Solved
 
 - **Responsive Design:** The application is accessible and usable across different devices and screen sizes.
 
-![Responsiveness demonstration, Post detail page in column layout](https://salvoits.altervista.org/imagesKF/responsive.png)
+![Responsiveness demonstration, Post detail page in column layout](https://salvoits.altervista.org/imagesKF/Responsive.png)
 
 
 ## Technologies Used
@@ -182,3 +183,13 @@ _Furthermore, it will set the state of the post, originary on 'Open', to 'Solved
 - **Ajax 3.5:** JavaScript technique used for making asynchronous HTTP requests to the server.
 
 ## Yet to come
+Below some of the future implementations that are listed to be done.
+
+### - Improved Follow/Unfollow system:
+The idea behind the improved Follow/Unfollow system is to implement a section where poeple can stay up to date with the contents published by the followers.
+
+### - Know Who's Online:
+Adding a little green circle next to member's profile pics so to know when they are connected and logged in the platform. It aims to enhance the interactions with other members.
+
+### - Chat System:
+A chat system, where the community can privately and comfortably talk with the one they follows, is behind the corner. It will be possible to start a chat only if there is a respective 'follow'.
