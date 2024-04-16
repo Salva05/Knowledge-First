@@ -9,7 +9,6 @@ from django.db.models import F, Count
 from django.contrib.auth import login, logout
 from datetime import datetime, timedelta
 from django.utils import timezone
-from django.http import HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -156,7 +155,6 @@ def detail(request, id):
     return HttpResponse(template.render(context, request))
 
 def signup(request):
-    user_authenticated = request.user.is_authenticated
 
     categories = Post.get_categories()
 
@@ -165,15 +163,15 @@ def signup(request):
 
         email = request.POST.get('email')
         if not email:
-            return render(request, 'signup.html', {'form': form, 'email_error': 'Email is required', 'categories': categories, 'user_authenticated': user_authenticated})
+            return render(request, 'signup.html', {'form': form, 'email_error': 'Email is required', 'categories': categories,})
         
         try:
             EmailValidator()(email)
         except ValidationError:
-            return render(request, 'signup.html', {'form': form, 'email_error': 'Invalid email format', 'categories': categories, 'user_authenticated': user_authenticated})
+            return render(request, 'signup.html', {'form': form, 'email_error': 'Invalid email format', 'categories': categories,})
 
         if Profile.objects.filter(email=email).exists():
-            return render(request, 'signup.html', {'form': form, 'email_error': 'Email already in use', 'categories': categories, 'user_authenticated': user_authenticated})
+            return render(request, 'signup.html', {'form': form, 'email_error': 'Email already in use', 'categories': categories,})
         
         if form.is_valid():
             # Save the standard django user
@@ -187,7 +185,6 @@ def signup(request):
                 
             interests = request.POST.get('interests', None)
             email = request.POST.get('email')
-            print(avatar)
             
             # Create a new profile instance linked to the user
             profile = Profile.objects.create(
@@ -195,7 +192,7 @@ def signup(request):
                 avatar=avatar,
                 interests=interests,
                 email=email
-            ) 
+            )
 
             #sign in the user
             login(request, user)
@@ -203,7 +200,7 @@ def signup(request):
             return redirect('signup_success')
     else:
         form = UserCreationForm()
-    return render(request, 'signup.html', {'form': form, 'categories': categories, 'user_authenticated': user_authenticated})
+    return render(request, 'signup.html', {'form': form, 'categories': categories,})
 
 def signup_success(request):
     categories = Post.get_categories()
