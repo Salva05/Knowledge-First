@@ -202,6 +202,7 @@ def signup(request):
         form = UserCreationForm()
     return render(request, 'signup.html', {'form': form, 'categories': categories,})
 
+@login_required
 def signup_success(request):
     categories = Post.get_categories()
     user_authenticated = request.user.is_authenticated
@@ -236,6 +237,7 @@ def signout(request):
     logout(request)
     return redirect('index')
 
+@login_required
 def profile(request):
     user_authenticated = request.user.is_authenticated
     
@@ -298,6 +300,7 @@ def profile(request):
 
     return HttpResponse(template.render(context, request))
 
+@login_required
 def new_topic(request):
     user_authenticated = request.user.is_authenticated
 
@@ -370,11 +373,13 @@ def submit_reply(request):
         return redirect('detail', id=post_id)
     return HttpResponse("Invalid request or data", status=400)
 
+@login_required
 def delete_topic(request, id):
     post = get_object_or_404(Post, pk=id)
     post.delete()
     return redirect('elenco')
 
+@login_required
 def delete_reply(request):
     if request.method == 'POST':
         reply_id = request.POST['reply_id']
@@ -388,6 +393,7 @@ def delete_reply(request):
 
     return redirect('detail', id=post_id)
 
+@login_required
 def post_like(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
 
@@ -400,7 +406,8 @@ def post_like(request, post_id):
         post.total_likes += 1
         post.save()
         return JsonResponse({'success': True, 'message': 'Post liked successfully.'})
-    
+
+@login_required
 def reply_like(request, reply_id):
     reply = get_object_or_404(Reply, pk=reply_id)
 
@@ -413,7 +420,8 @@ def reply_like(request, reply_id):
         reply.likes += 1
         reply.save()
         return JsonResponse({'success': True, 'message': 'Post liked successfully.'})
-    
+
+@login_required
 def discussions(request):
     user_authenticated = request.user.is_authenticated
     categories = Post.get_categories()
@@ -527,6 +535,7 @@ def member(request, profile_id):
 
     return HttpResponse(template.render(context, request))
 
+@login_required
 def follow_user(request, profile_id):
     if request.method == 'POST' and request.user.is_authenticated:
         # Get the profile being followed
