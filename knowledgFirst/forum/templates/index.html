@@ -104,7 +104,7 @@
                                     {% endif %}</h6>
                                     <small class="text-muted">Posted by <b class="font-italic">{{ topic.author }}</b><br>{{ topic.pub_date|date:"d/m/Y" }}</small>
                                 </div>
-                                <span class="badge badge-primary badge-pill">{{ topic.total_likes }} likes</span>
+                                <span class="badge badge-primary badge-pill">{{ topic.total_likes }} like{{ topic.total_likes|pluralize}}</span>
                             </a>
                         {% endfor %}
                     </div>
@@ -121,7 +121,7 @@
                         <li class="border-bottom mb-1 list-group-item d-flex justify-content-between align-items-center">
                             <a href="{% url 'member' user.id %}" class="card-link">
                                 &#9733 {{ user.user.username }}
-                                <span class="badge badge-primary badge-pill">{{ user.replies }} Total replies</span>
+                                <span class="badge badge-primary badge-pill">{{ user.replies }} Total replie{{ user.replies|pluralize}}</span>
                             </a>
                         </li>
                     {% endfor %}

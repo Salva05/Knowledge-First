@@ -57,8 +57,8 @@
 					{{ post.content | safe }}
 				</div>
 				<div class="mt-auto text-muted lks likes-updated">
-					<a href="#" data-toggle="modal" data-target="#examppleModalCenter2">{{ post.total_likes }} Likes </a>•
-					<span>{{ post.views }} Views {% if post.last_modify %}<small class="text-muted my-1 font-italic"> • edited {{ post.last_modify|custom_timesince }} </small>{% endif %}</span>
+					<a href="#" data-toggle="modal" data-target="#examppleModalCenter2">{{ post.total_likes }} Like{{ post.total_likes|pluralize}} </a>•
+					<span>{{ post.views }} View{{ post.views|pluralize }} {% if post.last_modify %}<small class="text-muted my-1 font-italic"> • edited {{ post.last_modify|custom_timesince }} </small>{% endif %}</span>
 				</div>
 				{% if user_authenticated %}
 				{% if post.state == 'Open' %}
@@ -160,7 +160,7 @@
 				</div>
 			</div>
 			<div class="mt-auto text-muted lks lksToTarget">
-				<a href="#" data-toggle="modal" data-target="#exampleModalCenter{{ reply.id }}" id="rplLikes">{{ reply.likes }} Likes</a>
+				<a href="#" data-toggle="modal" data-target="#exampleModalCenter{{ reply.id }}" id="rplLikes">{{ reply.likes }} Like{{ reply.likes|pluralize }}</a>
 			</div>
 			{% if user_authenticated %}
 			{% if post.state == 'Open' %}
