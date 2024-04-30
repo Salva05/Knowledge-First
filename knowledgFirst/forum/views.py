@@ -12,6 +12,8 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+from .forms import UserUpdateForm, ProfileUpdateForm
+
 from .models import *
 
 def index(request):
@@ -239,9 +241,26 @@ def signout(request):
 
 @login_required
 def profile(request):
+    template = loader.get_template('profile.html')
+
+    if request.method == 'POST':
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        profile_form = ProfileUpdateForm(request.POST,
+                                         request.FILES,
+                                         instance=request.user.profile)
+        print("Avatar file received stage-1:", request.FILES.get('avatar'))
+        profile_form.save()
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            print("Avatar file received stage-2:", request.FILES.get('avatar'))
+            messages.success(request, "The profile has been updated successfully.")
+    else:
+        user_form = UserUpdateForm(instance=request.user)
+        profile_form = ProfileUpdateForm(instance=request.user.profile)
+
     user_authenticated = request.user.is_authenticated
     
-    template = loader.get_template('profile.html')
     categories = Post.get_categories()
 
     is_admin = False
@@ -296,6 +315,8 @@ def profile(request):
             'total_following': total_following,
             'followers': followers,
             'following': following,
+            'user_form': user_form,
+            'profile_form': profile_form,
         }
 
     return HttpResponse(template.render(context, request))

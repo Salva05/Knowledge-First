@@ -1,154 +1,175 @@
 {% extends "master.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block back %}
     <a href="#" onclick="history.back();" class="btn btn-outline-light ml-2">Back</a>
 {% endblock %}
 
 {% block content %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="alert">
+          <p class="my-0">{{ message }}</p>
+        </div>
+      {% endfor %}
+    {% endif %}
     <div class="container user-profile-container">
-        {% if message %}
-            <div class="alert alert-success" role="alert">
-                {{ message }}
-            </div>
-        {% else %}
-            <div class="user-profile-card">
-                <div class="row">
-                    <div class="col-md-4">
-                        <img src="../{{ user_profile.avatar }}" alt="Profile Picture" class="avatar img-fluid mb-0">
-                        <h3 class="text-center">{{ user_profile.user.username }}</h3>
-                        <p class="text-muted font-italic text-center">{{ user_profile.grade }}</p>
-                        <div class="button-container text-center mb-3">
-                            <button type="button" class="custom-button btn-sm" data-toggle="modal" data-target="#followersModal">
-                                Followers <span class="badge badge-light">{{ total_followers }}</span>
-                            </button>
-                            <button type="button" class="custom-button btn-sm" data-toggle="modal" data-target="#followingModal">
-                                Following <span class="badge badge-light">{{ total_following }}</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="user-profile-info">
-                            <div class="info-item border-bottom">
-                                <span><b>Email:</b></span>
-                                <span class="value">{{ user_profile.email }}</span>
-                            </div>
-                            <div class="info-item border-bottom">
-                                <span><b>Join Date:</b></span>
-                                <span class="value">{{ user_profile.user.date_joined|date:"d/m/Y" }}</span>
-                            </div>
-                            <div class="info-item border-bottom">
-                                <span><b>Opened Topics:</b></span>
-                                <span class="value">{{ user_profile.total_posts }}</span>
-                            </div>
-                            <div class="info-item border-bottom">
-                                <span><b>Total Replies:</b></span>
-                                <span class="value">{{ user_profile.replies }}</span>
-                            </div>
-                        </div>
+        <div class="user-profile-card col-md-12">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="../{{ user_profile.avatar }}" alt="Profile Picture" class="avatar img-fluid mb-0">
+                    <h3 class="text-center">{{ user_profile.user.username }}</h3>
+                    <p class="text-muted font-italic text-center">{{ user_profile.grade }}</p>
+                    <div class="button-container text-center mb-3">
+                        <button type="button" class="custom-button btn-sm" data-toggle="modal" data-target="#followersModal">
+                            Followers <span class="badge badge-light">{{ total_followers }}</span>
+                        </button>
+                        <button type="button" class="custom-button btn-sm" data-toggle="modal" data-target="#followingModal">
+                            Following <span class="badge badge-light">{{ total_following }}</span>
+                        </button>
                     </div>
                 </div>
-                <!-- Additional informations -->
-                <!-- Collapsible elements -->
-                <!-- Interests -->
-                <div class="additional-info-header" data-toggle="collapse" data-target="#interestsCollapse" aria-expanded="true" aria-controls="interestsCollapse">
-                    <span class="collapse-btn">Interests</span>
-                    <span class="fas fa-chevron-down"></span> <!-- Added a down chevron icon -->
-                </div>
-                <div id="interestsCollapse" class="collapse mb-3">
-                    <div class="additional-info-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                {% if user_profile.interests|length > 0 %}
-                                <span>{{ user_profile.interests }}</span>
-                                {% else %}
-                                <span class="text-muted font-italic">You haven't set up a description yet.</span>
-                                {% endif %}
-                            </div>
+                <div class="col-md-8">
+                    <div class="user-profile-info">
+                        <div class="info-item border-bottom">
+                            <span><b>Email:</b></span>
+                            <span class="value">{{ user_profile.email }}</span>
                         </div>
-                    </div>
-                </div>
-                <!-- My Topics -->
-                <div class="additional-info-header" data-toggle="collapse" data-target="#openedTopics" aria-expanded="true" aria-controls="openedTopics">
-                    <span class="collapse-btn">My Topics</span>
-                    <span class="fas fa-chevron-down"></span>
-                </div>
-                <div id="openedTopics" class="collapse mb-3">
-                    <div class="additional-info-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                {% if posts %}
-                                    {% for post in posts %}
-                                        <div class="card topic-card mb-3" onclick="redirectToPostDetail('{% url 'detail' post.id %}')">
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-md-8">
-                                                        <h5 class="card-title"><b>{{ post.title }}</b></h5>
-                                                        <p class="card-text">{{ post.content|truncatechars:20 }}</p>
-                                                        <p class="card-text">
-                                                            <small class="text-muted">Posted on {{ post.pub_date }}</small>
-                                                        </p>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <ul class="topic-info">
-                                                            <li><i class="fas fa-comments"></i> Replies: {{ post.total_replies }}</li>
-                                                            <li><i class="fas fa-thumbs-up"></i> Likes: {{ post.total_likes }}</li>
-                                                            <li style="color: {% if post.state == 'Open' %}green{% else %}orange{% endif %};"><i class="fas fa-circle"></i> {% if post.state == 'Open' %}Opened{% else %}Solved{% endif %}</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                {% else %}
-                                <span class="text-muted font-italic">No topics published yet.</span>
-                                {% endif %}
-                            </div>
+                        <div class="info-item border-bottom">
+                            <span><b>Join Date:</b></span>
+                            <span class="value">{{ user_profile.user.date_joined|date:"d/m/Y" }}</span>
                         </div>
-                    </div>
-                </div>
-                <!-- Liked Topics -->
-                <div class="additional-info-header" data-toggle="collapse" data-target="#likedTopics" aria-expanded="true" aria-controls="likedTopics">
-                    <span class="collapse-btn">Liked Topics</span>
-                    <span class="fas fa-chevron-down"></span>
-                </div>
-                <div id="likedTopics" class="collapse mb-3">
-                    <div class="additional-info-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                {% if liked_posts %}
-                                    {% for post in liked_posts %}
-                                        <div class="card topic-card mb-3" onclick="redirectToTopicDetail('{% url 'detail' post.post.id %}')">
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-md-8">
-                                                        <h5 class="card-title"><b>{{ post.post.title }}</b></h5>
-                                                        <p class="card-text">{{ post.post.content|truncatechars:20 }}</p>
-                                                        <p class="card-text">
-                                                            <small class="text-muted">Liked on {{ post.like_date }}</small>
-                                                        </p>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <ul class="topic-info">
-                                                            <li><i class="fas fa-user"></i> Author: {{ post.post.author }}</li>
-                                                            <li><i class="fas fa-comments"></i> Replies: {{ post.post.total_replies }}</li>
-                                                            <li><i class="fas fa-thumbs-up"></i> Likes: {{ post.post.total_likes }}</li>
-                                                            <li style="color: {% if post.post.state == 'Open' %}green{% else %}orange{% endif %};"><i class="fas fa-circle"></i> {% if post.post.state == 'Open' %}Opened{% else %}Closed{% endif %}</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                {% else %}
-                                    <span class="text-muted font-italic">No liked topics yet.</span>
-                                {% endif %}
-                            </div>
+                        <div class="info-item border-bottom">
+                            <span><b>Opened Topics:</b></span>
+                            <span class="value">{{ user_profile.total_posts }}</span>
+                        </div>
+                        <div class="info-item border-bottom">
+                            <span><b>Total Replies:</b></span>
+                            <span class="value">{{ user_profile.replies }}</span>
                         </div>
                     </div>
                 </div>
             </div>
-        {% endif %}
+            <!-- Additional informations -->
+            <!-- Collapsible elements -->
+            <!-- Interests -->
+            <div class="additional-info-header" data-toggle="collapse" data-target="#interestsCollapse" aria-expanded="true" aria-controls="interestsCollapse">
+                <span class="collapse-btn">Interests</span>
+                <span class="fas fa-chevron-down"></span> <!-- Added a down chevron icon -->
+            </div>
+            <div id="interestsCollapse" class="collapse mb-3">
+                <div class="additional-info-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {% if user_profile.interests|length > 0 %}
+                            <span>{{ user_profile.interests }}</span>
+                            {% else %}
+                            <span class="text-muted font-italic">You haven't set up a description yet.</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- My Topics -->
+            <div class="additional-info-header" data-toggle="collapse" data-target="#openedTopics" aria-expanded="true" aria-controls="openedTopics">
+                <span class="collapse-btn">My Topics</span>
+                <span class="fas fa-chevron-down"></span>
+            </div>
+            <div id="openedTopics" class="collapse mb-3">
+                <div class="additional-info-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {% if posts %}
+                                {% for post in posts %}
+                                    <div class="card topic-card mb-3" onclick="redirectToPostDetail('{% url 'detail' post.id %}')">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <h5 class="card-title"><b>{{ post.title }}</b></h5>
+                                                    <p class="card-text">{{ post.content|truncatechars:20 }}</p>
+                                                    <p class="card-text">
+                                                        <small class="text-muted">Posted on {{ post.pub_date }}</small>
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <ul class="topic-info">
+                                                        <li><i class="fas fa-comments"></i> Replies: {{ post.total_replies }}</li>
+                                                        <li><i class="fas fa-thumbs-up"></i> Likes: {{ post.total_likes }}</li>
+                                                        <li style="color: {% if post.state == 'Open' %}green{% else %}orange{% endif %};"><i class="fas fa-circle"></i> {% if post.state == 'Open' %}Opened{% else %}Solved{% endif %}</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                            <span class="text-muted font-italic">No topics published yet.</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Liked Topics -->
+            <div class="additional-info-header" data-toggle="collapse" data-target="#likedTopics" aria-expanded="true" aria-controls="likedTopics">
+                <span class="collapse-btn">Liked Topics</span>
+                <span class="fas fa-chevron-down"></span>
+            </div>
+            <div id="likedTopics" class="collapse mb-3">
+                <div class="additional-info-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {% if liked_posts %}
+                                {% for post in liked_posts %}
+                                    <div class="card topic-card mb-3" onclick="redirectToTopicDetail('{% url 'detail' post.post.id %}')">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <h5 class="card-title"><b>{{ post.post.title }}</b></h5>
+                                                    <p class="card-text">{{ post.post.content|truncatechars:20 }}</p>
+                                                    <p class="card-text">
+                                                        <small class="text-muted">Liked on {{ post.like_date }}</small>
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <ul class="topic-info">
+                                                        <li><i class="fas fa-user"></i> Author: {{ post.post.author }}</li>
+                                                        <li><i class="fas fa-comments"></i> Replies: {{ post.post.total_replies }}</li>
+                                                        <li><i class="fas fa-thumbs-up"></i> Likes: {{ post.post.total_likes }}</li>
+                                                        <li style="color: {% if post.post.state == 'Open' %}green{% else %}orange{% endif %};"><i class="fas fa-circle"></i> {% if post.post.state == 'Open' %}Opened{% else %}Closed{% endif %}</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <span class="text-muted font-italic">No liked topics yet.</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container my-4">
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <form method="post" enctype="multipart/form-data" action="{% url 'profile' %}">
+                        {% csrf_token %}
+                        <div class="card text-dark">
+                            <div class="card-header">
+                                <h4 class="card-text text-center">Modify Profile</h4>
+                            </div>
+                            <div class="card-body">
+                                {{ user_form|crispy }}
+                                {{ profile_form|crispy }}
+                            </div>
+                            <button type="submit" class="btn btn-outline-success btn-sm">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Modal to display user's followers -->
@@ -206,7 +227,6 @@
             </div>
         </div>
     </div>
-
     <style>
         .custom-button {
             background-color: #17a2b8;
